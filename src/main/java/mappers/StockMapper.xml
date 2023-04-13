@@ -173,13 +173,13 @@
         and stock_plate = #{stockPlate}
       </if>
       <if test="stockPlate == null or stockPlate == '' ">
-        and (stock_plate is null or stock_plate='' or stock_plate='科创' or stock_plate='创业' )
+        and (stock_plate is null or stock_plate='' or stock_plate='科创' or stock_plate='创业' or stock_plate='港股' or stock_plate='美股')
       </if>
       <if test="stockType != null and stockType != '' ">
         and stock_type = #{stockType}
       </if>
     </where>
-    ORDER BY id DESC
+    ORDER BY id asc
   </select>
 
   <select id="findStockCode" resultMap="BaseResultMap" parameterType="map">

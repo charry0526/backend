@@ -14,8 +14,6 @@ public class UserRecharge {
 
     private String nickName;
 
-    private String phone;
-
     private Integer agentId;
 
     private String orderSn;
@@ -38,15 +36,13 @@ public class UserRecharge {
     private Integer payId;
 
 
-    public UserRecharge(Integer id, Integer userId, String nickName, String phone, Integer agentId, String orderSn, String paySn, String payChannel, BigDecimal payAmt, Integer orderStatus, String orderDesc, Date addTime, Date payTime, Integer payId) {
+    public UserRecharge(Integer id, Integer userId, String nickName, Integer agentId, String orderSn, String paySn, String payChannel, BigDecimal payAmt, Integer orderStatus, String orderDesc, Date addTime, Date payTime, Integer payId) {
 
         this.id = id;
 
         this.userId = userId;
 
         this.nickName = nickName;
-
-        this.phone = phone;
 
         this.agentId = agentId;
 
@@ -95,14 +91,6 @@ public class UserRecharge {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public Integer getAgentId() {

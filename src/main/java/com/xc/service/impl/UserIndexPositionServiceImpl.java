@@ -347,7 +347,6 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
         ucd.setPositionId(userIndexPosition.getId());
         ucd.setAgentId(user.getAgentId());
         ucd.setAgentName(user.getAgentName());
-        ucd.setPhone(user.getPhone());
         ucd.setUserId(user.getId());
         ucd.setUserName(user.getRealName());
         ucd.setDeType("指数盈亏");

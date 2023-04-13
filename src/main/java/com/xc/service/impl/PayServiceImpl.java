@@ -70,7 +70,6 @@ public class PayServiceImpl implements IPayService {
         userRecharge.setUserId(user.getId());
         userRecharge.setNickName(user.getRealName());
         userRecharge.setAgentId(user.getAgentId());
-        userRecharge.setPhone(user.getPhone());
 
         String ordersn = KeyUtils.getRechargeOrderSn();
         userRecharge.setOrderSn(ordersn);
@@ -210,7 +209,6 @@ public class PayServiceImpl implements IPayService {
         userRecharge.setUserId(user.getId());
         userRecharge.setNickName(user.getRealName());
         userRecharge.setAgentId(user.getAgentId());
-        userRecharge.setPhone(user.getPhone());
 
         String ordersn = KeyUtils.getRechargeOrderSn();
         userRecharge.setOrderSn(ordersn);

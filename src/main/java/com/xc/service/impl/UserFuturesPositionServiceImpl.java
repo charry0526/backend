@@ -377,7 +377,6 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
         ucd.setAgentId(user.getAgentId());
         ucd.setAgentName(user.getAgentName());
         ucd.setUserId(user.getId());
-        ucd.setPhone(user.getPhone());
         ucd.setUserName(user.getRealName());
         ucd.setDeType("期货盈亏");
         ucd.setDeAmt(all_profit);

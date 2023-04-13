@@ -24,7 +24,8 @@ public class ApiAdminAuthorityInterceptor implements HandlerInterceptor {
 
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object handler) throws Exception {
         SiteAdmin siteAdmin = null;
-        String loginToken = httpServletRequest.getHeader("token");
+        String loginToken = CookieUtils.readLoginToken(httpServletRequest,
+                PropertiesUtil.getProperty("admin.cookie.name"));
         if (StringUtils.isNotEmpty(loginToken)) {
             String adminJsonStr = RedisShardedPoolUtils.get(loginToken);
             siteAdmin = (SiteAdmin) JsonUtil.string2Obj(adminJsonStr, SiteAdmin.class);

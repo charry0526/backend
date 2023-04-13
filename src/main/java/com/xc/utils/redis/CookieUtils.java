@@ -24,15 +24,24 @@ public class CookieUtils {
     private static final String COOKIE_DOMAIN = PropertiesUtil.getProperty("cookie.project.url");
 
 
-    public static void writeLoginToken(HttpServletResponse httpServletResponse, String token) {
-//        Cookie cookie = new Cookie(COOKIE_NAME, token);
-//        cookie.setPath("/");
-//        cookie.setMaxAge(31536000);
-//        cookie.setHttpOnly(true);
-//        //cookie.setHttpOnly(false);
-//        log.info("write cookie name :{} ,cookie value : {}", cookie.getName(), cookie.getValue());
-//        httpServletResponse.addCookie(cookie);
-        httpServletResponse.addHeader("token",token);
+    public static void writeLoginToken(HttpServletResponse httpServletResponse, String token, String COOKIE_NAME) {
+
+        Cookie cookie = new Cookie(COOKIE_NAME, token);
+
+
+        cookie.setPath("/");
+
+
+        cookie.setMaxAge(31536000);
+
+
+        cookie.setHttpOnly(true);
+        //cookie.setHttpOnly(false);
+
+        log.info("write cookie name :{} ,cookie value : {}", cookie.getName(), cookie.getValue());
+
+        httpServletResponse.addCookie(cookie);
+
     }
 
 

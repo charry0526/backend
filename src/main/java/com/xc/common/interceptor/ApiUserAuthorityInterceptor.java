@@ -28,7 +28,7 @@ public class ApiUserAuthorityInterceptor implements HandlerInterceptor {
         if (url.equals("/user/upload.do")) {
             return true;
         }
-        String loginToken = httpServletRequest.getHeader("token");
+        String loginToken = CookieUtils.readLoginToken(httpServletRequest, PropertiesUtil.getProperty("user.cookie.name"));
         if (StringUtils.isNotEmpty(loginToken)) {
             String userJsonStr = RedisShardedPoolUtils.get(loginToken);
             user = (User) JsonUtil.string2Obj(userJsonStr, User.class);

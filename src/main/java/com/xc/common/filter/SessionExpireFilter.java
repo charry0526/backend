@@ -30,11 +30,27 @@ SessionExpireFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String userLoginToken = CookieUtils.readLoginToken(httpServletRequest,
                 PropertiesUtil.getProperty("user.cookie.name"));
-        String userToken = (String) httpServletRequest.getHeader("token");
-        if (StringUtils.isNotEmpty(userToken)) {
-            String adminJsonStr = RedisShardedPoolUtils.get(userToken);
+        if (StringUtils.isNotEmpty(userLoginToken)) {
+            String userjsonstr = RedisShardedPoolUtils.get(userLoginToken);
+            if (StringUtils.isNotEmpty(userjsonstr)) {
+                RedisShardedPoolUtils.expire(userLoginToken, 5400);
+            }
+        }
+        String agentLoginToken = CookieUtils.readLoginToken(httpServletRequest,
+                PropertiesUtil.getProperty("agent.cookie.name"));
+        if (StringUtils.isNotEmpty(agentLoginToken)) {
+
+            String agentJsonStr = RedisShardedPoolUtils.get(agentLoginToken);
+            if (StringUtils.isNotEmpty(agentJsonStr)) {
+                RedisShardedPoolUtils.expire(agentLoginToken, 5400);
+            }
+        }
+        String adminLoginToken = CookieUtils.readLoginToken(httpServletRequest,
+                PropertiesUtil.getProperty("admin.cookie.name"));
+        if (StringUtils.isNotEmpty(adminLoginToken)) {
+            String adminJsonStr = RedisShardedPoolUtils.get(adminLoginToken);
             if (StringUtils.isNotEmpty(adminJsonStr)) {
-                RedisShardedPoolUtils.expire(userToken, 5400);
+                RedisShardedPoolUtils.expire(adminLoginToken, 5400);
             }
         }
         HttpServletRequest req = (HttpServletRequest) servletRequest;

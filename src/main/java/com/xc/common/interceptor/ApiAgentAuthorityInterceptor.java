@@ -24,7 +24,8 @@ public class ApiAgentAuthorityInterceptor implements HandlerInterceptor {
 
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object handler) throws Exception {
         AgentUser agentUser = null;
-        String loginToken = httpServletRequest.getHeader("token");
+        String loginToken = CookieUtils.readLoginToken(httpServletRequest,
+                PropertiesUtil.getProperty("agent.cookie.name"));
         if (StringUtils.isNotEmpty(loginToken)) {
             String agentJsonStr = RedisShardedPoolUtils.get(loginToken);
             agentUser = (AgentUser) JsonUtil.string2Obj(agentJsonStr, AgentUser.class);

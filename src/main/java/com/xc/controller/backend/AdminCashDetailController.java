@@ -23,8 +23,8 @@ public class AdminCashDetailController {
     //分页查询资金管理 所有资金记录信息及模糊查询
     @RequestMapping({"list.do"})
     @ResponseBody
-    public ServerResponse list(@RequestParam(value = "userId", required = false) Integer userId, @RequestParam(value = "userName", required = false) String userName,@RequestParam(value = "phone", required = false) String phone, @RequestParam(value = "agentId", required = false) Integer agentId, @RequestParam(value = "positionId", required = false) Integer positionId, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return this.iUserCashDetailService.listByAdmin(userId, userName, phone, agentId, positionId, pageNum, pageSize);
+    public ServerResponse list(@RequestParam(value = "userId", required = false) Integer userId, @RequestParam(value = "userName", required = false) String userName, @RequestParam(value = "agentId", required = false) Integer agentId, @RequestParam(value = "positionId", required = false) Integer positionId, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        return this.iUserCashDetailService.listByAdmin(userId, userName, agentId, positionId, pageNum, pageSize);
     }
 
     //删除资金记录

@@ -111,7 +111,6 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         userRecharge.setUserId(user.getId());
         userRecharge.setNickName(user.getRealName());
         userRecharge.setAgentId(user.getAgentId());
-        userRecharge.setPhone(user.getPhone());
 
         String ordersn = KeyUtils.getRechargeOrderSn();
         userRecharge.setOrderSn(ordersn);
@@ -187,7 +186,6 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         ucd.setAgentId(user.getAgentId());
         ucd.setAgentName(user.getAgentName());
         ucd.setUserId(user.getId());
-        ucd.setPhone(user.getPhone());
         ucd.setUserName(user.getRealName());
         ucd.setDeType("用户充值");
         ucd.setDeAmt(userRecharge.getPayAmt());
@@ -278,10 +276,9 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
     }
 
 
-    public ServerResponse listByAdmin(Integer agentId, Integer userId, String phone, String realName, Integer state, String beginTime, String endTime, HttpServletRequest request, int pageNum, int pageSize) {
+    public ServerResponse listByAdmin(Integer agentId, Integer userId, String realName, Integer state, String beginTime, String endTime, HttpServletRequest request, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
-        //@todo check phone
 
         Timestamp begin_time = null;
         if (StringUtils.isNotBlank(beginTime)) {
@@ -293,7 +290,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         }
 
 
-        List<UserRecharge> userRecharges = this.userRechargeMapper.listByAdmin(agentId, userId, phone, realName, state, begin_time, end_time);
+        List<UserRecharge> userRecharges = this.userRechargeMapper.listByAdmin(agentId, userId, realName, state, begin_time, end_time);
 
         PageInfo pageInfo = new PageInfo(userRecharges);
 
@@ -361,8 +358,6 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         UserRecharge userRecharge = new UserRecharge();
         userRecharge.setUserId(user.getId());
         userRecharge.setNickName(user.getRealName());
-        userRecharge.setPhone(user.getPhone());
-
         userRecharge.setAgentId(user.getAgentId());
 
         String ordersn = KeyUtils.getRechargeOrderSn();

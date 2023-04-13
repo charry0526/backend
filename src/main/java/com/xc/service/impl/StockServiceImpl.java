@@ -9,7 +9,10 @@ import com.xc.dao.RealTimeMapper;
 import com.xc.dao.StockFuturesMapper;
 import com.xc.dao.StockIndexMapper;
 import com.xc.dao.StockMapper;
-import com.xc.pojo.*;
+import com.xc.pojo.Stock;
+import com.xc.pojo.StockFutures;
+import com.xc.pojo.StockIndex;
+import com.xc.pojo.User;
 import com.xc.service.IStockMarketsDayService;
 import com.xc.service.IStockOptionService;
 import com.xc.service.IStockService;
@@ -19,26 +22,9 @@ import com.xc.utils.PropertiesUtil;
 import com.xc.utils.stock.pinyin.GetPyByChinese;
 import com.xc.utils.stock.qq.QqStockApi;
 import com.xc.utils.stock.sina.SinaStockApi;
-import com.xc.vo.stock.MarketVO;
-import com.xc.vo.stock.MarketVOResult;
-import com.xc.vo.stock.StockAdminListVO;
-import com.xc.vo.stock.StockListVO;
-import com.xc.vo.stock.StockVO;
+import com.xc.vo.stock.*;
 import com.xc.vo.stock.k.MinDataVO;
 import com.xc.vo.stock.k.echarts.EchartsDataVO;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +32,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service("iStockService")
 public class StockServiceImpl implements IStockService {
@@ -114,12 +111,20 @@ public class StockServiceImpl implements IStockService {
     List<StockListVO> stockListVOS = Lists.newArrayList();
     if (stockList.size() > 0)
       for (Stock stock : stockList) {
-        StockListVO stockListVO = SinaStockApi.assembleStockListVO(SinaStockApi.getSinaStock(stock.getStockGid()));
+
+        String stype = stock.getStockType();
+        String stockGid = stock.getStockGid();
+        StockListVO stockListVO = findStockList(stype,stockGid);
+        //过滤空数据
+        if(Objects.isNull(stockListVO.getName())){
+          continue;
+        }
+
         stockListVO.setCode(stock.getStockCode());
         stockListVO.setSpell(stock.getStockSpell());
         stockListVO.setGid(stock.getStockGid());
-        BigDecimal day3Rate = (BigDecimal)selectRateByDaysAndStockCode(stock.getStockCode(), 3).getData();
-        stockListVO.setDay3Rate(day3Rate);
+//        BigDecimal day3Rate = (BigDecimal)selectRateByDaysAndStockCode(stock.getStockCode(), 3).getData();
+//        stockListVO.setDay3Rate(day3Rate);
         stockListVO.setStock_plate(stock.getStockPlate());
         stockListVO.setStock_type(stock.getStockType());
         //是否添加自选
@@ -313,7 +318,11 @@ public class StockServiceImpl implements IStockService {
     StockVO stockVO = new StockVO();
     if(code.contains("hf")){
       stockVO = SinaStockApi.assembleStockFuturesVO(sinaResult);
-    }else {
+    } else if("hk".equals(stock.getStockType())){
+      stockVO = SinaStockApi.assembleHkStockVO(sinaResult);
+    } else if("us".equals(stock.getStockType())){
+      stockVO = SinaStockApi.assembleUsStockVO(sinaResult);
+    } else {
       stockVO = SinaStockApi.assembleStockVO(sinaResult);
     }
     stockVO.setDepositAmt(depositAmt);
@@ -452,7 +461,11 @@ public class StockServiceImpl implements IStockService {
     stockAdminListVO.setIsLock(stock.getIsLock());
     stockAdminListVO.setIsShow(stock.getIsShow());
     stockAdminListVO.setAddTime(stock.getAddTime());
-    StockListVO stockListVO = SinaStockApi.assembleStockListVO(SinaStockApi.getSinaStock(stock.getStockGid()));
+
+    String stype = stock.getStockType();
+    String stockGid = stock.getStockGid();
+    StockListVO stockListVO = findStockList(stype,stockGid);
+
     stockAdminListVO.setNowPrice(stockListVO.getNowPrice());
     stockAdminListVO.setHcrate(stockListVO.getHcrate());
     stockAdminListVO.setSpreadRate(stock.getSpreadRate());
@@ -515,12 +528,12 @@ public class StockServiceImpl implements IStockService {
     if (stockPlate != null)
       stock.setStockPlate(stockPlate);
 
-    if(stockPlate != null && StringUtils.isNotEmpty(stockPlate) && stockCode.startsWith("300"))
-      stock.setStockPlate("创业");
-    else if(stockPlate != null && StringUtils.isNotEmpty(stockPlate) &&stockCode.startsWith("688"))
-      stock.setStockPlate("科创");
-    else
-      stock.setStockPlate(null);
+//    if(stockPlate != null && StringUtils.isNotEmpty(stockPlate) && stockCode.startsWith("300"))
+//      stock.setStockPlate("创业");
+//    else if(stockPlate != null && StringUtils.isNotEmpty(stockPlate) &&stockCode.startsWith("688"))
+//      stock.setStockPlate("科创");
+//    else
+//      stock.setStockPlate(null);
 
     int insertCount = this.stockMapper.insert(stock);
     if (insertCount > 0)
@@ -573,6 +586,23 @@ public class StockServiceImpl implements IStockService {
       return ServerResponse.createBySuccessMsg("操作成功");
     }
     return ServerResponse.createByErrorMsg("操作失败");
+  }
+
+  /**
+   * 获取每个股票的信息
+   * @param type
+   * @param stockGid
+   * @return
+   */
+  private StockListVO findStockList(String type, String stockGid){
+    String sinaStock = SinaStockApi.getSinaStock(stockGid);
+    if(type.equals("hk")){
+      return SinaStockApi.assembleHkStockListVO(sinaStock);
+    } else if(type.equals("us")){
+      return SinaStockApi.assembleUsStockListVO(sinaStock);
+    } else {
+      return SinaStockApi.assembleStockListVO(sinaStock);
+    }
   }
 
 }

@@ -568,7 +568,6 @@ public class UserPositionServiceImpl implements IUserPositionService {
         ucd.setAgentId(user.getAgentId());
         ucd.setAgentName(user.getAgentName());
         ucd.setUserId(user.getId());
-        ucd.setPhone(user.getPhone());
         ucd.setUserName(user.getRealName());
         ucd.setDeType("总盈亏");
         ucd.setDeAmt(all_profit);
@@ -676,7 +675,6 @@ public class UserPositionServiceImpl implements IUserPositionService {
         ucd.setPositionId(userPosition.getId());
         ucd.setAgentId(user.getAgentId());
         ucd.setAgentName(user.getAgentName());
-        ucd.setPhone(user.getPhone());
         ucd.setUserId(user.getId());
         ucd.setUserName(user.getRealName());
         ucd.setDeType("追加保证金");

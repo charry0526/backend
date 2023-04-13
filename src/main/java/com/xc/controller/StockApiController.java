@@ -1,5 +1,8 @@
 package com.xc.controller;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
 import com.xc.common.ServerResponse;
 import com.xc.service.IStockService;
 import org.slf4j.Logger;
@@ -11,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.List;
 
 @Controller
 @RequestMapping({"/api/stock/"})
@@ -20,6 +24,31 @@ public class StockApiController {
 
     @Autowired
     IStockService iStockService;
+
+    /**
+     * 初始化港美股
+     * @return
+     */
+    @RequestMapping({"initStock.do"})
+    @ResponseBody
+    public String initStock(){
+        File file = FileUtil.file("/www/wwwroot/lr/xh_shares.xls");
+        ExcelReader reader = ExcelUtil.getReader(file);
+        List<List<Object>> read = reader.read();
+        for (List<Object> objects : read) {
+            String stockName = String.valueOf(objects.get(2));
+            String stockCode = String.valueOf(objects.get(3));
+            String type = String.valueOf(objects.get(15));
+            String stockPlate = "港股";
+            String stockType = "hk";
+            if(type.contains("us")){
+                stockType = "us";
+                stockPlate = "美股";
+            }
+            iStockService.addStock(stockName,stockCode,stockType,stockPlate,0,0);
+        }
+        return "ok";
+    }
 
     //查询 股票指数、大盘指数信息
     @RequestMapping({"getMarket.do"})

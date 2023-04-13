@@ -1,7 +1,8 @@
 package com.xc.utils.stock.sina;
 
 
-import com.google.common.collect.Lists;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.xc.common.ServerResponse;
 import com.xc.pojo.Stock;
 import com.xc.pojo.StockFutures;
@@ -14,15 +15,15 @@ import com.xc.vo.stock.StockListVO;
 import com.xc.vo.stock.StockVO;
 import com.xc.vo.stock.k.MinDataVO;
 import com.xc.vo.stock.k.echarts.EchartsDataVO;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Date;
+import java.util.List;
 
 
 public class SinaStockApi {
@@ -32,13 +33,99 @@ public class SinaStockApi {
     public static String getSinaStock(String stockGid) {
         String sina_result = "";
         try {
-            sina_result = HttpClientRequest.doGet(sina_url + stockGid);
+            String url = sina_url + stockGid;
+            if(stockGid.contains("us")){
+                String novelUrl = stockGid.substring(2,stockGid.length());
+                url = sina_url + String.format("gb_%s",novelUrl.toLowerCase());
+            }
+            sina_result = HttpClientRequest.doGet(url);
         } catch (Exception e) {
             log.error("获取股票行情出错，错误信息 = {}", e);
         }
         return sina_result.substring(sina_result.indexOf("=") + 2);
     }
 
+    /**
+     * 处理美股数据
+     * @param sinaResult
+     * @return
+     */
+    public static StockListVO assembleUsStockListVO(String sinaResult) {
+        StockListVO stockListVO = new StockListVO();
+
+        String[] hqarr = sinaResult.split(",");
+
+        if (hqarr.length > 1) {
+
+            stockListVO.setName(hqarr[0]);
+
+            stockListVO.setNowPrice(hqarr[1]);
+
+            BigDecimal chang_rate = new BigDecimal("0");
+            if ((new BigDecimal(hqarr[26])).compareTo(new BigDecimal("0")) != 0 && new BigDecimal(hqarr[1]).compareTo(new BigDecimal("0")) != 0) {
+
+                chang_rate = (new BigDecimal(hqarr[1])).subtract(new BigDecimal(hqarr[26]));
+
+                chang_rate = chang_rate.multiply(new BigDecimal("100")).divide(new BigDecimal(hqarr[26]), 2, RoundingMode.HALF_UP);
+            }
+            stockListVO.setHcrate(chang_rate);
+
+            stockListVO.setToday_max(hqarr[6]);
+
+            stockListVO.setToday_min(hqarr[7]);
+
+            stockListVO.setBusiness_amount(hqarr[10]);
+
+            stockListVO.setBusiness_balance(hqarr[11]);
+
+            stockListVO.setPreclose_px(hqarr[26]);
+
+            stockListVO.setOpen_px(hqarr[5]);
+        }
+
+        return stockListVO;
+    }
+
+    /**
+     * 处理香港股票数据
+     * @param sinaResult
+     * @return
+     */
+    public static StockListVO assembleHkStockListVO(String sinaResult) {
+        StockListVO stockListVO = new StockListVO();
+
+        String[] hqarr = sinaResult.split(",");
+
+        if (hqarr.length > 1) {
+
+            stockListVO.setName(hqarr[1]);
+
+            stockListVO.setNowPrice(hqarr[6]);
+
+            BigDecimal chang_rate = new BigDecimal("0");
+            if ((new BigDecimal(hqarr[3])).compareTo(new BigDecimal("0")) != 0 && new BigDecimal(hqarr[6]).compareTo(new BigDecimal("0")) != 0) {
+
+                chang_rate = (new BigDecimal(hqarr[6])).subtract(new BigDecimal(hqarr[3]));
+
+                chang_rate = chang_rate.multiply(new BigDecimal("100")).divide(new BigDecimal(hqarr[3]), 2, RoundingMode.HALF_UP);
+            }
+            stockListVO.setHcrate(chang_rate);
+
+            stockListVO.setToday_max(hqarr[4]);
+
+            stockListVO.setToday_min(hqarr[5]);
+
+            stockListVO.setBusiness_amount(hqarr[11]);
+
+            stockListVO.setBusiness_balance(hqarr[12]);
+
+            stockListVO.setPreclose_px(hqarr[3]);
+
+            stockListVO.setOpen_px(hqarr[2]);
+        }
+
+        return stockListVO;
+    }
 
     public static StockListVO assembleStockListVO(String sinaResult) {
         StockListVO stockListVO = new StockListVO();
@@ -86,11 +173,11 @@ public class SinaStockApi {
         stockVO.setNowPrice(hqarr[3]);
 
         BigDecimal chang_rate = new BigDecimal("0");
-        if ((new BigDecimal(hqarr[2])).compareTo(new BigDecimal("0")) != 0 && new BigDecimal(hqarr[3]).compareTo(new BigDecimal("0")) != 0) {
+        if ((new BigDecimal(hqarr[26])).compareTo(new BigDecimal("0")) != 0 && new BigDecimal(hqarr[1]).compareTo(new BigDecimal("0")) != 0) {
 
-            chang_rate = (new BigDecimal(hqarr[3])).subtract(new BigDecimal(hqarr[2]));
+            chang_rate = (new BigDecimal(hqarr[1])).subtract(new BigDecimal(hqarr[26]));
 
-            chang_rate = chang_rate.multiply(new BigDecimal("100")).divide(new BigDecimal(hqarr[2]), 2, RoundingMode.HALF_UP);
+            chang_rate = chang_rate.multiply(new BigDecimal("100")).divide(new BigDecimal(hqarr[26]), 2, RoundingMode.HALF_UP);
         }
         stockVO.setHcrate(chang_rate);
 
@@ -131,6 +218,146 @@ public class SinaStockApi {
         stockVO.setSell5_num(hqarr[28]);
 
         return stockVO;
+    }
+
+    public static StockVO assembleHkStockVO(String sinaResult) {
+        StockVO stockVO = new StockVO();
+
+        String[] hqarr = sinaResult.split(",");
+
+        stockVO.setName(hqarr[1]);
+
+        stockVO.setNowPrice(hqarr[6]);
+
+        BigDecimal chang_rate = new BigDecimal("0");
+        if ((new BigDecimal(hqarr[3])).compareTo(new BigDecimal("0")) != 0 && new BigDecimal(hqarr[6]).compareTo(new BigDecimal("0")) != 0) {
+
+            chang_rate = (new BigDecimal(hqarr[6])).subtract(new BigDecimal(hqarr[3]));
+
+            chang_rate = chang_rate.multiply(new BigDecimal("100")).divide(new BigDecimal(hqarr[3]), 2, RoundingMode.HALF_UP);
+        }
+
+
+        stockVO.setHcrate(chang_rate);
+
+        stockVO.setToday_max(hqarr[4]);
+
+        stockVO.setToday_min(hqarr[5]);
+
+        stockVO.setBusiness_amount(hqarr[11]);
+
+        stockVO.setBusiness_balance(hqarr[12]);
+
+        stockVO.setPreclose_px(hqarr[3]);
+
+        stockVO.setOpen_px(hqarr[2]);
+
+        String price = hqarr[2];
+        stockVO.setBuy1(randomPrice(price));
+        stockVO.setBuy2(randomPrice(price));
+        stockVO.setBuy3(randomPrice(price));
+        stockVO.setBuy4(randomPrice(price));
+        stockVO.setBuy5(randomPrice(price));
+
+        stockVO.setSell1(randomPrice(price));
+        stockVO.setSell2(randomPrice(price));
+        stockVO.setSell3(randomPrice(price));
+        stockVO.setSell4(randomPrice(price));
+        stockVO.setSell5(randomPrice(price));
+
+        stockVO.setBuy1_num(randomVol());
+        stockVO.setBuy2_num(randomVol());
+        stockVO.setBuy3_num(randomVol());
+        stockVO.setBuy4_num(randomVol());
+        stockVO.setBuy5_num(randomVol());
+
+        stockVO.setSell1_num(randomVol());
+        stockVO.setSell2_num(randomVol());
+        stockVO.setSell3_num(randomVol());
+        stockVO.setSell4_num(randomVol());
+        stockVO.setSell5_num(randomVol());
+
+        return stockVO;
+    }
+
+    public static StockVO assembleUsStockVO(String sinaResult) {
+        StockVO stockVO = new StockVO();
+
+        String[] hqarr = sinaResult.split(",");
+
+        stockVO.setName(hqarr[0]);
+
+        stockVO.setNowPrice(hqarr[1]);
+
+        BigDecimal chang_rate = new BigDecimal("0");
+        if ((new BigDecimal(hqarr[26])).compareTo(new BigDecimal("0")) != 0 && new BigDecimal(hqarr[1]).compareTo(new BigDecimal("0")) != 0) {
+
+            chang_rate = (new BigDecimal(hqarr[1])).subtract(new BigDecimal(hqarr[26]));
+
+            chang_rate = chang_rate.multiply(new BigDecimal("100")).divide(new BigDecimal(hqarr[1]), 2, RoundingMode.HALF_UP);
+        }
+
+
+        stockVO.setHcrate(chang_rate);
+
+        stockVO.setToday_max(hqarr[6]);
+
+        stockVO.setToday_min(hqarr[7]);
+
+        stockVO.setBusiness_amount(hqarr[10]);
+
+        stockVO.setBusiness_balance(hqarr[11]);
+
+        stockVO.setPreclose_px(hqarr[26]);
+
+        stockVO.setOpen_px(hqarr[5]);
+
+        String price = hqarr[5];
+        stockVO.setBuy1(randomPrice(price));
+        stockVO.setBuy2(randomPrice(price));
+        stockVO.setBuy3(randomPrice(price));
+        stockVO.setBuy4(randomPrice(price));
+        stockVO.setBuy5(randomPrice(price));
+
+        stockVO.setSell1(randomPrice(price));
+        stockVO.setSell2(randomPrice(price));
+        stockVO.setSell3(randomPrice(price));
+        stockVO.setSell4(randomPrice(price));
+        stockVO.setSell5(randomPrice(price));
+
+        stockVO.setBuy1_num(randomVol());
+        stockVO.setBuy2_num(randomVol());
+        stockVO.setBuy3_num(randomVol());
+        stockVO.setBuy4_num(randomVol());
+        stockVO.setBuy5_num(randomVol());
+
+        stockVO.setSell1_num(randomVol());
+        stockVO.setSell2_num(randomVol());
+        stockVO.setSell3_num(randomVol());
+        stockVO.setSell4_num(randomVol());
+        stockVO.setSell5_num(randomVol());
+
+        return stockVO;
+    }
+
+    /**
+     * 随机买入 卖出
+     * @param price
+     * @return
+     */
+    private static String randomPrice(String price){
+        BigDecimal selldec = RandomUtil.randomBigDecimal(new BigDecimal("0.15"));
+        BigDecimal sellround = NumberUtil.round(selldec, 2);
+        Double pricesell = Double.valueOf(price) - sellround.doubleValue();
+        return pricesell.toString();
+    }
+
+    /**
+     * 随机量
+     * @return
+     */
+    private static String randomVol(){
+        return String.valueOf(RandomUtil.randomInt(0,2000));
     }
 
     /*期货详情转换*/

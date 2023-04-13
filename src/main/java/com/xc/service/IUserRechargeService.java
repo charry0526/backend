@@ -25,7 +25,7 @@ public interface IUserRechargeService {
   
   ServerResponse<PageInfo> listByAgent(Integer paramInteger1, String paramString1, String paramString2, Integer paramInteger2, HttpServletRequest paramHttpServletRequest, int paramInt1, int paramInt2);
   
-  ServerResponse listByAdmin(Integer paramInteger1, Integer paramInteger2, String paramString0,String paramString1, Integer paramInteger3, String paramString2, String paramString3, HttpServletRequest paramHttpServletRequest, int paramInt1, int paramInt2);
+  ServerResponse listByAdmin(Integer paramInteger1, Integer paramInteger2, String paramString1, Integer paramInteger3, String paramString2, String paramString3, HttpServletRequest paramHttpServletRequest, int paramInt1, int paramInt2);
   
   ServerResponse updateState(Integer paramInteger1, Integer paramInteger2) throws Exception;
   

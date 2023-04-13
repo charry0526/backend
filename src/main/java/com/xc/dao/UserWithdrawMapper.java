@@ -22,7 +22,7 @@ public interface UserWithdrawMapper {
   
   List listByAgent(@Param("searchId") Integer paramInteger1, @Param("realName") String paramString, @Param("state") Integer paramInteger2);
   
-  List listByAdmin(@Param("agentId") Integer paramInteger1, @Param("userId") Integer paramInteger2, @Param("phone") String paramString0, @Param("realName") String paramString1, @Param("state") Integer paramInteger3, @Param("beginTime") String paramString2, @Param("endTime") String paramString3);
+  List listByAdmin(@Param("agentId") Integer paramInteger1, @Param("userId") Integer paramInteger2, @Param("realName") String paramString1, @Param("state") Integer paramInteger3, @Param("beginTime") String paramString2, @Param("endTime") String paramString3);
   
   BigDecimal CountSpWithSumAmtByState(Integer paramInteger);
 

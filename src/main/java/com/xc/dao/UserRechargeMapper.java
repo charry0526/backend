@@ -25,7 +25,7 @@ public interface UserRechargeMapper {
   
   List findUserChargeList(@Param("uid") Integer paramInteger, @Param("payChannel") String paramString1, @Param("orderStatus") String paramString2);
   
-  List listByAdmin(@Param("agentId") Integer paramInteger1, @Param("userId") Integer paramInteger2,@Param("phone") String paramString0, @Param("realName") String paramString, @Param("state") Integer paramInteger3, @Param("begin_time") Date paramDate1, @Param("end_time") Date paramDate2);
+  List listByAdmin(@Param("agentId") Integer paramInteger1, @Param("userId") Integer paramInteger2, @Param("realName") String paramString, @Param("state") Integer paramInteger3, @Param("begin_time") Date paramDate1, @Param("end_time") Date paramDate2);
   
   int deleteByUserId(@Param("userId") Integer paramInteger);
   

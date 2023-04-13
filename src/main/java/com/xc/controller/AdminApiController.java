@@ -1,8 +1,6 @@
 package com.xc.controller;
 
 import com.xc.common.ServerResponse;
-import com.xc.pojo.SiteAdmin;
-import com.xc.pojo.SiteAdminLogin;
 import com.xc.pojo.SiteSpread;
 import com.xc.service.*;
 import com.xc.utils.PropertiesUtil;
@@ -22,8 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Date;
 
 @Controller
 @RequestMapping({"/api/admin/"})
@@ -53,22 +49,11 @@ public class AdminApiController {
     @ResponseBody
     public ServerResponse login(@RequestParam("adminPhone") String adminPhone, @RequestParam("adminPwd") String adminPwd, @RequestParam("verifyCode") String verifyCode, HttpSession httpSession, HttpServletRequest request, HttpServletResponse response) {
         ServerResponse serverResponse = this.iSiteAdminService.login(adminPhone, adminPwd, verifyCode, request);
-//        String admin_cookie_name = PropertiesUtil.getProperty("admin.cookie.name");
+        String admin_cookie_name = PropertiesUtil.getProperty("admin.cookie.name");
         if (serverResponse.isSuccess()) {
-            String token = RedisConst.getAdminRedisKey(httpSession.getId());
-            CookieUtils.writeLoginToken(response, token);
-            String str = RedisShardedPoolUtils.setEx(RedisConst.getAdminRedisKey(httpSession.getId()),
+            CookieUtils.writeLoginToken(response, RedisConst.getAdminRedisKey(httpSession.getId()), admin_cookie_name);
+           String str = RedisShardedPoolUtils.setEx(RedisConst.getAdminRedisKey(httpSession.getId()),
                     JsonUtil.obj2String(serverResponse.getData()), 5400);
-            SiteAdminLogin siteAdminLogin = new SiteAdminLogin();
-            SiteAdmin data= (SiteAdmin) serverResponse.getData();
-            siteAdminLogin.setAdminName(data.getAdminName());
-            siteAdminLogin.setAdminPwd(data.getAdminPwd());
-            siteAdminLogin.setAdminPhone(data.getAdminPhone());
-            siteAdminLogin.setIsLock(data.getIsLock());
-            siteAdminLogin.setId(data.getId());
-            siteAdminLogin.setAddTime(data.getAddTime());
-            siteAdminLogin.setToken(token);
-            return ServerResponse.createBySuccess("登陆成功", siteAdminLogin);
         }
         return serverResponse;
     }

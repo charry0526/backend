@@ -111,11 +111,11 @@ import org.springframework.stereotype.Service;
 
    }
 
-   public ServerResponse<PageInfo> listByAdmin(Integer userId, String userName, String phone, Integer agentId, Integer positionId, int pageNum, int pageSize) {
+   public ServerResponse<PageInfo> listByAdmin(Integer userId, String userName, Integer agentId, Integer positionId, int pageNum, int pageSize) {
 
      PageHelper.startPage(pageNum, pageSize);
 
-     List<UserCashDetail> cashDetails = this.userCashDetailMapper.listByAdmin(userId, userName, phone, agentId, positionId);
+     List<UserCashDetail> cashDetails = this.userCashDetailMapper.listByAdmin(userId, userName, agentId, positionId);
 
      PageInfo pageInfo = new PageInfo(cashDetails);
 

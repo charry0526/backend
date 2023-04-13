@@ -214,8 +214,6 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             userWithdraw.setNickName(user.getRealName());
 
-            userWithdraw.setPhone(user.getPhone());
-
             userWithdraw.setAgentId(user.getAgentId());
 
             userWithdraw.setWithAmt(new BigDecimal(amt));
@@ -383,12 +381,12 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
     }
 
 
-    public ServerResponse<PageInfo> listByAdmin(Integer agentId, Integer userId, String phone, String realName, Integer state, String beginTime, String endTime, HttpServletRequest request, int pageNum, int pageSize) {
+    public ServerResponse<PageInfo> listByAdmin(Integer agentId, Integer userId, String realName, Integer state, String beginTime, String endTime, HttpServletRequest request, int pageNum, int pageSize) {
 
         PageHelper.startPage(pageNum, pageSize);
 
 
-        List<UserWithdraw> userWithdraws = this.userWithdrawMapper.listByAdmin(agentId, userId, phone, realName, state, beginTime, endTime);
+        List<UserWithdraw> userWithdraws = this.userWithdrawMapper.listByAdmin(agentId, userId, realName, state, beginTime, endTime);
 
 
         PageInfo pageInfo = new PageInfo(userWithdraws);

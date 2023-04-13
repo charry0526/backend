@@ -23,8 +23,8 @@ public class AdminWithDrawController {
     //分页查询资金管理 提现列表信息及模糊查询
     @RequestMapping({"list.do"})
     @ResponseBody
-    public ServerResponse<PageInfo> list(@RequestParam(value = "agentId", required = false) Integer agentId, @RequestParam(value = "userId", required = false) Integer userId, @RequestParam(value = "phone", required = false) String phone, @RequestParam(value = "realName", required = false) String realName, @RequestParam(value = "state", required = false) Integer state, @RequestParam(value = "beginTime", required = false) String beginTime, @RequestParam(value = "endTime", required = false) String endTime, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
-        return this.iUserWithdrawService.listByAdmin(agentId, userId, phone, realName, state, beginTime, endTime, request, pageNum, pageSize);
+    public ServerResponse<PageInfo> list(@RequestParam(value = "agentId", required = false) Integer agentId, @RequestParam(value = "userId", required = false) Integer userId, @RequestParam(value = "realName", required = false) String realName, @RequestParam(value = "state", required = false) Integer state, @RequestParam(value = "beginTime", required = false) String beginTime, @RequestParam(value = "endTime", required = false) String endTime, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
+        return this.iUserWithdrawService.listByAdmin(agentId, userId, realName, state, beginTime, endTime, request, pageNum, pageSize);
     }
 
     //修改资金管理 提现列表 提现状态

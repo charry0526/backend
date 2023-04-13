@@ -11,8 +11,6 @@ public class UserCashDetail {
 
     private String agentName;
 
-    private String phone;
-
     private Integer userId;
 
     private String userName;
@@ -34,14 +32,12 @@ public class UserCashDetail {
     private Integer isRead;
 
 
-    public UserCashDetail(Integer id, Integer agentId, String agentName, String phone, Integer userId, String userName, Integer positionId, String deType, BigDecimal deAmt, String deSummary, Date addTime, String addIp, String addAddress, Integer isRead) {
+    public UserCashDetail(Integer id, Integer agentId, String agentName, Integer userId, String userName, Integer positionId, String deType, BigDecimal deAmt, String deSummary, Date addTime, String addIp, String addAddress, Integer isRead) {
         this.id = id;
 
         this.agentId = agentId;
 
         this.agentName = agentName;
-
-        this.phone = phone;
 
         this.userId = userId;
 
@@ -89,14 +85,6 @@ public class UserCashDetail {
 
     public void setAgentName(String agentName) {
         this.agentName = agentName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public Integer getUserId() {

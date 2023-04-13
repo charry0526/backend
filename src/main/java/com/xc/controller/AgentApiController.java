@@ -51,15 +51,15 @@ public class AgentApiController {
     @ResponseBody
     public ServerResponse login(@RequestParam("agentPhone") String agentPhone, @RequestParam("agentPwd") String agentPwd, @RequestParam(value = "verifyCode", required = false, defaultValue = "") String verifyCode, HttpSession httpSession, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         ServerResponse serverResponse = this.iAgentUserService.login(agentPhone, agentPwd, verifyCode, httpServletRequest);
-//        String agent_cookie_name = PropertiesUtil.getProperty("agent.cookie.name");
+        String agent_cookie_name = PropertiesUtil.getProperty("agent.cookie.name");
         String token = RedisConst.getAgentRedisKey(httpSession.getId());
         if (serverResponse.isSuccess()) {
-            CookieUtils.writeLoginToken(httpServletResponse, token);
+            CookieUtils.writeLoginToken(httpServletResponse, token, agent_cookie_name);
             String redisSetExResult = RedisShardedPoolUtils.setEx(token,
                     JsonUtil.obj2String(serverResponse.getData()), 5400);
             log.info("redis setex agent result : {}", redisSetExResult);
             AgentLoginResultVO resultVO = new AgentLoginResultVO();
-            resultVO.setKey("token");
+            resultVO.setKey(agent_cookie_name);
             resultVO.setToken(token);
             return ServerResponse.createBySuccess("登陆成功", resultVO);
         }

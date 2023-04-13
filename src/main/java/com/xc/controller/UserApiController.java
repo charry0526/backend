@@ -66,14 +66,15 @@ public class UserApiController {
     @RequestMapping(value = {"login.do"}, method = {RequestMethod.POST})
     @ResponseBody
     public ServerResponse login(@RequestParam("phone") String phone, @RequestParam("userPwd") String userPwd, HttpSession httpSession, HttpServletRequest request, HttpServletResponse response) {
+        String pc_cookie_name = PropertiesUtil.getProperty("user.cookie.name");
         String token = RedisConst.getUserRedisKey(httpSession.getId());
         ServerResponse serverResponse = this.iUserService.login(phone, userPwd, request);
         if (serverResponse.isSuccess()) {
-//            CookieUtils.writeLoginToken(response, token);
+            CookieUtils.writeLoginToken(response, token, pc_cookie_name);
             String redisSetExResult = RedisShardedPoolUtils.setEx(token, JsonUtil.obj2String(serverResponse.getData()), 5400);
             log.info("redis setex user result : {}", redisSetExResult);
             UserLoginResultVO resultVO = new UserLoginResultVO();
-            resultVO.setKey("token");
+            resultVO.setKey(pc_cookie_name);
             resultVO.setToken(token);
             return ServerResponse.createBySuccess("登陆成功", resultVO);
         }

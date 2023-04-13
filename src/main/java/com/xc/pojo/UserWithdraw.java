@@ -13,8 +13,6 @@ public class UserWithdraw {
 
     private String nickName;
 
-    private String phone;
-
     private Integer agentId;
 
     private BigDecimal withAmt;
@@ -38,15 +36,13 @@ public class UserWithdraw {
     private String withMsg;
 
 
-    public UserWithdraw(Integer id, Integer userId, String nickName, String phone, Integer agentId, BigDecimal withAmt, Date applyTime, Date transTime, String withName, String bankNo, String bankName, String bankAddress, Integer withStatus, BigDecimal withFee, String withMsg) {
+    public UserWithdraw(Integer id, Integer userId, String nickName, Integer agentId, BigDecimal withAmt, Date applyTime, Date transTime, String withName, String bankNo, String bankName, String bankAddress, Integer withStatus, BigDecimal withFee, String withMsg) {
 
         this.id = id;
 
         this.userId = userId;
 
         this.nickName = nickName;
-
-        this.phone = phone;
 
         this.agentId = agentId;
 
@@ -89,14 +85,6 @@ public class UserWithdraw {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getNickName() {

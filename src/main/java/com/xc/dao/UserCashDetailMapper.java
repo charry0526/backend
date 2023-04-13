@@ -21,7 +21,7 @@ public interface UserCashDetailMapper {
   
   List listByAgent(@Param("userId") Integer paramInteger1, @Param("userName") String paramString, @Param("searchId") Integer paramInteger2, @Param("positionId") Integer paramInteger3);
   
-  List listByAdmin(@Param("userId") Integer paramInteger1, @Param("userName") String paramString, @Param("phone") String phone, @Param("agentId") Integer paramInteger2, @Param("positionId") Integer paramInteger3);
+  List listByAdmin(@Param("userId") Integer paramInteger1, @Param("userName") String paramString, @Param("agentId") Integer paramInteger2, @Param("positionId") Integer paramInteger3);
   
   int deleteByUserId(@Param("userId") Integer paramInteger);
 }

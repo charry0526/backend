@@ -81,7 +81,6 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
                 UserCashDetail ucd = new UserCashDetail();
                 ucd.setPositionId(model.getId());
                 ucd.setAgentId(user.getAgentId());
-                ucd.setPhone(user.getPhone());
                 ucd.setAgentName(user.getAgentName());
                 ucd.setUserId(user.getId());
                 ucd.setUserName(user.getRealName());
@@ -185,7 +184,6 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
                         /* 184 */             ucd.setPositionId(fundsApply.getId());
                         /* 185 */             ucd.setAgentId(user.getAgentId());
                         /* 186 */             ucd.setAgentName(user.getAgentName());
-                                              ucd.setPhone(user.getPhone());
                         /* 187 */             ucd.setUserId(user.getId());
                         /* 188 */             ucd.setUserName(user.getRealName());
                         /* 189 */             ucd.setDeType("配资审核通过");
@@ -212,7 +210,6 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
                         /* 210 */             UserCashDetail ucd = new UserCashDetail();
                         /* 211 */             ucd.setPositionId(fundsApply.getId());
                         /* 212 */             ucd.setAgentId(user.getAgentId());
-                                              ucd.setPhone(user.getPhone());
                         /* 213 */             ucd.setAgentName(user.getAgentName());
                         /* 214 */             ucd.setUserId(user.getId());
                         /* 215 */             ucd.setUserName(user.getRealName());

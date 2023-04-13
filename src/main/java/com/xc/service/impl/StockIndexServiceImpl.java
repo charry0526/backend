@@ -1,6 +1,7 @@
 package com.xc.service.impl;
 
 
+import cn.hutool.core.date.DateUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -15,17 +16,15 @@ import com.xc.utils.HttpClientRequest;
 import com.xc.utils.PropertiesUtil;
 import com.xc.vo.stock.MarketVO;
 import com.xc.vo.stockindex.StockIndexVO;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
 
 
 @Service("iStockIndexService")
@@ -186,7 +185,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
             //System.out.print("指数请求开始，时间："+sdf.format(new Date())+"，market_url："+market_url + "\n");
 
             result = HttpClientRequest.doGet(market_url);
-            //System.out.print("指数请求结束，时间："+sdf.format(new Date())+"，result："+result + "\n");
+            System.out.print("发起请求结束，时间："+ DateUtil.now() +"，result："+result + "\n");
         } catch (Exception e) {
             log.error("获取 大盘指数 出错 e = {}", e);
         }

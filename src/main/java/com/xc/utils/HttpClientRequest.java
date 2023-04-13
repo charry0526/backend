@@ -1,13 +1,7 @@
 package com.xc.utils;
 
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -20,6 +14,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 
 public class HttpClientRequest {
@@ -35,10 +33,16 @@ public class HttpClientRequest {
 
             httpGet.setHeader("Authorization", "Bearer da3efcbf-0845-4fe3-8aba-ee040be542c0");
 
+            httpGet.setHeader("referer","https://finance.sina.com.cn/");
 
             RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(35000).setConnectionRequestTimeout(35000).setSocketTimeout(60000).build();
 
             httpGet.setConfig(requestConfig);
+            Header[] allHeaders = httpGet.getAllHeaders();
+            for(Header h : allHeaders){
+                System.out.println("请求头: " + h.getName() + "," + h.getValue());
+            }
+
 
             response = httpClient.execute(httpGet);
 

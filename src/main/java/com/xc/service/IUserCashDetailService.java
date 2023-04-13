@@ -10,7 +10,7 @@ public interface IUserCashDetailService {
   
   ServerResponse<PageInfo> listByAgent(Integer paramInteger1, String paramString, Integer paramInteger2, Integer paramInteger3, HttpServletRequest paramHttpServletRequest, int paramInt1, int paramInt2);
   
-  ServerResponse<PageInfo> listByAdmin(Integer paramInteger1, String paramString, String paramString1, Integer paramInteger2, Integer paramInteger3, int paramInt1, int paramInt2);
+  ServerResponse<PageInfo> listByAdmin(Integer paramInteger1, String paramString, Integer paramInteger2, Integer paramInteger3, int paramInt1, int paramInt2);
   
   int deleteByUserId(Integer paramInteger);
 
