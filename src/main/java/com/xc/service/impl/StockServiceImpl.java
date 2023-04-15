@@ -314,17 +314,27 @@ public class StockServiceImpl implements IStockService {
     if (stock == null)
       return ServerResponse.createByErrorMsg("");
     String gid = stock.getStockGid();
-    String sinaResult = SinaStockApi.getSinaStock(gid);
+//    String sinaResult = SinaStockApi.getSinaStock(gid);
     StockVO stockVO = new StockVO();
-    if(code.contains("hf")){
-      stockVO = SinaStockApi.assembleStockFuturesVO(sinaResult);
-    } else if("hk".equals(stock.getStockType())){
-      stockVO = SinaStockApi.assembleHkStockVO(sinaResult);
-    } else if("us".equals(stock.getStockType())){
-      stockVO = SinaStockApi.assembleUsStockVO(sinaResult);
-    } else {
-      stockVO = SinaStockApi.assembleStockVO(sinaResult);
-    }
+//    if(code.contains("hf")){
+//      stockVO = SinaStockApi.assembleStockFuturesVO(sinaResult);
+//    } else if("hk".equals(stock.getStockType())){
+//      stockVO = SinaStockApi.assembleHkStockVO(sinaResult);
+//    } else if("us".equals(stock.getStockType())){
+//      stockVO = SinaStockApi.assembleUsStockVO(sinaResult);
+//    } else {
+//      stockVO = SinaStockApi.assembleStockVO(sinaResult);
+//    }
+    StockListVO cacheData = SinaStockApi.getVietNamData(stock.getStockType(), code);
+
+    stockVO.setToday_max(cacheData.getToday_max());
+    stockVO.setToday_min(cacheData.getToday_min());
+    stockVO.setHcrate(cacheData.getHcrate());
+    stockVO.setNowPrice(cacheData.getNowPrice());
+    stockVO.setBusiness_amount(cacheData.getBusiness_amount());
+    stockVO.setPreclose_px(cacheData.getPreclose_px());
+    stockVO.setOpen_px(cacheData.getOpen_px());
+
     stockVO.setDepositAmt(depositAmt);
     stockVO.setId(stock.getId().intValue());
     stockVO.setCode(stock.getStockCode());
@@ -595,6 +605,12 @@ public class StockServiceImpl implements IStockService {
    * @return
    */
   private StockListVO findStockList(String type, String stockGid){
+
+    if(type.equals("HOSE") || type.equals("HNX") || type.equals("UPCOM")){
+        return SinaStockApi.getVietNamData(type,stockGid);
+    }
+
+
     String sinaStock = SinaStockApi.getSinaStock(stockGid);
     if(type.equals("hk")){
       return SinaStockApi.assembleHkStockListVO(sinaStock);

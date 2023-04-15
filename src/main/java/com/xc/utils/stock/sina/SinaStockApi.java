@@ -10,11 +10,13 @@ import com.xc.pojo.StockIndex;
 import com.xc.utils.HttpClientRequest;
 import com.xc.utils.PropertiesUtil;
 import com.xc.utils.redis.JsonUtil;
+import com.xc.utils.redis.RedisShardedPoolUtils;
 import com.xc.utils.stock.sina.vo.SinaStockMinData;
 import com.xc.vo.stock.StockListVO;
 import com.xc.vo.stock.StockVO;
 import com.xc.vo.stock.k.MinDataVO;
 import com.xc.vo.stock.k.echarts.EchartsDataVO;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
@@ -703,6 +705,32 @@ public class SinaStockApi {
 //
 //        sss = "{" + sss + "}";
         getSinaStock("s_sh600090");
+    }
+
+    public static StockListVO getVietNamData(String type, String stockGid) {
+        String result = "";
+        StockListVO data = new StockListVO();
+        try {
+//            String url = "https://ezir.fpts.com.vn/ThongTinDoanhNghiep/PriceRealTime?stockCode="+stockGid;
+//            result = HttpClientRequest.doGet(url);
+//
+            result = RedisShardedPoolUtils.get("data-cache-"+stockGid);
+            if(null == result){
+                return data;
+            }
+            JSONObject data2 = JSONObject.fromObject(result);
+            data.setName(data2.getString("code"));
+            data.setNowPrice(data2.getString("matchPrice"));
+            data.setHcrate(BigDecimal.valueOf(data2.getDouble("changePrice")));
+            data.setToday_max(data2.getString("highestPrice"));
+            data.setToday_min(data2.getString("lowestPrice"));
+            data.setBusiness_amount(data2.getString("totalQtty").replaceAll(",",""));
+            data.setOpen_px(data2.getString("openPrice"));
+            data.setPreclose_px(data2.getString("lowestPrice"));
+        } catch (Exception e) {
+            log.error("鑾峰彇鑲＄エ琛屾儏鍑洪敊锛岄敊璇¯淇℃伅 = {}", e);
+        }
+        return data;
     }
 }
 

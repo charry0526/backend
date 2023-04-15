@@ -39,9 +39,10 @@ public class HttpClientRequest {
 
             httpGet.setConfig(requestConfig);
             Header[] allHeaders = httpGet.getAllHeaders();
-            for(Header h : allHeaders){
-                System.out.println("请求头: " + h.getName() + "," + h.getValue());
-            }
+            System.out.println("请求: " + url);
+//            for(Header h : allHeaders){
+//                System.out.println("请求头: " + h.getName() + "," + h.getValue());
+//            }
 
 
             response = httpClient.execute(httpGet);

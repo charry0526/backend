@@ -24,6 +24,7 @@ package com.xc.service.impl;
 
  import com.xc.utils.stock.sina.SinaStockApi;
 
+ import com.xc.vo.stock.StockListVO;
  import com.xc.vo.stock.StockOptionListVO;
 
  import com.xc.vo.stock.StockVO;
@@ -113,20 +114,22 @@ package com.xc.service.impl;
 
          stockOptionListVO.setStockGid(option.getStockGid());
 
-         StockVO stockVO = new StockVO();
-         if(option.getStockGid().contains("hf")){
-             stockVO = SinaStockApi.assembleStockFuturesVO(SinaStockApi.getSinaStock(option.getStockGid()));
-         } else {
-             stockVO = SinaStockApi.assembleStockVO(SinaStockApi.getSinaStock(option.getStockGid()));
-         }
+//         StockVO stockVO = new StockVO();
+//         if(option.getStockGid().contains("hf")){
+//             stockVO = SinaStockApi.assembleStockFuturesVO(SinaStockApi.getSinaStock(option.getStockGid()));
+//         } else {
+//             stockVO = SinaStockApi.assembleStockVO(SinaStockApi.getSinaStock(option.getStockGid()));
+//         }
 
-         stockOptionListVO.setNowPrice(stockVO.getNowPrice());
+       StockListVO cacheData = SinaStockApi.getVietNamData(option.getStockCode(), option.getStockCode());
 
-         stockOptionListVO.setHcrate(stockVO.getHcrate().toString());
+         stockOptionListVO.setNowPrice(cacheData.getNowPrice());
 
-         stockOptionListVO.setPreclose_px(stockVO.getPreclose_px());
+         stockOptionListVO.setHcrate(cacheData.getHcrate().toString());
 
-         stockOptionListVO.setOpen_px(stockVO.getOpen_px());
+         stockOptionListVO.setPreclose_px(cacheData.getPreclose_px());
+
+         stockOptionListVO.setOpen_px(cacheData.getOpen_px());
 
          Stock stock = this.stockMapper.selectByPrimaryKey(option.getStockId());
 
