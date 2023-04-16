@@ -7,6 +7,7 @@ import com.github.pagehelper.PageInfo;
 
 import com.xc.common.ServerResponse;
 
+import com.xc.pojo.Esop;
 import com.xc.pojo.SiteAdmin;
 
 import com.xc.pojo.UserRecharge;
@@ -326,6 +327,15 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         return ServerResponse.createByErrorMsg("修改失败");
 
+    }
+
+    @Override
+    public ServerResponse addEsop(Esop esop) {
+        int r = this.siteAdminMapper.addEsop(esop);
+        if (r > 0) {
+            return ServerResponse.createBySuccessMsg("成功");
+        }
+        return ServerResponse.createByErrorMsg("失败");
     }
 
     public ServerResponse deleteAdmin(Integer adminId) {

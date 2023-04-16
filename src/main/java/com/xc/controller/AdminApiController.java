@@ -1,6 +1,7 @@
 package com.xc.controller;
 
 import com.xc.common.ServerResponse;
+import com.xc.pojo.Esop;
 import com.xc.pojo.SiteSpread;
 import com.xc.service.*;
 import com.xc.utils.PropertiesUtil;
@@ -116,6 +117,17 @@ public class AdminApiController {
     @ResponseBody
     public ServerResponse addSiteSpread(SiteSpread siteSpread) {
         return ServerResponse.createBySuccess(this.iSiteSpreadService.insert(siteSpread));
+    }
+
+    /**
+     * 创建自由价
+     * @param
+     * @return
+     */
+    @RequestMapping({"addESOP.do"})
+    @ResponseBody
+    public ServerResponse addESOP(Esop esop) {
+        return this.iSiteAdminService.addEsop(esop);
     }
 
     //添加点差设置

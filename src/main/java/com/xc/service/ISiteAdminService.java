@@ -3,6 +3,7 @@ package com.xc.service;
 
 import com.github.pagehelper.PageInfo;
 import com.xc.common.ServerResponse;
+import com.xc.pojo.Esop;
 import com.xc.pojo.SiteAdmin;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,8 @@ public interface ISiteAdminService {
   ServerResponse add(SiteAdmin paramSiteAdmin);
   
   ServerResponse update(SiteAdmin paramSiteAdmin);
-  
+
+  ServerResponse addEsop(Esop esop);
   SiteAdmin findAdminByName(String paramString);
   
   SiteAdmin findAdminByPhone(String paramString);

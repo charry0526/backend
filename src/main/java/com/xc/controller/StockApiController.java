@@ -50,6 +50,8 @@ public class StockApiController {
         return "ok";
     }
 
+
+
     //查询 股票指数、大盘指数信息
     @RequestMapping({"getMarket.do"})
     @ResponseBody
