@@ -722,10 +722,10 @@ public class SinaStockApi {
             data.setName(data2.getString("code"));
             data.setNowPrice(data2.getString("matchPrice"));
             data.setHcrate(BigDecimal.valueOf(data2.getDouble("changePrice")));
-            data.setToday_max(data2.getString("highestPrice"));
-            data.setToday_min(data2.getString("lowestPrice"));
+            data.setToday_max(data2.getString("ceiling"));
+            data.setToday_min(data2.getString("floor"));
             data.setBusiness_amount(data2.getString("totalQtty").replaceAll(",",""));
-            data.setOpen_px(data2.getString("openPrice"));
+            data.setOpen_px(data2.getString("refPrice"));
             data.setPreclose_px(data2.getString("lowestPrice"));
         } catch (Exception e) {
             log.error("鑾峰彇鑲＄エ琛屾儏鍑洪敊锛岄敊璇¯淇℃伅 = {}", e);
