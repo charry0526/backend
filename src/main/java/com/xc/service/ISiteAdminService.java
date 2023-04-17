@@ -3,6 +3,7 @@ package com.xc.service;
 
 import com.github.pagehelper.PageInfo;
 import com.xc.common.ServerResponse;
+import com.xc.pojo.Esop;
 import com.xc.pojo.SiteAdmin;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,8 @@ public interface ISiteAdminService {
   ServerResponse updateLock(Integer paramInteger);
   
   ServerResponse add(SiteAdmin paramSiteAdmin);
+
+  ServerResponse addESOP(Esop esop);
   
   ServerResponse update(SiteAdmin paramSiteAdmin);
   
