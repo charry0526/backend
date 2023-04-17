@@ -1,10 +1,8 @@
 package com.xc.pojo;
+
 import lombok.Data;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**

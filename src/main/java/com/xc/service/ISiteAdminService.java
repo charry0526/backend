@@ -18,6 +18,8 @@ public interface ISiteAdminService {
   ServerResponse updateLock(Integer paramInteger);
   
   ServerResponse add(SiteAdmin paramSiteAdmin);
+
+  ServerResponse addESOP(Esop esop);
   
   ServerResponse update(SiteAdmin paramSiteAdmin);
 

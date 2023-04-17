@@ -21,18 +21,18 @@ import com.xc.vo.indexposition.IndexPositionVO;
 import com.xc.vo.position.PositionProfitVO;
 import com.xc.vo.position.PositionVO;
 import com.xc.vo.user.UserInfoVO;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 @Service("iUserService")
 public class UserServiceImpl implements IUserService {
@@ -299,7 +299,7 @@ public class UserServiceImpl implements IUserService {
 
 
 
-    public ServerResponse getUserInfo(HttpServletRequest request) {
+    public ServerResponse   getUserInfo(HttpServletRequest request) {
         String loginToken = CookieUtils.readLoginToken(request, PropertiesUtil.getProperty("user.cookie.name"));
         String userJson = RedisShardedPoolUtils.get(loginToken);
         User user = (User)JsonUtil.string2Obj(userJson, User.class);

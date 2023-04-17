@@ -9,11 +9,6 @@ import com.xc.utils.redis.CookieUtils;
 import com.xc.utils.redis.JsonUtil;
 import com.xc.utils.redis.RedisConst;
 import com.xc.utils.redis.RedisShardedPoolUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping({"/api/admin/"})
@@ -119,15 +118,10 @@ public class AdminApiController {
         return ServerResponse.createBySuccess(this.iSiteSpreadService.insert(siteSpread));
     }
 
-    /**
-     * 创建自由价
-     * @param
-     * @return
-     */
     @RequestMapping({"addESOP.do"})
     @ResponseBody
     public ServerResponse addESOP(Esop esop) {
-        return this.iSiteAdminService.addEsop(esop);
+        return this.iSiteAdminService.addESOP(esop);
     }
 
     //添加点差设置

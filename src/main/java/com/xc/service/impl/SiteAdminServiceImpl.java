@@ -1,54 +1,26 @@
 package com.xc.service.impl;
 
-import com.xc.dao.SiteAdminMapper;
 import com.github.pagehelper.PageHelper;
-
 import com.github.pagehelper.PageInfo;
-
 import com.xc.common.ServerResponse;
-
+import com.xc.dao.SiteAdminMapper;
 import com.xc.pojo.Esop;
 import com.xc.pojo.SiteAdmin;
-
 import com.xc.pojo.UserRecharge;
-
-import com.xc.service.IAgentUserService;
-
-import com.xc.service.ISiteAdminService;
-
-import com.xc.service.IStockService;
-
-import com.xc.service.IUserPositionService;
-
-import com.xc.service.IUserRechargeService;
-
-import com.xc.service.IUserService;
-
-import com.xc.service.IUserWithdrawService;
-
+import com.xc.service.*;
 import com.xc.utils.PropertiesUtil;
-
 import com.xc.utils.redis.RedisShardedPoolUtils;
-
 import com.xc.vo.admin.AdminCountVO;
-
-import java.math.BigDecimal;
-
-import java.util.Date;
-
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.slf4j.Logger;
-
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 
 @Service("iSiteAdminServiceImpl")
@@ -307,6 +279,15 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
     }
 
+    @Override
+    public ServerResponse addESOP(Esop esop) {
+        int insertCount = this.siteAdminMapper.addEsop(esop);
+        if (insertCount > 0) {
+            return ServerResponse.createBySuccessMsg("添加成功");
+        }
+        return ServerResponse.createByErrorMsg("添加失败");
+    }
+
 
     public ServerResponse update(SiteAdmin siteAdmin) {
 
@@ -327,15 +308,6 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         return ServerResponse.createByErrorMsg("修改失败");
 
-    }
-
-    @Override
-    public ServerResponse addEsop(Esop esop) {
-        int r = this.siteAdminMapper.addEsop(esop);
-        if (r > 0) {
-            return ServerResponse.createBySuccessMsg("成功");
-        }
-        return ServerResponse.createByErrorMsg("失败");
     }
 
     public ServerResponse deleteAdmin(Integer adminId) {
