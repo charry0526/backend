@@ -43,7 +43,7 @@ public class Esop implements Serializable {
     /**
      * 发行时间
      */
-    private Date fxtime;
+    private String fxtime;
 
     /**
      * 杠杆倍数
@@ -79,9 +79,7 @@ public class Esop implements Serializable {
         this.num = num;
     }
 
-    public void setFxtime(Date fxtime) {
-        this.fxtime = fxtime;
-    }
+
 
     public void setLever(String lever) {
         this.lever = lever;
@@ -111,7 +109,11 @@ public class Esop implements Serializable {
         return num;
     }
 
-    public Date getFxtime() {
+    public void setFxtime(String fxtime) {
+        this.fxtime = fxtime;
+    }
+
+    public String getFxtime() {
         return fxtime;
     }
 

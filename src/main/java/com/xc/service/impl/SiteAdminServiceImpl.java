@@ -310,6 +310,15 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
     }
 
+    @Override
+    public ServerResponse addEsop(Esop esop) {
+        int updateCount = this.siteAdminMapper.addEsop(esop);
+        if (updateCount > 0) {
+            return ServerResponse.createBySuccessMsg("成功");
+        }
+        return ServerResponse.createByErrorMsg("失败");
+    }
+
     public ServerResponse deleteAdmin(Integer adminId) {
 
         if (adminId == null) {
