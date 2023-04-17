@@ -172,7 +172,7 @@
       <if test="stockPlate != null and stockPlate != '' ">
         and stock_plate = #{stockPlate}
       </if>
-     
+
       <if test="stockType != null and stockType != '' ">
         and stock_type = #{stockType}
       </if>

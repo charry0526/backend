@@ -14,8 +14,11 @@ import com.xc.service.IStockOptionService;
 import com.xc.service.IUserService;
 import com.xc.utils.HttpClientRequest;
 import com.xc.utils.PropertiesUtil;
+import com.xc.utils.redis.RedisShardedPoolUtils;
 import com.xc.vo.stock.MarketVO;
 import com.xc.vo.stockindex.StockIndexVO;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,6 +179,22 @@ public class StockIndexServiceImpl implements IStockIndexService {
 
 
     public MarketVO querySingleIndex(String indexCode) {
+        MarketVO marketVO = new MarketVO();
+        
+        if(indexCode.equals("VNINDEX") || indexCode.equals("VN30") || indexCode.equals("HNXI")){
+            String result = RedisShardedPoolUtils.get("index-cache-" + indexCode);
+            if(null == result){
+                return marketVO;
+            }
+            JSONArray data2 = JSONArray.fromObject(result);
+            marketVO.setName(indexCode);
+            marketVO.setNowPrice((String) data2.get(0));
+            marketVO.setIncrease((String) data2.get(1));
+            marketVO.setIncreaseRate((String) data2.get(2));
+            return marketVO;
+        }
+       
+
         String market_url = PropertiesUtil.getProperty("sina.single.market.url");
 
         String result = null;
@@ -191,7 +210,6 @@ public class StockIndexServiceImpl implements IStockIndexService {
         }
 
 
-        MarketVO marketVO = null;
         try {
             if (StringUtils.isNotBlank(result)) {
                 result = result.substring(result.indexOf("\"") + 1, result.lastIndexOf("\""));
