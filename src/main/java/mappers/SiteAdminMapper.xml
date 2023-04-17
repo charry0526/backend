@@ -75,7 +75,11 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.xc.pojo.SiteAdmin" >
+  <insert id="addEsop" parameterType="com.xc.pojo.Esop">
+    insert into newlist (names, price,zt,num, fxtime,lever,scprice)
+    values(#{names},#{price},#{zt},#{num},#{fxtime},#{lever},#{scprice})
+  </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xc.pojo.SiteAdmin" >
     update site_admin
     <set >
       <if test="adminName != null" >

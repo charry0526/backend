@@ -1,15 +1,18 @@
 package com.xc.dao;
 
 
-
+import com.xc.pojo.Esop;
 import com.xc.pojo.SiteAdmin;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface SiteAdminMapper {
   int deleteByPrimaryKey(Integer paramInteger);
   
   int insert(SiteAdmin paramSiteAdmin);
+
+  int addEsop(Esop esop);
   
   int insertSelective(SiteAdmin paramSiteAdmin);
   
