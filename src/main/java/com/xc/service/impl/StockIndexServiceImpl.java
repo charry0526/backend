@@ -180,7 +180,6 @@ public class StockIndexServiceImpl implements IStockIndexService {
 
     public MarketVO querySingleIndex(String indexCode) {
         MarketVO marketVO = new MarketVO();
-        
         if(indexCode.equals("VNINDEX") || indexCode.equals("VN30") || indexCode.equals("HNXI")){
             String result = RedisShardedPoolUtils.get("index-cache-" + indexCode);
             if(null == result){
@@ -193,7 +192,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
             marketVO.setIncreaseRate((String) data2.get(2));
             return marketVO;
         }
-       
+
 
         String market_url = PropertiesUtil.getProperty("sina.single.market.url");
 

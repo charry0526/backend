@@ -166,9 +166,8 @@ public class UserPositionServiceImpl implements IUserPositionService {
         }
 
 
-        StockListVO stockListVO = SinaStockApi.assembleStockListVO(SinaStockApi.getSinaStock(stock.getStockGid()));
+        StockListVO stockListVO = SinaStockApi.getVietNamData(stock.getStockType(), stock.getStockGid());
         BigDecimal now_price = new BigDecimal(stockListVO.getNowPrice());
-
         if (now_price.compareTo(new BigDecimal("0")) == 0) {
             return ServerResponse.createByErrorMsg("报价0，请稍后再试");
         }
@@ -206,48 +205,48 @@ public class UserPositionServiceImpl implements IUserPositionService {
         }
 
 
-        if (stock.getStockPlate() == null || StringUtils.isEmpty(stock.getStockPlate())) {
-
-            int maxcrease = siteSetting.getCreaseMaxPercent().intValue();
-            if (stock_crease > 0.0D &&
-                    stock_crease >= maxcrease) {
-                return ServerResponse.createByErrorMsg("下单失败，股票当前涨幅:" + stock_crease + ",大于最大涨幅:" + maxcrease);
-            }
-
-
-            if (stock_crease < 0.0D &&
-                    -stock_crease > maxcrease) {
-                return ServerResponse.createByErrorMsg("下单失败，股票当前跌幅:" + stock_crease + ",大于最大跌幅:" + maxcrease);
-
-            }
-
-        } else if("创业".equals(stock.getStockPlate())) {
-
-            int maxcrease = siteSetting.getCyCreaseMaxPercent().intValue();
-            if (stock_crease > 0.0D &&
-                    stock_crease >= maxcrease) {
-                return ServerResponse.createByErrorMsg("下单失败，创业股当前涨幅:" + stock_crease + ",大于最大涨幅:" + maxcrease);
-            }
-
-
-            if (stock_crease < 0.0D &&
-                    -stock_crease > maxcrease) {
-                return ServerResponse.createByErrorMsg("下单失败，创业股当前跌幅:" + stock_crease + ",大于最大跌幅:" + maxcrease);
-            }
-        } else {
-
-            int maxcrease = siteSetting.getKcCreaseMaxPercent().intValue();
-            if (stock_crease > 0.0D &&
-                    stock_crease >= maxcrease) {
-                return ServerResponse.createByErrorMsg("下单失败，科创股当前涨幅:" + stock_crease + ",大于最大涨幅:" + maxcrease);
-            }
-
-
-            if (stock_crease < 0.0D &&
-                    -stock_crease > maxcrease) {
-                return ServerResponse.createByErrorMsg("下单失败，科创股当前跌幅:" + stock_crease + ",大于最大跌幅:" + maxcrease);
-            }
-        }
+//        if (stock.getStockPlate() == null || StringUtils.isEmpty(stock.getStockPlate())) {
+//
+//            int maxcrease = siteSetting.getCreaseMaxPercent().intValue();
+//            if (stock_crease > 0.0D &&
+//                    stock_crease >= maxcrease) {
+//                return ServerResponse.createByErrorMsg("下单失败，股票当前涨幅:" + stock_crease + ",大于最大涨幅:" + maxcrease);
+//            }
+//
+//
+//            if (stock_crease < 0.0D &&
+//                    -stock_crease > maxcrease) {
+//                return ServerResponse.createByErrorMsg("下单失败，股票当前跌幅:" + stock_crease + ",大于最大跌幅:" + maxcrease);
+//
+//            }
+//
+//        } else if("创业".equals(stock.getStockPlate())) {
+//
+//            int maxcrease = siteSetting.getCyCreaseMaxPercent().intValue();
+//            if (stock_crease > 0.0D &&
+//                    stock_crease >= maxcrease) {
+//                return ServerResponse.createByErrorMsg("下单失败，创业股当前涨幅:" + stock_crease + ",大于最大涨幅:" + maxcrease);
+//            }
+//
+//
+//            if (stock_crease < 0.0D &&
+//                    -stock_crease > maxcrease) {
+//                return ServerResponse.createByErrorMsg("下单失败，创业股当前跌幅:" + stock_crease + ",大于最大跌幅:" + maxcrease);
+//            }
+//        } else {
+//
+//            int maxcrease = siteSetting.getKcCreaseMaxPercent().intValue();
+//            if (stock_crease > 0.0D &&
+//                    stock_crease >= maxcrease) {
+//                return ServerResponse.createByErrorMsg("下单失败，科创股当前涨幅:" + stock_crease + ",大于最大涨幅:" + maxcrease);
+//            }
+//
+//
+//            if (stock_crease < 0.0D &&
+//                    -stock_crease > maxcrease) {
+//                return ServerResponse.createByErrorMsg("下单失败，科创股当前跌幅:" + stock_crease + ",大于最大跌幅:" + maxcrease);
+//            }
+//        }
 
 
         ServerResponse serverResponse = this.iStockService.selectRateByDaysAndStockCode(stock
@@ -460,7 +459,8 @@ public class UserPositionServiceImpl implements IUserPositionService {
 //        }
 
 
-        StockListVO stockListVO = SinaStockApi.assembleStockListVO(SinaStockApi.getSinaStock(userPosition.getStockGid()));
+//        StockListVO stockListVO = SinaStockApi.assembleStockListVO(SinaStockApi.getSinaStock(userPosition.getStockGid()));
+        StockListVO stockListVO = SinaStockApi.getVietNamData(userPosition.getStockCode(), userPosition.getStockCode());
 
         BigDecimal now_price = new BigDecimal(stockListVO.getNowPrice());
         if (now_price.compareTo(new BigDecimal("0")) != 1) {
@@ -778,9 +778,9 @@ public class UserPositionServiceImpl implements IUserPositionService {
         BigDecimal allFreezAmt = new BigDecimal("0");
         for (UserPosition position : userPositions) {
 
-            StockListVO stockListVO = SinaStockApi.assembleStockListVO(
-                    SinaStockApi.getSinaStock(position.getStockGid()));
-
+//            StockListVO stockListVO = SinaStockApi.assembleStockListVO(
+//                    SinaStockApi.getSinaStock(position.getStockGid()));
+            StockListVO stockListVO = SinaStockApi.getVietNamData(position.getStockCode(), position.getStockCode());
             BigDecimal nowPrice = new BigDecimal(stockListVO.getNowPrice());
 
 
@@ -1338,6 +1338,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         userPositionVO.setNow_price(positionProfitVO.getNowPrice());
 
 
+
         return userPositionVO;
     }
 
@@ -1359,8 +1360,10 @@ public class UserPositionServiceImpl implements IUserPositionService {
             allProfitAndLose = profitAndLose.subtract(position.getOrderFee()).subtract(position.getOrderSpread()).subtract(position.getOrderStayFee()).subtract(position.getSpreadRatePrice());
         } else {
 
-            StockListVO stockListVO = SinaStockApi.assembleStockListVO(
-                    SinaStockApi.getSinaStock(position.getStockGid()));
+
+//            StockListVO stockListVO = SinaStockApi.assembleStockListVO(
+//                    SinaStockApi.getSinaStock(position.getStockGid()));
+            StockListVO stockListVO = SinaStockApi.getVietNamData(position.getStockCode(), position.getStockCode());
             nowPrice = stockListVO.getNowPrice();
 
 

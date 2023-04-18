@@ -337,7 +337,7 @@ public class StockServiceImpl implements IStockService {
 
     stockVO.setDepositAmt(depositAmt);
     stockVO.setId(stock.getId().intValue());
-    stockVO.setCode(stock.getStockCode());
+    stockVO.setCode(code);
     stockVO.setSpell(stock.getStockSpell());
     stockVO.setGid(stock.getStockGid());
     stockVO.setMinImg(PropertiesUtil.getProperty("sina.single.stock.min.url") + stock.getStockGid() + ".jpg");
@@ -351,7 +351,7 @@ public class StockServiceImpl implements IStockService {
     //  int rr = (int) r;
     //  cacheData1.setNowPrice(String.valueOf(rr));
     //}
-    return ServerResponse.createBySuccess(cacheData);
+    return ServerResponse.createBySuccess(stockVO);
   }
 
 
