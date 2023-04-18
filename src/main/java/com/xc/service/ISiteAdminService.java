@@ -4,9 +4,11 @@ package com.xc.service;
 import com.github.pagehelper.PageInfo;
 import com.xc.common.ServerResponse;
 import com.xc.pojo.Esop;
+import com.xc.pojo.Esop_sq;
 import com.xc.pojo.SiteAdmin;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public interface ISiteAdminService {
   ServerResponse login(String paramString1, String paramString2, String paramString3, HttpServletRequest paramHttpServletRequest);
@@ -20,7 +22,12 @@ public interface ISiteAdminService {
   ServerResponse add(SiteAdmin paramSiteAdmin);
 
   ServerResponse addESOP(Esop esop);
-  
+  ServerResponse addESOP_sq(Esop_sq esop);
+
+
+  ServerResponse<PageInfo> getEsopList(int pageNum, int pageSize);
+  ServerResponse<PageInfo> getEsopList_sq(int pageNum, int pageSize,String phone);
+
   ServerResponse update(SiteAdmin paramSiteAdmin);
 
   ServerResponse addEsop(Esop esop);

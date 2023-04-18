@@ -1,16 +1,16 @@
 package com.xc.service.impl;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xc.common.ServerResponse;
 import com.xc.dao.SiteAdminMapper;
-import com.xc.pojo.Esop;
-import com.xc.pojo.SiteAdmin;
-import com.xc.pojo.UserRecharge;
+import com.xc.pojo.*;
 import com.xc.service.*;
 import com.xc.utils.PropertiesUtil;
 import com.xc.utils.redis.RedisShardedPoolUtils;
 import com.xc.vo.admin.AdminCountVO;
+import com.xc.vo.agent.AgentAgencyFeeVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -286,6 +286,34 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
             return ServerResponse.createBySuccessMsg("添加成功");
         }
         return ServerResponse.createByErrorMsg("添加失败");
+    }
+
+    @Override
+    public ServerResponse addESOP_sq(Esop_sq esop) {
+        int insertCount = this.siteAdminMapper.addEsop_sq(esop);
+        if (insertCount > 0) {
+            return ServerResponse.createBySuccessMsg("添加成功");
+        }
+        return ServerResponse.createByErrorMsg("添加失败");
+    }
+
+    @Override
+    public ServerResponse<PageInfo> getEsopList(int pageNum, int pageSize) {
+        Page<AgentAgencyFeeVO> page = PageHelper.startPage(pageNum, pageSize);
+        List<Esop> list = this.siteAdminMapper.getEsopList(pageNum, pageSize);
+        PageInfo pageInfo = new PageInfo(page);
+        pageInfo.setList(list);
+        return ServerResponse.createBySuccess(pageInfo);
+
+    }
+
+    @Override
+    public ServerResponse<PageInfo> getEsopList_sq(int pageNum, int pageSize,String phone) {
+        Page<AgentAgencyFeeVO> page = PageHelper.startPage(pageNum, pageSize);
+        List<Esop_sq> list = this.siteAdminMapper.getEsopList_sq(pageNum, pageSize,phone);
+        PageInfo pageInfo = new PageInfo(page);
+        pageInfo.setList(list);
+        return ServerResponse.createBySuccess(pageInfo);
     }
 
 

@@ -32,6 +32,7 @@ public interface ISiteSpreadService {
      */
     ServerResponse<PageInfo> pageList(int pageNum, int pageSize, String typeName);
 
+
     /**
      * 查询点差费率
      * @author lr

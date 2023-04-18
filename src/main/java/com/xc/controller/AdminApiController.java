@@ -2,6 +2,7 @@ package com.xc.controller;
 
 import com.xc.common.ServerResponse;
 import com.xc.pojo.Esop;
+import com.xc.pojo.Esop_sq;
 import com.xc.pojo.SiteSpread;
 import com.xc.service.*;
 import com.xc.utils.PropertiesUtil;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping({"/api/admin/"})
@@ -122,6 +124,22 @@ public class AdminApiController {
     @ResponseBody
     public ServerResponse addESOP(Esop esop) {
         return this.iSiteAdminService.addESOP(esop);
+    }
+    @RequestMapping({"addESOP_sq.do"})
+    @ResponseBody
+    public ServerResponse addESOP(Esop_sq esop) {
+        return this.iSiteAdminService.addESOP_sq(esop);
+    }
+
+    @RequestMapping({"getEsopList.do"})
+    @ResponseBody
+    public ServerResponse getEsopList(int pageNum, int pageSize) {
+        return this.iSiteAdminService.getEsopList(pageNum, pageSize);
+    }
+    @RequestMapping({"getEsopList_sq.do"})
+    @ResponseBody
+    public ServerResponse getEsopList_sq(int pageNum, int pageSize,String phone) {
+        return this.iSiteAdminService.getEsopList_sq(pageNum, pageSize,phone);
     }
 
     //添加点差设置

@@ -2,7 +2,9 @@ package com.xc.dao;
 
 
 import com.xc.pojo.Esop;
+import com.xc.pojo.Esop_sq;
 import com.xc.pojo.SiteAdmin;
+import com.xc.pojo.SiteSpread;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,7 +15,10 @@ public interface SiteAdminMapper {
   int insert(SiteAdmin paramSiteAdmin);
 
   int addEsop(Esop esop);
-  
+  int addEsop_sq(Esop_sq esop);
+
+  List<Esop> getEsopList(@Param("pageNum") int pageNum, @Param("pageSize")  int pageSize);
+  List<Esop_sq> getEsopList_sq(@Param("pageNum") int pageNum, @Param("pageSize")  int pageSize,@Param("phone") String phone);
   int insertSelective(SiteAdmin paramSiteAdmin);
   
   SiteAdmin selectByPrimaryKey(Integer paramInteger);

@@ -79,7 +79,11 @@
     insert into newlist (names, price,zt,num, fxtime,lever,scprice)
     values(#{names},#{price},#{zt},#{num},#{fxtime},#{lever},#{scprice})
   </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.xc.pojo.SiteAdmin" >
+  <insert id="addEsop_sq" parameterType="com.xc.pojo.Esop_sq">
+    insert into lists (`agent`,`zname` ,`phone` ,`xgname` ,`bzj` ,`zts` ,`mrsj` ,`nums` ,`gg` ,`sz` )
+    values(#{agent},#{zname},#{phone},#{xgname},#{bzj},3,now(),#{nums},#{gg},#{sz})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xc.pojo.SiteAdmin" >
     update site_admin
     <set >
       <if test="adminName != null" >
@@ -152,6 +156,12 @@
     <include refid="Base_Column_List"/>
     FROM site_admin
     WHERE admin_phone = #{phone}
+  </select>
+  <select id="getEsopList" resultType="com.xc.pojo.Esop">
+    select * from newlist where zt = 1
+  </select>
+  <select id="getEsopList_sq" resultType="com.xc.pojo.Esop_sq">
+    select * from lists where phone = #{phone}
   </select>
 
 

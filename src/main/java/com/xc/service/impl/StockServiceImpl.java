@@ -344,12 +344,14 @@ public class StockServiceImpl implements IStockService {
     stockVO.setDayImg(PropertiesUtil.getProperty("sina.single.stock.day.url") + stock.getStockGid() + ".jpg");
     stockVO.setWeekImg(PropertiesUtil.getProperty("sina.single.stock.week.url") + stock.getStockGid() + ".jpg");
     stockVO.setMonthImg(PropertiesUtil.getProperty("sina.single.stock.month.url") + stock.getStockGid() + ".jpg");
-    StockListVO cacheData1 = SinaStockApi.getVietNamData(code.toUpperCase(), code.toUpperCase());
-    double d = Double.parseDouble(cacheData1.getNowPrice());
-    double r = d * 1000;
-    int rr = (int) r;
-    cacheData1.setNowPrice(String.valueOf(rr));
-    return ServerResponse.createBySuccess(cacheData1);
+    //StockListVO cacheData1 = SinaStockApi.getVietNamData(code.toUpperCase(), code.toUpperCase());
+    //if(!org.springframework.util.StringUtils.isEmpty(cacheData1)){
+    //  double d = Double.parseDouble(cacheData1.getNowPrice());
+    //  double r = d * 1000;
+    //  int rr = (int) r;
+    //  cacheData1.setNowPrice(String.valueOf(rr));
+    //}
+    return ServerResponse.createBySuccess(cacheData);
   }
 
 
