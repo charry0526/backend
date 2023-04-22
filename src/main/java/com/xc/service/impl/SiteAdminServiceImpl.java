@@ -22,10 +22,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -322,6 +318,11 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
             return ServerResponse.createBySuccessMsg("添加成功");
         }
         return ServerResponse.createByErrorMsg("添加失败");
+    }
+
+    @Override
+    public int updateStatus(Integer id) {
+        return this.siteAdminMapper.updateStatus(id);
     }
 
     @Override

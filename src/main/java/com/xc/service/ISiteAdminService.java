@@ -8,7 +8,6 @@ import com.xc.pojo.Esop_sq;
 import com.xc.pojo.SiteAdmin;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 public interface ISiteAdminService {
   ServerResponse login(String paramString1, String paramString2, String paramString3, HttpServletRequest paramHttpServletRequest);
@@ -25,6 +24,8 @@ public interface ISiteAdminService {
 
   ServerResponse addESOP(Esop esop);
   ServerResponse addESOP_sq(Esop_sq esop);
+
+  int updateStatus(Integer id);
 
   /**
    * 新股列表

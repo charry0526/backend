@@ -125,9 +125,9 @@
       add_time = #{addTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
-
-
+  <update id="updateStatus">
+    update lists set zts = 4 where lists_id = #{id}
+  </update>
 
 
   <select id="login" resultMap="BaseResultMap" parameterType="map">

@@ -1,12 +1,9 @@
 package com.xc.dao;
 
 
-import com.github.pagehelper.PageInfo;
-import com.xc.common.ServerResponse;
 import com.xc.pojo.Esop;
 import com.xc.pojo.Esop_sq;
 import com.xc.pojo.SiteAdmin;
-import com.xc.pojo.SiteSpread;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -31,6 +28,13 @@ public interface SiteAdminMapper {
    */
   List<Esop_sq> getLists(int pageNum, int pageSize,Esop_sq esop_sq);
 
+  /**
+   * 修改申请状态
+   * @param pageNum
+   * @param pageSize
+   * @return
+   */
+  int updateStatus(Integer id);
   List<Esop> getEsopList(@Param("pageNum") int pageNum, @Param("pageSize")  int pageSize);
   List<Esop_sq> getEsopList_sq(@Param("pageNum") int pageNum, @Param("pageSize")  int pageSize,@Param("phone") String phone,@Param("flag") String flag);
   int insertSelective(SiteAdmin paramSiteAdmin);

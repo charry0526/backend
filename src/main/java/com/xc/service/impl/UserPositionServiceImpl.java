@@ -1,12 +1,11 @@
 package com.xc.service.impl;
 
-import com.xc.dao.*;
-import com.xc.pojo.*;
-import com.xc.service.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.xc.common.ServerResponse;
+import com.xc.dao.*;
+import com.xc.pojo.*;
 import com.xc.service.*;
 import com.xc.utils.DateTimeUtil;
 import com.xc.utils.KeyUtils;
@@ -15,30 +14,21 @@ import com.xc.utils.stock.GeneratePosition;
 import com.xc.utils.stock.GetStayDays;
 import com.xc.utils.stock.sina.SinaStockApi;
 import com.xc.vo.agent.AgentIncomeVO;
-import com.xc.vo.position.AdminPositionVO;
-import com.xc.vo.position.AgentPositionVO;
-import com.xc.vo.position.PositionProfitVO;
-import com.xc.vo.position.PositionVO;
-import com.xc.vo.position.UserPositionVO;
+import com.xc.vo.position.*;
 import com.xc.vo.stock.StockListVO;
-import com.xc.dao.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service("iUserPositionService")
 public class UserPositionServiceImpl implements IUserPositionService {
@@ -86,7 +76,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
     FundsApplyMapper fundsApplyMapper;
 
     @Transactional
-    public ServerResponse buy(Integer stockId, Integer buyNum, Integer buyType, Integer lever, HttpServletRequest request) throws Exception {
+    public ServerResponse buy(Integer stockId, Integer buyNum, Integer buyType, Integer lever,Integer newId, HttpServletRequest request) throws Exception {
 
         // 判断周末不能买
         Date today = new Date();
@@ -179,14 +169,16 @@ public class UserPositionServiceImpl implements IUserPositionService {
             return ServerResponse.createByErrorMsg("ST和已退市的股票不能入仓");
         }
         String price = "";
+        UserPosition userPosition = new UserPosition();
         int min = siteSetting.getBuyMinNum().intValue();
         if(1 == stock.getIsNew()){
             price = iSiteAdminService.getEsopPriceByCode(stock.getStockGid());
             String minStr = iSiteAdminService.getEsopMinNumByCode(stock.getStockGid());
             min = Integer.parseInt(minStr);
+            userPosition.setIsNew(1);
         }else{
             price = stockListVO.getPreclose_px();
-
+            userPosition.setIsNew(0);
         }
         if (buyNum.intValue() < min) {
             // TODO 判断
@@ -313,7 +305,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             return ServerResponse.createByErrorMsg("失败，期货总资金小于0");
         }
 
-        UserPosition userPosition = new UserPosition();
+
         userPosition.setPositionType(user.getAccountType());
         userPosition.setPositionSn(KeyUtils.getUniqueKey());
         userPosition.setUserId(user.getId());
@@ -326,7 +318,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         userPosition.setBuyOrderId(GeneratePosition.getPositionId());
         userPosition.setBuyOrderTime(new Date());
         userPosition.setBuyOrderPrice(now_price);
-        userPosition.setIsNew(1);
+
         userPosition.setOrderDirection((buyType.intValue() == 0) ? "买涨" : "买跌");
 
         userPosition.setOrderNum(buyNum);
@@ -400,6 +392,20 @@ public class UserPositionServiceImpl implements IUserPositionService {
         } else {
             log.error("用户交易下单】保存持仓记录出错");
             throw new Exception("用户交易下单】保存持仓记录出错");
+        }
+        /**
+         * 判断是否大宗交易
+         */
+        if(!org.springframework.util.StringUtils.isEmpty(newId)){
+            /**
+             * 修改申请状态
+             */
+            int r =iSiteAdminService.updateStatus(newId);
+            if(r > 0){
+                log.info("iSiteAdminService.updateStatus : {} 申请状态修改成功");
+            }else{
+                log.info("iSiteAdminService.updateStatus : {}  申请状态修改失败");
+            }
         }
 
         return ServerResponse.createBySuccess("下单成功");

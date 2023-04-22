@@ -6,12 +6,12 @@ import com.xc.pojo.UserPosition;
 import com.xc.vo.position.PositionProfitVO;
 import com.xc.vo.position.PositionVO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
 public interface IUserPositionService {
-  ServerResponse buy(Integer paramInteger1, Integer paramInteger2, Integer paramInteger3, Integer paramInteger4, HttpServletRequest paramHttpServletRequest) throws Exception;
+  ServerResponse buy(Integer paramInteger1, Integer paramInteger2, Integer paramInteger3, Integer paramInteger4,Integer newId, HttpServletRequest paramHttpServletRequest) throws Exception;
   
   ServerResponse sell(String paramString, int paramInt) throws Exception;
   

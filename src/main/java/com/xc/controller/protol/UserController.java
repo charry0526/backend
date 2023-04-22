@@ -6,13 +6,6 @@ import com.xc.common.ServerResponse;
 import com.xc.pojo.UserStockSubscribe;
 import com.xc.service.*;
 import com.xc.utils.PropertiesUtil;
-
-import java.math.BigDecimal;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.util.Map;
 
 @Controller
 @RequestMapping({"/user/"})
@@ -68,10 +66,10 @@ public class UserController {
     //用户下单买入股票
     @RequestMapping({"buy.do"})
     @ResponseBody
-    public ServerResponse buy(@RequestParam("stockId") Integer stockId, @RequestParam("buyNum") Integer buyNum, @RequestParam("buyType") Integer buyType, @RequestParam("lever") Integer lever, HttpServletRequest request) {
+    public ServerResponse buy(@RequestParam("stockId") Integer stockId, @RequestParam("buyNum") Integer buyNum, @RequestParam("buyType") Integer buyType, @RequestParam("lever") Integer lever, @RequestParam("newId") Integer newId, HttpServletRequest request) {
         ServerResponse serverResponse = null;
         try {
-            serverResponse = this.iUserPositionService.buy(stockId, buyNum, buyType, lever, request);
+            serverResponse = this.iUserPositionService.buy(stockId, buyNum, buyType, lever, newId,request);
         } catch (Exception e) {
             log.error("用户下单操作 = {}", e);
         }
