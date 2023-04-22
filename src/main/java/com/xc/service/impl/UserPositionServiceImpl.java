@@ -49,6 +49,8 @@ public class UserPositionServiceImpl implements IUserPositionService {
     UserPositionMapper userPositionMapper;
 
     @Autowired
+    ISiteAdminService iSiteAdminService;
+    @Autowired
     IUserService iUserService;
 
     @Autowired
@@ -129,7 +131,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         log.info("是否在上午交易时间 = {} 是否在下午交易时间 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag));
 
         if (!am_flag && !pm_flag) {
-            return ServerResponse.createByErrorMsg("下单失败，不在交易时段内");
+            //return ServerResponse.createByErrorMsg("下单失败，不在交易时段内");
         }
 
         Stock stock = null;
@@ -156,25 +158,12 @@ public class UserPositionServiceImpl implements IUserPositionService {
                     .getBuyNumTimes() + "分钟内不能超过" + siteSetting.getBuyNumLots() + "手");
         }
 
-        if (buyNum.intValue() < siteSetting.getBuyMinNum().intValue()) {
-            return ServerResponse.createByErrorMsg("下单失败，购买数量小于" + siteSetting
-                    .getBuyMinNum() + "股");
-        }
-        if (buyNum.intValue() > siteSetting.getBuyMaxNum().intValue()) {
-            return ServerResponse.createByErrorMsg("下单失败，购买数量大于" + siteSetting
-                    .getBuyMaxNum() + "股");
-        }
-
 
         StockListVO stockListVO = SinaStockApi.getVietNamData(stock.getStockType(), stock.getStockGid());
-        BigDecimal now_price = new BigDecimal(stockListVO.getNowPrice());
-        if (now_price.compareTo(new BigDecimal("0")) == 0) {
-            return ServerResponse.createByErrorMsg("报价0，请稍后再试");
-        }
+
 
 
         double stock_crease = stockListVO.getHcrate().doubleValue();
-
 
         BigDecimal maxRisePercent = new BigDecimal("0");
         if (stock.getStockPlate() != null) {
@@ -189,14 +178,36 @@ public class UserPositionServiceImpl implements IUserPositionService {
         if(stockListVO.getName().startsWith("ST") || stockListVO.getName().endsWith("退")){
             return ServerResponse.createByErrorMsg("ST和已退市的股票不能入仓");
         }
+        String price = "";
+        int min = siteSetting.getBuyMinNum().intValue();
+        if(1 == stock.getIsNew()){
+            price = iSiteAdminService.getEsopPriceByCode(stock.getStockGid());
+            String minStr = iSiteAdminService.getEsopMinNumByCode(stock.getStockGid());
+            min = Integer.parseInt(minStr);
+        }else{
+            price = stockListVO.getPreclose_px();
 
-        BigDecimal zsPrice = new BigDecimal(stockListVO.getPreclose_px());
+        }
+        if (buyNum.intValue() < min) {
+            // TODO 判断
+            return ServerResponse.createByErrorMsg("下单失败，购买数量小于" + siteSetting
+                    .getBuyMinNum() + "股");
+        }
+        if (buyNum.intValue() > siteSetting.getBuyMaxNum().intValue()) {
+            return ServerResponse.createByErrorMsg("下单失败，购买数量大于" + siteSetting
+                    .getBuyMaxNum() + "股");
+        }
 
+        BigDecimal zsPrice = new BigDecimal(price);
+        BigDecimal now_price = new BigDecimal(price);
         BigDecimal ztPrice = zsPrice.multiply(maxRisePercent).add(zsPrice);
         ztPrice = ztPrice.setScale(2, 4);
         BigDecimal chaPrice = ztPrice.subtract(zsPrice);
 
         BigDecimal ztRate = chaPrice.multiply(new BigDecimal("100")).divide(zsPrice, 2, 4);
+        if (now_price.compareTo(new BigDecimal("0")) == 0) {
+            return ServerResponse.createByErrorMsg("报价0，请稍后再试");
+        }
 
         log.info("当前涨跌幅 = {} % , 涨停幅度 = {} %", Double.valueOf(stock_crease), ztRate);
         if ((new BigDecimal(String.valueOf(stock_crease))).compareTo(ztRate) == 0 && buyType
@@ -315,6 +326,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         userPosition.setBuyOrderId(GeneratePosition.getPositionId());
         userPosition.setBuyOrderTime(new Date());
         userPosition.setBuyOrderPrice(now_price);
+        userPosition.setIsNew(1);
         userPosition.setOrderDirection((buyType.intValue() == 0) ? "买涨" : "买跌");
 
         userPosition.setOrderNum(buyNum);
@@ -360,19 +372,12 @@ public class UserPositionServiceImpl implements IUserPositionService {
         }
 
         userPosition.setSpreadRatePrice(spread_rate_amt);
-
-
         BigDecimal profit_and_lose = new BigDecimal("0");
         userPosition.setProfitAndLose(profit_and_lose);
-
-
         BigDecimal all_profit_and_lose = profit_and_lose.subtract(buy_fee_amt).subtract(buy_yhs_amt).subtract(spread_rate_amt);
         userPosition.setAllProfitAndLose(all_profit_and_lose);
-
-
         userPosition.setOrderStayDays(Integer.valueOf(0));
         userPosition.setOrderStayFee(new BigDecimal("0"));
-
         int insertPositionCount = 0;
         this.userPositionMapper.insert(userPosition);
         insertPositionCount = userPosition.getId();
@@ -752,7 +757,6 @@ public class UserPositionServiceImpl implements IUserPositionService {
         User user = this.iUserService.getCurrentUser(request);
 
         PageHelper.startPage(pageNum, pageSize);
-
 
         List<UserPosition> userPositions = this.userPositionMapper.findMyPositionByCodeAndSpell(user.getId(), stockCode, stockSpell, state);
 
@@ -1300,8 +1304,8 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
     private UserPositionVO assembleUserPositionVO(UserPosition position) {
         UserPositionVO userPositionVO = new UserPositionVO();
-
         userPositionVO.setId(position.getId());
+        userPositionVO.setIsNew(position.getIsNew());
         userPositionVO.setPositionType(position.getPositionType());
         userPositionVO.setPositionSn(position.getPositionSn());
         userPositionVO.setUserId(position.getUserId());
@@ -1333,8 +1337,9 @@ public class UserPositionServiceImpl implements IUserPositionService {
         userPositionVO.setSpreadRatePrice(position.getSpreadRatePrice());
 
         PositionProfitVO positionProfitVO = getPositionProfitVO(position);
-        userPositionVO.setProfitAndLose(positionProfitVO.getProfitAndLose());
-        userPositionVO.setAllProfitAndLose(positionProfitVO.getAllProfitAndLose());
+
+        userPositionVO.setProfitAndLose(positionProfitVO.getProfitAndLose().setScale(2,BigDecimal.ROUND_HALF_UP));
+        userPositionVO.setAllProfitAndLose(positionProfitVO.getAllProfitAndLose().setScale(2,BigDecimal.ROUND_HALF_UP));
         userPositionVO.setNow_price(positionProfitVO.getNowPrice());
 
 
