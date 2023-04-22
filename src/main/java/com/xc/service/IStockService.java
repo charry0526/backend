@@ -42,7 +42,7 @@ public interface IStockService {
 
   ServerResponse getDateline(HttpServletResponse paramHttpServletResponse, String paramString);
 
-  ServerResponse getSingleStock(String paramString);
+  ServerResponse getSingleStock(String paramString,String isNew);
 
   ServerResponse getMinK(String paramString, Integer paramInteger1, Integer paramInteger2, Integer paramInteger3);
 
