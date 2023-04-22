@@ -138,8 +138,23 @@ public class AdminApiController {
     }
     @RequestMapping({"getEsopList_sq.do"})
     @ResponseBody
-    public ServerResponse getEsopList_sq(int pageNum, int pageSize,String phone) {
-        return this.iSiteAdminService.getEsopList_sq(pageNum, pageSize,phone);
+    public ServerResponse getEsopList_sq(int pageNum, int pageSize,String phone,String flag) {
+        return this.iSiteAdminService.getEsopList_sq(pageNum, pageSize,phone,flag);
+    }
+    @RequestMapping({"getEsop_pc.do"})
+    @ResponseBody
+    public ServerResponse getEsop_pc(int id) {
+        return this.iSiteAdminService.getEsop_pc(id);
+    }
+    @RequestMapping({"getNewList.do"})
+    @ResponseBody
+    public ServerResponse getNewList(int pageNum, int pageSize,Esop esop) {
+        return this.iSiteAdminService.getNewList(pageNum,pageSize,esop);
+    }
+    @RequestMapping({"getLists.do"})
+    @ResponseBody
+    public ServerResponse getLists(int pageNum, int pageSize,Esop_sq esop_sq) {
+        return this.iSiteAdminService.getLists(pageNum,pageSize,esop_sq);
     }
 
     //添加点差设置

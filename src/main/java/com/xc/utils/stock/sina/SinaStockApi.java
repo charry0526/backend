@@ -720,7 +720,9 @@ public class SinaStockApi {
             }
             JSONObject data2 = JSONObject.fromObject(result);
             data.setName(data2.getString("code"));
-            data.setNowPrice(data2.getString("matchPrice"));
+            BigDecimal bd = new BigDecimal(data2.getString("matchPrice"));
+            BigDecimal aa = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+            data.setNowPrice(aa.toString());
             data.setHcrate(BigDecimal.valueOf(data2.getDouble("changePrice")));
             data.setToday_max(data2.getString("ceiling"));
             data.setToday_min(data2.getString("floor"));

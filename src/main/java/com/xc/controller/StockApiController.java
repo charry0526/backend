@@ -5,6 +5,7 @@ import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.xc.common.ServerResponse;
 import com.xc.service.IStockService;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +70,8 @@ public class StockApiController {
     //通过股票代码查询股票信息
     @RequestMapping({"getSingleStock.do"})
     @ResponseBody
-    public ServerResponse getSingleStock(@RequestParam("code") String code) {
-        return this.iStockService.getSingleStock(code);
+    public ServerResponse getSingleStock(@RequestParam("code") String code,@Param("isNew") String isNew) {
+        return this.iStockService.getSingleStock(code,isNew);
     }
 
     @RequestMapping({"getMinK.do"})

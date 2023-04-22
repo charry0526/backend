@@ -22,9 +22,9 @@ public interface StockMapper {
 
   List findStockCode(@Param("stockType") String stockType,@Param("stock_num")Integer stock_num,@Param("stock_nums")Integer stock_nums);
 
-  Stock findStockByCode(String paramString);
+  Stock findStockByCode(@Param("code") String paramString,@Param("isNew") Integer isNew);
 
-  Stock findStockByName(String paramString);
+  Stock findStockByName(@Param("code")String paramString);
 
   List listByAdmin(@Param("showState") Integer paramInteger1, @Param("lockState") Integer paramInteger2, @Param("code") String paramString1, @Param("name") String paramString2, @Param("stockPlate") String paramString3, @Param("stockType") String paramString4);
 

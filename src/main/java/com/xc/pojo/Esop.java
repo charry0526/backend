@@ -53,7 +53,7 @@ public class Esop implements Serializable {
     /**
      * 市场价格
      */
-    private Integer scprice;
+    private Double scprice;
 
 
     public Esop() {
@@ -85,9 +85,6 @@ public class Esop implements Serializable {
         this.lever = lever;
     }
 
-    public void setScprice(Integer scprice) {
-        this.scprice = scprice;
-    }
 
     public String getNames() {
         return names;
@@ -121,7 +118,11 @@ public class Esop implements Serializable {
         return lever;
     }
 
-    public Integer getScprice() {
+    public void setScprice(Double scprice) {
+        this.scprice = scprice;
+    }
+
+    public Double getScprice() {
         return scprice;
     }
 }

@@ -19,6 +19,8 @@ public class Stock {
     /*点差费率*/
     private BigDecimal spreadRate;
 
+    private Integer isNew;
+
     @Override
     public String toString() {
         return "Stock{" +
@@ -33,10 +35,11 @@ public class Stock {
                 ", isShow=" + isShow +
                 ", addTime=" + addTime +
                 ", spreadRate=" + spreadRate +
+                ", isNew=" + isNew +
                 '}';
     }
 
-    public Stock(Integer id, String stockName, String stockCode, String stockSpell, String stockType, String stockGid, String stockPlate, Integer isLock, Integer isShow, Date addTime,BigDecimal spreadRate) {
+    public Stock(Integer id, String stockName, String stockCode, String stockSpell, String stockType, String stockGid, String stockPlate, Integer isLock, Integer isShow, Date addTime,BigDecimal spreadRate,Integer isNew) {
         this.id = id;
         this.stockName = stockName;
         this.stockCode = stockCode;
@@ -48,10 +51,19 @@ public class Stock {
         this.isShow = isShow;
         this.addTime = addTime;
         this.spreadRate = spreadRate;
+        this.isNew = isNew;
     }
 
 
     public Stock() {
+    }
+
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
+    }
+
+    public Integer getIsNew() {
+        return isNew;
     }
 
     public Integer getId() {

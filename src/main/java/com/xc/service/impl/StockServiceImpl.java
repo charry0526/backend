@@ -13,10 +13,7 @@ import com.xc.pojo.Stock;
 import com.xc.pojo.StockFutures;
 import com.xc.pojo.StockIndex;
 import com.xc.pojo.User;
-import com.xc.service.IStockMarketsDayService;
-import com.xc.service.IStockOptionService;
-import com.xc.service.IStockService;
-import com.xc.service.IUserService;
+import com.xc.service.*;
 import com.xc.utils.HttpClientRequest;
 import com.xc.utils.PropertiesUtil;
 import com.xc.utils.stock.pinyin.GetPyByChinese;
@@ -50,6 +47,9 @@ public class StockServiceImpl implements IStockService {
 
   @Autowired
   StockMapper stockMapper;
+
+  @Autowired
+  ISiteAdminService iSiteAdminService;
 
   @Autowired
   RealTimeMapper realTimeMapper;
@@ -213,7 +213,7 @@ public class StockServiceImpl implements IStockService {
   public ServerResponse getDateline(HttpServletResponse response, String code) {
     if (StringUtils.isBlank(code))
       return ServerResponse.createByErrorMsg("");
-    Stock stock = this.stockMapper.findStockByCode(code);
+    Stock stock = this.stockMapper.findStockByCode(code,0);
     if (stock == null)
       return ServerResponse.createByErrorMsg("");
     response.setHeader("Access-Control-Allow-Origin", "*");
@@ -283,7 +283,7 @@ public class StockServiceImpl implements IStockService {
     return ServerResponse.createBySuccess(echartsDataVO);
   }
 
-  public ServerResponse getSingleStock(String code) {
+  public ServerResponse getSingleStock(String code,String isNew) {
     if (StringUtils.isBlank(code))
       return ServerResponse.createByErrorMsg("");
     Stock stock = new Stock();
@@ -308,9 +308,12 @@ public class StockServiceImpl implements IStockService {
       stock.setStockSpell("0");
       depositAmt = model.getDepositAmt();
     } else {//股票
-      stock = this.stockMapper.findStockByCode(code);
+      int flag = 0;
+      if(!org.springframework.util.StringUtils.isEmpty(isNew)){
+        flag = 1;
+      }
+      stock = this.stockMapper.findStockByCode(code,flag);
     }
-
     if (stock == null)
       return ServerResponse.createByErrorMsg("");
     String gid = stock.getStockGid();
@@ -326,11 +329,18 @@ public class StockServiceImpl implements IStockService {
 //      stockVO = SinaStockApi.assembleStockVO(sinaResult);
 //    }
     StockListVO cacheData = SinaStockApi.getVietNamData(stock.getStockType(), code);
-
     stockVO.setToday_max(cacheData.getToday_max());
     stockVO.setToday_min(cacheData.getToday_min());
     stockVO.setHcrate(cacheData.getHcrate());
-    stockVO.setNowPrice(cacheData.getNowPrice());
+
+    String price = "";
+    if(!org.springframework.util.StringUtils.isEmpty(isNew)){
+      String esopPrice = this.iSiteAdminService.getEsopPriceByCode(code);
+      price = esopPrice;
+    }else{
+      price = cacheData.getNowPrice();
+    }
+    stockVO.setNowPrice(price);
     stockVO.setBusiness_amount(cacheData.getBusiness_amount());
     stockVO.setPreclose_px(cacheData.getPreclose_px());
     stockVO.setOpen_px(cacheData.getOpen_px());
@@ -358,7 +368,7 @@ public class StockServiceImpl implements IStockService {
   public ServerResponse getMinK(String code, Integer time, Integer ma, Integer size) {
     if (StringUtils.isBlank(code) || time == null || ma == null || size == null)
       return ServerResponse.createByErrorMsg("");
-    Stock stock = this.stockMapper.findStockByCode(code);
+    Stock stock = this.stockMapper.findStockByCode(code,0);
     if (stock == null)
       return ServerResponse.createByErrorMsg("");
     return SinaStockApi.getStockMinK(stock, time.intValue(), ma.intValue(), size.intValue());
@@ -367,7 +377,7 @@ public class StockServiceImpl implements IStockService {
   public ServerResponse getMinK_Echarts(String code, Integer time, Integer ma, Integer size) {
     if (StringUtils.isBlank(code) || time == null || ma == null || size == null)
       return ServerResponse.createByErrorMsg("");
-    Stock stock = this.stockMapper.findStockByCode(code);
+    Stock stock = this.stockMapper.findStockByCode(code,0);
     if (stock == null)
       return ServerResponse.createByErrorMsg("");
     ServerResponse<MinDataVO> serverResponse = SinaStockApi.getStockMinK(stock, time.intValue(), ma.intValue(), size.intValue());
@@ -406,7 +416,7 @@ public class StockServiceImpl implements IStockService {
   public ServerResponse getDayK_Echarts(String code) {
     if (StringUtils.isBlank(code))
       return ServerResponse.createByErrorMsg("");
-    Stock stock = this.stockMapper.findStockByCode(code);
+    Stock stock = this.stockMapper.findStockByCode(code,0);
     if (stock == null)
       return ServerResponse.createByErrorMsg("");
     ServerResponse<MinDataVO> serverResponse = QqStockApi.getGpStockMonthK(stock,"day");
@@ -446,7 +456,7 @@ public class StockServiceImpl implements IStockService {
   }
 
   public ServerResponse<Stock> findStockByCode(String code) {
-    return ServerResponse.createBySuccess(this.stockMapper.findStockByCode(code));
+    return ServerResponse.createBySuccess(this.stockMapper.findStockByCode(code,0));
   }
 
   public ServerResponse<Stock> findStockById(Integer stockId) {
@@ -575,7 +585,7 @@ public class StockServiceImpl implements IStockService {
   }
 
   public ServerResponse selectRateByDaysAndStockCode(String stockCode, int days) {
-    Stock stock = this.stockMapper.findStockByCode(stockCode);
+    Stock stock = this.stockMapper.findStockByCode(stockCode,0);
     if (stock == null)
       return ServerResponse.createByErrorMsg("");
     BigDecimal daysRate = this.iStockMarketsDayService.selectRateByDaysAndStockCode(stock.getId(), days);

@@ -21,8 +21,19 @@ public class UserPosition {
     private String sellOrderId;
     private Date sellOrderTime;
 
+    private Integer isNew;
+
+
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
+    }
+
+    public Integer getIsNew() {
+        return isNew;
     }
 
     private BigDecimal sellOrderPrice;

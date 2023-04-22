@@ -2,7 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xc.dao.StockMapper" >
   <resultMap id="BaseResultMap" type="com.xc.pojo.Stock" >
-    <constructor >
+<!--    id, stock_name, stock_code, stock_spell, stock_type, stock_gid, stock_plate, is_lock,-->
+<!--    is_show, add_time,spread_rate,is_new-->
+    <result column="id" property="id" />
+    <result column="stock_name" property="stockName" />
+    <result column="stock_code" property="stockCode" />
+    <result column="stock_spell" property="stockSpell" />
+    <result column="stock_type" property="stockType" />
+    <result column="stock_gid" property="stockGid" />
+    <result column="stock_plate" property="stockPlate" />
+    <result column="is_lock" property="isLock" />
+    <result column="is_show" property="isShow" />
+    <result column="add_time" property="addTime" />
+    <result column="spread_rate" property="spreadRate" />
+    <result column="is_new" property="isNew" />
+  </resultMap>
+  <!--  <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="stock_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="stock_code" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -12,13 +27,13 @@
       <arg column="stock_plate" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="is_lock" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="is_show" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="is_new" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="add_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="spread_rate" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
-    </constructor>
-  </resultMap>
+    </constructor>-->
   <sql id="Base_Column_List" >
     id, stock_name, stock_code, stock_spell, stock_type, stock_gid, stock_plate, is_lock,
-    is_show, add_time,spread_rate
+    is_show, add_time,spread_rate,is_new
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -35,11 +50,11 @@
     insert into stock (id, stock_name, stock_code,
       stock_spell, stock_type, stock_gid,
       stock_plate, is_lock, is_show,
-      add_time)
+      add_time,is_new)
     values (#{id,jdbcType=INTEGER}, #{stockName,jdbcType=VARCHAR}, #{stockCode,jdbcType=VARCHAR},
       #{stockSpell,jdbcType=VARCHAR}, #{stockType,jdbcType=VARCHAR}, #{stockGid,jdbcType=VARCHAR},
       #{stockPlate,jdbcType=VARCHAR}, #{isLock,jdbcType=INTEGER}, #{isShow,jdbcType=INTEGER},
-      #{addTime,jdbcType=TIMESTAMP})
+      #{addTime,jdbcType=TIMESTAMP},#{isNew,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.xc.pojo.Stock" >
     insert into stock
@@ -164,6 +179,7 @@
     <include refid="Base_Column_List" />
     from stock
     <where>
+      is_new = 0 and
       is_show = #{show}
       <if test="keyWords != null and keyWords != '' ">
         and (stock_code like CONCAT('%','${keyWords}','%')
@@ -172,11 +188,12 @@
       <if test="stockPlate != null and stockPlate != '' ">
         and stock_plate = #{stockPlate}
       </if>
-     
+
       <if test="stockType != null and stockType != '' ">
         and stock_type = #{stockType}
       </if>
     </where>
+
     ORDER BY id asc
   </select>
 
@@ -193,17 +210,19 @@
     </where>
   </select>
 
-  <select id="findStockByCode" resultMap="BaseResultMap" parameterType="string">
+  <select id="findStockByCode" resultMap="BaseResultMap" >
     SELECT
     <include refid="Base_Column_List" />
     from stock
     WHERE stock_code = #{code}
+    AND is_new = #{isNew}
   </select>
   <select id="findStockByName" resultMap="BaseResultMap" parameterType="string">
     SELECT
     <include refid="Base_Column_List" />
     from stock
     WHERE stock_name = #{name}
+    AND is_new = 0
   </select>
 
 

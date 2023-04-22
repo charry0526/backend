@@ -239,7 +239,7 @@ public class UserServiceImpl implements IUserService {
                 stock.setIsLock(0);
             }
         } else {
-            stock = this.stockMapper.findStockByCode(code);
+            stock = this.stockMapper.findStockByCode(code,0);
         }
         if (stock == null) {
             return ServerResponse.createByErrorMsg("添加失败，股票不存在");

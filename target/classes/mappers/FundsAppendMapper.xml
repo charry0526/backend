@@ -4,8 +4,7 @@
 <mapper namespace="com.xc.dao.FundsAppendMapper">
 
     <resultMap id="BaseResultMap" type="com.xc.pojo.FundsAppend" >
-        <result column="id" property="id" />
-        <result column="append_type" property="appendType" />
+
         <result column="apply_id" property="applyId" />
         <result column="user_id" property="userId" />
         <result column="user_name" property="userName" />

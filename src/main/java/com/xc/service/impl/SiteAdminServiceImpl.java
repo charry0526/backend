@@ -5,12 +5,15 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xc.common.ServerResponse;
 import com.xc.dao.SiteAdminMapper;
+import com.xc.dao.StockMapper;
 import com.xc.pojo.*;
 import com.xc.service.*;
 import com.xc.utils.PropertiesUtil;
 import com.xc.utils.redis.RedisShardedPoolUtils;
+import com.xc.utils.stock.sina.SinaStockApi;
 import com.xc.vo.admin.AdminCountVO;
 import com.xc.vo.agent.AgentAgencyFeeVO;
+import com.xc.vo.stock.StockListVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +22,10 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +40,8 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
     SiteAdminMapper siteAdminMapper;
 
+    @Autowired
+    StockMapper stockMapper;
 
     @Autowired
 
@@ -106,6 +115,16 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         return ServerResponse.createBySuccess(siteAdmin);
 
+    }
+
+    @Override
+    public String getEsopPriceByCode(String code) {
+        return this.siteAdminMapper.getEsopPriceByCode(code);
+    }
+
+    @Override
+    public String getEsopMinNumByCode(String code) {
+        return this.siteAdminMapper.getEsopMinNumByCode(code);
     }
 
 
@@ -281,7 +300,15 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
     @Override
     public ServerResponse addESOP(Esop esop) {
+        String gg = siteAdminMapper.getEsopLeverByCode(esop.getNames());
+        if(!org.springframework.util.StringUtils.isEmpty(gg)){
+            return ServerResponse.createByErrorMsg(esop.getNames()+"已存在，无法添加");
+        }
         int insertCount = this.siteAdminMapper.addEsop(esop);
+        Stock stock = this.stockMapper.findStockByCode(esop.getNames(),0);
+        stock.setIsNew(1);
+        stock.setId(null);
+        this.stockMapper.insert(stock);
         if (insertCount > 0) {
             return ServerResponse.createBySuccessMsg("添加成功");
         }
@@ -298,6 +325,24 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
     }
 
     @Override
+    public ServerResponse<PageInfo> getNewList(int pageNum, int pageSize,Esop esop) {
+        Page<AgentAgencyFeeVO> page = PageHelper.startPage(pageNum, pageSize);
+        List<Esop> list = this.siteAdminMapper.getNewList(pageNum, pageSize,esop);
+        PageInfo pageInfo = new PageInfo(page);
+        pageInfo.setList(list);
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
+    public ServerResponse<PageInfo> getLists(int pageNum, int pageSize,Esop_sq esop_sq) {
+        Page<AgentAgencyFeeVO> page = PageHelper.startPage(pageNum, pageSize);
+        List<Esop_sq> list = this.siteAdminMapper.getLists(pageNum, pageSize,esop_sq);
+        PageInfo pageInfo = new PageInfo(page);
+        pageInfo.setList(list);
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
     public ServerResponse<PageInfo> getEsopList(int pageNum, int pageSize) {
         Page<AgentAgencyFeeVO> page = PageHelper.startPage(pageNum, pageSize);
         List<Esop> list = this.siteAdminMapper.getEsopList(pageNum, pageSize);
@@ -308,14 +353,54 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
     }
 
     @Override
-    public ServerResponse<PageInfo> getEsopList_sq(int pageNum, int pageSize,String phone) {
+    public ServerResponse<PageInfo> getEsopList_sq(int pageNum, int pageSize,String phone,String flag) {
         Page<AgentAgencyFeeVO> page = PageHelper.startPage(pageNum, pageSize);
-        List<Esop_sq> list = this.siteAdminMapper.getEsopList_sq(pageNum, pageSize,phone);
+        List<Esop_sq> list = this.siteAdminMapper.getEsopList_sq(pageNum, pageSize,phone,flag);
+        for (Esop_sq item:list) {
+            String gg = this.siteAdminMapper.getEsopLeverByCode(item.getXgname());
+            item.setGgStr(gg);
+        }
         PageInfo pageInfo = new PageInfo(page);
         pageInfo.setList(list);
         return ServerResponse.createBySuccess(pageInfo);
     }
 
+    /**
+     * 获取股票最新价格
+     * @param code
+     * @return
+     */
+    public String getNowPriceByCode(String code){
+        Stock stock = this.stockMapper.findStockByCode(code,0);
+        StockListVO cacheData = SinaStockApi.getVietNamData(stock.getStockType(), code.toUpperCase());
+        return cacheData.getNowPrice();
+    }
+    @Override
+    public ServerResponse getEsop_pc(int id) {
+        Esop_sq item = this.siteAdminMapper.getEsopById(id);
+        // 获取用户手机号
+        String phone = item.getPhone();
+        // 查询股票最新价格
+        String newPrice = getNowPriceByCode(item.getXgname());
+        // 获取购买数量
+        String nums = item.getNums();
+        // 获取购买时市值
+        String sz = item.getSz();
+        // 换算单位
+        double dsz = Double.parseDouble(sz);
+        double dnums = Double.parseDouble(nums);
+        double dnewPirce = Double.parseDouble(newPrice);
+
+
+
+        return null;
+    }
+
+    public static int dateDiffrent(Date date1,Date date2) {
+        int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));
+        return days;
+
+    }
 
     public ServerResponse update(SiteAdmin siteAdmin) {
 
@@ -339,13 +424,10 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
     }
 
     @Override
-    public ServerResponse addEsop(Esop esop) {
-        int updateCount = this.siteAdminMapper.addEsop(esop);
-        if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("成功");
-        }
-        return ServerResponse.createByErrorMsg("失败");
+    public int purchaseCompleted() {
+        return 0;
     }
+
 
     public ServerResponse deleteAdmin(Integer adminId) {
 

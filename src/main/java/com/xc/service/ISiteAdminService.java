@@ -12,7 +12,9 @@ import java.util.List;
 
 public interface ISiteAdminService {
   ServerResponse login(String paramString1, String paramString2, String paramString3, HttpServletRequest paramHttpServletRequest);
-  
+
+  String getEsopPriceByCode(String code);
+  String getEsopMinNumByCode(String code);
   ServerResponse<PageInfo> listByAdmin(String paramString1, String paramString2, HttpServletRequest paramHttpServletRequest, int paramInt1, int paramInt2);
   
   ServerResponse authCharge(String paramString1, Integer paramInteger, String paramString2);
@@ -24,13 +26,25 @@ public interface ISiteAdminService {
   ServerResponse addESOP(Esop esop);
   ServerResponse addESOP_sq(Esop_sq esop);
 
+  /**
+   * 新股列表
+   * @return
+   */
+  ServerResponse<PageInfo> getNewList(int pageNum, int pageSize,Esop esop);
+
+  /**
+   * 申请列表
+   * @return
+   */
+  ServerResponse<PageInfo> getLists(int pageNum, int pageSize,Esop_sq esop_sq);
 
   ServerResponse<PageInfo> getEsopList(int pageNum, int pageSize);
-  ServerResponse<PageInfo> getEsopList_sq(int pageNum, int pageSize,String phone);
-
+  ServerResponse<PageInfo> getEsopList_sq(int pageNum, int pageSize,String phone,String flag);
+  ServerResponse getEsop_pc(int id);
   ServerResponse update(SiteAdmin paramSiteAdmin);
 
-  ServerResponse addEsop(Esop esop);
+  int purchaseCompleted();
+
   SiteAdmin findAdminByName(String paramString);
   
   SiteAdmin findAdminByPhone(String paramString);

@@ -13,6 +13,14 @@ public class Esop_sq implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
+    /**
+     * id
+     */
+
+    private Integer  listsId;
+
+
     /**
      * 代理名称
      */
@@ -59,11 +67,97 @@ public class Esop_sq implements Serializable {
      */
     private String gg;
 
+    private String ggStr;
+
+
+
+
     /**
      * 市值
      */
     private String sz;
+    /**
+     * 手续费
+     */
+    private String sxf;
+    /**
+     * 利润
+     */
+    private String lr;
+    /**
+     * 是否平仓
+     */
+    private String flag;
+    /**
+     * 持有天数
+     */
+    private Integer day;
 
+    /**
+     * 最新价格
+     */
+    private String newPrice;
+
+     /**
+     * 购买时价格
+     */
+    private String oldPrice;
+
+    public void setListsId(Integer listsId) {
+        this.listsId = listsId;
+    }
+
+    public Integer getListsId() {
+        return listsId;
+    }
+
+    public void setOldPrice(String oldPrice) {
+        this.oldPrice = oldPrice;
+    }
+
+    public String getOldPrice() {
+        return oldPrice;
+    }
+
+    public void setNewPrice(String newPrice) {
+        this.newPrice = newPrice;
+    }
+
+    public String getNewPrice() {
+        return newPrice;
+    }
+
+    public void setSxf(String sxf) {
+        this.sxf = sxf;
+    }
+
+    public void setLr(String lr) {
+        this.lr = lr;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public void setDay(Integer day) {
+        this.day = day;
+    }
+
+    public String getSxf() {
+        return sxf;
+    }
+
+    public String getLr() {
+        return lr;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public Integer getDay() {
+        return day;
+    }
 
     public Esop_sq() {
     }

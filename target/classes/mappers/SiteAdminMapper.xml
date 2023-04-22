@@ -11,6 +11,18 @@
       <arg column="add_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
     </constructor>
   </resultMap>
+  <resultMap id="esopMap" type="com.xc.pojo.Esop_sq" >
+    <result column="lists_id" property="listsId" />
+    <result column="agent" property="agent" />
+    <result column="zname" property="zname" />
+    <result column="zts" property="zts" />
+    <result column="xgname" property="xgname" />
+    <result column="nums" property="nums" />
+    <result column="mrsj" property="mrsj" />
+    <result column="bzj" property="bzj" />
+    <result column="gg" property="gg" />
+    <result column="sz" property="sz" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, admin_name, admin_pwd, admin_phone, is_lock, add_time
   </sql>
@@ -160,8 +172,66 @@
   <select id="getEsopList" resultType="com.xc.pojo.Esop">
     select * from newlist where zt = 1
   </select>
-  <select id="getEsopList_sq" resultType="com.xc.pojo.Esop_sq">
-    select * from lists where phone = #{phone}
+  <select id="getEsopList_sq" resultType="com.xc.pojo.Esop_sq" resultMap="esopMap">
+    select * from lists where 1 =1
+    <if test="phone != null and phone != '' ">
+      and phone = #{phone}
+    </if><if test="flag != null and flag != '' ">
+      and zts = 1
+    </if>
+  </select>
+  <select id="getEsopById" resultMap="esopMap">
+    select * from lists where lists_id = #{id}
+  </select>
+  <select id="getEsopPriceByCode" resultType="java.lang.String">
+    select price from newlist where names = #{code}
+  </select>
+  <select id="getEsopLeverByCode" resultType="java.lang.String">
+    select lever from newlist where names = #{code}
+  </select>
+  <select id="getNewList" resultType="com.xc.pojo.Esop">
+    select * from newlist where 1 = 1
+    <if test="names != null and names != '' ">
+      and names like CONCAT('%',#{names},'%')
+    </if>
+    <if test="price != null and price != '' ">
+      and price = #{price}
+    </if>
+    <if test="zt != null and zt != '' ">
+      and zt = #{zt}
+    </if>
+    <if test="fxtime != null and fxtime != '' ">
+      and fxtime = #{fxtime}
+    </if>
+    <if test="lever != null and lever != '' ">
+      and lever like CONCAT('%',#{lever},'%')
+    </if>
+  </select>
+  <select id="getLists" resultType="com.xc.pojo.Esop_sq">
+    select * from lists where 1 = 1
+    <if test="agent != null and agent != ''">
+       and agent like CONCAT('%',#{agent},'%')
+    </if>
+    <if test="zname != null and zname != ''">
+      and agent like CONCAT('%',#{zname},'%')
+    </if>
+    <if test="zts != null and zts != ''"></if>
+        and zts = #{zts}
+    <if test="phone != null and phone != ''">
+      and phone like CONCAT('%',#{phone},'%')
+    </if>
+    <if test="xgname != null and xgname != ''">
+      and xgname = #{xgname}
+    </if>
+    <if test="nums != null and nums != ''">
+      and nums = #{nums}
+    </if>
+    <if test="gg != null and gg != ''">
+      and gg = #{gg}
+    </if>
+  </select>
+  <select id="getEsopMinNumByCode" resultType="java.lang.String">
+    select num from newlist where names = #{code}
   </select>
 
 

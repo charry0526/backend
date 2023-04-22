@@ -55,6 +55,15 @@ public class UserPositionVO {
     private BigDecimal spreadRatePrice;
     /*追加保证金额*/
     private BigDecimal marginAdd;
+    private Integer isNew;
+
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
+    }
+
+    public Integer getIsNew() {
+        return isNew;
+    }
 
     public void setPositionType(Integer positionType) {
         this.positionType = positionType;
