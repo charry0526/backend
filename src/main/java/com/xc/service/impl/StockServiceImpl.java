@@ -14,6 +14,7 @@ import com.xc.pojo.StockFutures;
 import com.xc.pojo.StockIndex;
 import com.xc.pojo.User;
 import com.xc.service.*;
+import com.xc.utils.DateTimeUtil;
 import com.xc.utils.HttpClientRequest;
 import com.xc.utils.PropertiesUtil;
 import com.xc.utils.stock.pinyin.GetPyByChinese;
@@ -25,6 +26,7 @@ import com.xc.vo.stock.k.echarts.EchartsDataVO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,10 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service("iStockService")
@@ -613,6 +618,62 @@ public class StockServiceImpl implements IStockService {
       return ServerResponse.createBySuccessMsg("操作成功");
     }
     return ServerResponse.createByErrorMsg("操作失败");
+  }
+
+  @Override
+  public HistoryVO getHistory(String code) {
+
+    LocalDate date = LocalDate.now();
+    DateTimeFormatter year = DateTimeFormatter.ofPattern("yyyy");
+    String nowYear = date.format(year);
+
+    DateTimeFormatter md = DateTimeFormatter.ofPattern("-MM-dd");
+    String nowMd = date.format(md);
+
+
+    HistoryVO historyVO = new HistoryVO();
+
+    String result = HttpClientRequest.doGet("https://wifeed.vn/api/du-lieu-gia-eod/full?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mjk4LCJlbWFpbCI6ImxvbmdtcjEyMDQxOUBnbWFpbC5jb20iLCJpYXQiOjE2ODE1NzMzNzd9.JAIAHp7qIWtQIVRLPCMUEI4oyVVJMyK4YaMSW1Jj1oo&code="+code+"&from-date="+String.valueOf(Integer.valueOf(nowYear)-1)+nowMd+"&to-date="+nowYear+nowMd);
+    JSONArray data2 = JSONArray.fromObject(result);
+
+    ArrayList<String> t = new ArrayList<>();
+    ArrayList<String> o = new ArrayList<>();
+    ArrayList<String> h = new ArrayList<>();
+    ArrayList<String> l = new ArrayList<>();
+    ArrayList<String> c = new ArrayList<>();
+    ArrayList<String> v = new ArrayList<>();
+
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    for (int i = data2.size()-1; i >=0 ; i--) {
+      try {
+        t.add(
+                String.valueOf(
+                        simpleDateFormat.parse(
+                                ((JSONObject) data2.get(i)).get("ngay").toString()
+                                        .replace(".000Z","")
+                                        .replace("T"," "))
+                                .getTime()/1000)
+        );
+
+        h.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("high_root").toString())/1000));
+        o.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("open_root").toString())/1000));
+        l.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("low_root").toString())/1000));
+        c.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("close_adjust").toString())/1000));
+        v.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("volume_adjust").toString())/1));
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+
+
+    }
+    historyVO.setT(t);
+    historyVO.setH(h);
+    historyVO.setO(o);
+    historyVO.setL(l);
+    historyVO.setC(c);
+    historyVO.setV(v);
+    return historyVO;
   }
 
   /**

@@ -3,6 +3,8 @@ package com.xc.service;
 import com.github.pagehelper.PageInfo;
 import com.xc.common.ServerResponse;
 import com.xc.pojo.Stock;
+import com.xc.vo.stock.HistoryVO;
+
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -86,4 +88,5 @@ public interface IStockService {
 
   ServerResponse deleteByPrimaryKey(Integer id);
 
+  HistoryVO getHistory(String code);
 }
