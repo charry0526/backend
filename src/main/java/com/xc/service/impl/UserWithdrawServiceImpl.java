@@ -478,7 +478,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("操作成功！");
+            return ServerResponse.createBySuccessMsg("Hoạt động thành công！");
 
         }
 
@@ -506,7 +506,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
         }
         int updateCount = this.userWithdrawMapper.deleteByPrimaryKey(withdrawId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
         return ServerResponse.createByErrorMsg("删除失败");
     }

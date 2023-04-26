@@ -132,7 +132,7 @@ import org.springframework.stereotype.Service;
      }
      int updateCount = this.userCashDetailMapper.deleteByPrimaryKey(cashId);
      if (updateCount > 0) {
-       return ServerResponse.createBySuccessMsg("删除成功");
+       return ServerResponse.createBySuccessMsg("Xóa thành công");
      }
      return ServerResponse.createByErrorMsg("删除失败");
    }

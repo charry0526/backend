@@ -223,7 +223,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (insertCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
 
         }
 
@@ -275,7 +275,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
 
         }
 

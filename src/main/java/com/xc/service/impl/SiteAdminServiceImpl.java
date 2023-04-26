@@ -228,7 +228,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
 
         }
 
@@ -286,7 +286,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (insertCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
 
         }
 
@@ -306,7 +306,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
         stock.setId(null);
         this.stockMapper.insert(stock);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
         return ServerResponse.createByErrorMsg("添加失败");
     }
@@ -315,7 +315,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
     public ServerResponse addESOP_sq(Esop_sq esop) {
         int insertCount = this.siteAdminMapper.addEsop_sq(esop);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
         return ServerResponse.createByErrorMsg("添加失败");
     }
@@ -420,7 +420,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
 
         }
 
@@ -443,7 +443,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Xóa thành công");
 
         }
 

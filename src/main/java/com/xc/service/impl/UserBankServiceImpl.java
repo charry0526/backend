@@ -65,7 +65,7 @@ import org.springframework.stereotype.Service;
      int insertCount = this.userBankMapper.insert(userBank);
 
      if (insertCount > 0) {
-       return ServerResponse.createBySuccess("添加银行卡成功");
+       return ServerResponse.createBySuccess("Đã thêm thành công thẻ ngân hàng");
 
      }
 
@@ -99,7 +99,7 @@ import org.springframework.stereotype.Service;
 
      if (updateCount > 0) {
 
-       return ServerResponse.createBySuccess("修改银行卡成功");
+       return ServerResponse.createBySuccess("Sửa đổi thẻ ngân hàng thành công");
 
      }
 
@@ -144,7 +144,7 @@ import org.springframework.stereotype.Service;
 
      if (updateCount > 0) {
 
-       return ServerResponse.createBySuccessMsg("修改成功");
+       return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
 
      }
 

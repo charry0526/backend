@@ -50,7 +50,7 @@ public class SiteSettingServiceImpl implements ISiteSettingService {
         int updateCount = this.siteSettingMapper.updateByPrimaryKeySelective(setting);
 
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
         return ServerResponse.createByErrorMsg("修改失败");
 

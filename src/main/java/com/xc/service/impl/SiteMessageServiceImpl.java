@@ -105,7 +105,7 @@ public class SiteMessageServiceImpl implements ISiteMessageService {
 
         int updateCount = this.siteMessageMapper.delete(id);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
         return ServerResponse.createByErrorMsg("删除失败");
     }

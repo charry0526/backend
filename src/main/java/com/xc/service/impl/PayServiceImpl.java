@@ -293,7 +293,7 @@ public class PayServiceImpl implements IPayService {
             user.setEnableAmt(total_enable);
             int updateUserCount = this.userMapper.updateByPrimaryKeySelective(user);
             if (updateUserCount > 0) {
-                return ServerResponse.createBySuccessMsg("后台通知 处理成功");
+                return ServerResponse.createBySuccessMsg("xử lý thông báo nền thành công");
             }
             return ServerResponse.createByErrorMsg("后台通知 处理失败 修改用户资金不成功");
         }

@@ -402,7 +402,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
              */
             int r =iSiteAdminService.updateStatus(newId);
             if(r > 0){
-                log.info("iSiteAdminService.updateStatus : {} 申请状态修改成功");
+                log.info("iSiteAdminService.updateStatus : {} 申请状态Sửa đổi thành công");
             }else{
                 log.info("iSiteAdminService.updateStatus : {}  申请状态修改失败");
             }
@@ -599,7 +599,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             throw new Exception("用户平仓】保存明细记录出错");
         }
 
-        return ServerResponse.createBySuccessMsg("平仓成功！");
+        return ServerResponse.createBySuccessMsg("Đã đóng thành công！");
     }
 
     //用户追加保证金操作
@@ -736,7 +736,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
         int updateCount = this.userPositionMapper.updateByPrimaryKeySelective(position);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
         }
         return ServerResponse.createByErrorMsg("操作失败");
     }
@@ -754,7 +754,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         }*/
         int updateCount = this.userPositionMapper.deleteByPrimaryKey(positionId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
         return ServerResponse.createByErrorMsg("删除失败");
     }

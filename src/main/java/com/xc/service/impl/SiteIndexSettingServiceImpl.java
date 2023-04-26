@@ -92,7 +92,7 @@ public class SiteIndexSettingServiceImpl
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
 
         }
 

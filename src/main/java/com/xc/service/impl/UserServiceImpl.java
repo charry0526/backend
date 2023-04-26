@@ -178,7 +178,7 @@ public class UserServiceImpl implements IUserService {
                 return ServerResponse.createByErrorMsg("登陆失败, 账户被锁定");
             }
 
-            log.info("用户{}登陆成功, 登陆状态{} ,交易状态{}", new Object[] { user.getId(), user.getIsLogin(), user.getIsLock() });
+            log.info("用户{}Hạ cánh thành công, 登陆状态{} ,交易状态{}", new Object[] { user.getId(), user.getIsLogin(), user.getIsLock() });
 
             this.iSiteLoginLogService.saveLog(user, request);
             return ServerResponse.createBySuccess(user);
@@ -324,7 +324,7 @@ public class UserServiceImpl implements IUserService {
         user.setUserPwd(newPwd);
         int updateCount = this.userMapper.updateByPrimaryKeySelective(user);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
         return ServerResponse.createByErrorMsg("修改失败");
     }
@@ -385,7 +385,7 @@ public class UserServiceImpl implements IUserService {
 
         int updateCount = this.userMapper.updateByPrimaryKeySelective(user);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
         return ServerResponse.createByErrorMsg("修改失败");
     }
@@ -1237,7 +1237,7 @@ public class UserServiceImpl implements IUserService {
 
         int insertCount = this.userMapper.insert(user);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("用户添加成功");
+            return ServerResponse.createBySuccessMsg("用户Thêm thành công");
         }
         return ServerResponse.createByErrorMsg("用户添加失败");
     }
@@ -1277,7 +1277,7 @@ public class UserServiceImpl implements IUserService {
 
         int updateCount = this.userMapper.updateByPrimaryKeySelective(user);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccess("修改成功");
+            return ServerResponse.createBySuccess("Sửa đổi thành công");
         }
         return ServerResponse.createByErrorMsg("修改失败");
     }
@@ -1402,7 +1402,7 @@ public class UserServiceImpl implements IUserService {
 
         int delUserCount = this.userMapper.deleteByPrimaryKey(userId);
         if (delUserCount > 0) {
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
         }
         return ServerResponse.createByErrorMsg("操作失败, 查看日志");
     }
@@ -1479,7 +1479,7 @@ public class UserServiceImpl implements IUserService {
 
         int i = userMapper.updateWithPwd(with_pwd, phone);
         if (i>0){
-            return ServerResponse.createBySuccessMsg("添加成功！");
+            return ServerResponse.createBySuccessMsg("Thêm thành công！");
         }else {
             return ServerResponse.createByErrorMsg("添加失败！");
         }

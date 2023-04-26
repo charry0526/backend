@@ -51,7 +51,7 @@ public class SiteArticleServiceImpl
 
         int insertCount = this.siteArticleMapper.insert(siteArticle);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
         return ServerResponse.createByErrorMsg("添加失败");
     }
@@ -63,7 +63,7 @@ public class SiteArticleServiceImpl
         }
         int updateCount = this.siteArticleMapper.updateByPrimaryKeySelective(siteArticle);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
         return ServerResponse.createByErrorMsg("修改失败");
     }
@@ -74,7 +74,7 @@ public class SiteArticleServiceImpl
         }
         int updateCount = this.siteArticleMapper.deleteByPrimaryKey(artId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
         return ServerResponse.createByErrorMsg("删除失败");
     }

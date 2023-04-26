@@ -221,7 +221,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
 
         int updateCount = this.userIndexPositionMapper.deleteByPrimaryKey(positionId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
         return ServerResponse.createByErrorMsg("删除失败");
     }
@@ -366,7 +366,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             throw new Exception("【用户平仓指数】保存明细记录出错");
         }
 
-        return ServerResponse.createBySuccessMsg("平仓成功！");
+        return ServerResponse.createBySuccessMsg("Đã đóng thành công！");
     }
 
 
@@ -400,7 +400,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
 
         int updateCount = this.userIndexPositionMapper.updateByPrimaryKeySelective(userIndexPosition);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
         }
         return ServerResponse.createByErrorMsg("操作失败");
     }

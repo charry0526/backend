@@ -106,7 +106,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
 
         int updateCount = this.stockIndexMapper.updateByPrimaryKey(dbindex);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
         return ServerResponse.createByErrorMsg("修改失败");
     }
@@ -134,7 +134,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
         int insertCount = this.stockIndexMapper.insert(stockIndex);
 
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
         return ServerResponse.createByErrorMsg("添加失败");
     }

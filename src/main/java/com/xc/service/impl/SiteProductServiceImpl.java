@@ -31,7 +31,7 @@ public class SiteProductServiceImpl
 
         int updateCount = this.siteProductMapper.updateByPrimaryKeySelective(siteProduct);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
         return ServerResponse.createByErrorMsg("修改失败");
     }

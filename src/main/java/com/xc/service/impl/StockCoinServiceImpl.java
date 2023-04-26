@@ -173,7 +173,7 @@ public class StockCoinServiceImpl implements IStockCoinService {
 
         if (insertCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
 
         }
 
@@ -241,7 +241,7 @@ public class StockCoinServiceImpl implements IStockCoinService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
 
         }
 

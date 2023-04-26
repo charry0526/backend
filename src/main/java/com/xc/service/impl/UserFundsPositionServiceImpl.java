@@ -94,7 +94,7 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             ret = userFundsPositionMapper.insert(model);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
         }
         return ServerResponse.createByErrorMsg("操作失败");
     }
@@ -562,7 +562,7 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             throw new Exception("用户平仓】保存明细记录出错");
         }
 
-        return ServerResponse.createBySuccessMsg("平仓成功！");
+        return ServerResponse.createBySuccessMsg("Đã đóng thành công！");
     }
 
 

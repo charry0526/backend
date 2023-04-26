@@ -61,7 +61,7 @@ public class AgentApiController {
             AgentLoginResultVO resultVO = new AgentLoginResultVO();
             resultVO.setKey(agent_cookie_name);
             resultVO.setToken(token);
-            return ServerResponse.createBySuccess("登陆成功", resultVO);
+            return ServerResponse.createBySuccess("Hạ cánh thành công", resultVO);
         }
         return serverResponse;
     }

@@ -37,7 +37,7 @@ public class SiteBannerServiceImpl
         siteBanner.setAddTime(new Date());
         int insertCount = this.siteBannerMapper.insert(siteBanner);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
         return ServerResponse.createByErrorMsg("添加失败");
     }
@@ -59,7 +59,7 @@ public class SiteBannerServiceImpl
 
         int updateCount = this.siteBannerMapper.updateByPrimaryKeySelective(siteBanner);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
         return ServerResponse.createByErrorMsg("修改失败");
     }
@@ -71,7 +71,7 @@ public class SiteBannerServiceImpl
         }
         int deleteCount = this.siteBannerMapper.deleteByPrimaryKey(id);
         if (deleteCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
         return ServerResponse.createByErrorMsg("删除失败");
     }

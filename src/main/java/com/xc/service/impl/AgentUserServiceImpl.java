@@ -129,7 +129,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
         int updateCount = this.agentUserMapper.updateByPrimaryKeySelective(agentUser);
 
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
         return ServerResponse.createByErrorMsg("修改失败");
     }
@@ -200,7 +200,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
                 //分销用户数据处理
                 recursiveSaveAgentDistributionUser(insertCount,parentId,parentAgent.getAgentLevel());
             }
-            return ServerResponse.createBySuccessMsg("保存代理用户成功");
+            return ServerResponse.createBySuccessMsg("Lưu người dùng proxy thành công");
         }
         return ServerResponse.createByErrorMsg("添加失败，请重试");
     }
@@ -298,7 +298,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
 
         int insertCount = this.agentUserMapper.insert(dbAgent);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加代理成功");
+            return ServerResponse.createBySuccessMsg("Đã thêm đại lý thành công");
         }
         return ServerResponse.createByErrorMsg("添加代理失败");
     }
@@ -345,7 +345,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
 
         int updateCount = this.agentUserMapper.updateByPrimaryKeySelective(dbAgent);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改代理成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi proxy thành công");
         }
         return ServerResponse.createByErrorMsg("修改代理失败");
     }
@@ -450,7 +450,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
 
         int insertCount = this.siteTaskLogMapper.insert(siteTaskLog);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改资金成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi quỹ thành công");
         }
         return ServerResponse.createByErrorMsg("修改资金失败");
     }
@@ -465,7 +465,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
 
         int updateCount = this.agentUserMapper.deleteByPrimaryKey(agentId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除代理成功");
+            return ServerResponse.createBySuccessMsg("Đã xóa proxy thành công");
         }
         return ServerResponse.createByErrorMsg("删除代理失败");
     }

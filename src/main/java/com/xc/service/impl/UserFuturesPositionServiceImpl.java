@@ -243,7 +243,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
         int updateCount = this.userFuturesPositionMapper.deleteByPrimaryKey(positionId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
         return ServerResponse.createByErrorMsg("删除失败");
     }
@@ -396,7 +396,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
             throw new Exception("【用户平仓 期货 】保存明细记录出错");
         }
 
-        return ServerResponse.createBySuccessMsg("平仓成功！");
+        return ServerResponse.createBySuccessMsg("Đã đóng thành công！");
     }
 
 
@@ -460,7 +460,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
         int updateCount = this.userFuturesPositionMapper.updateByPrimaryKeySelective(position);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
         }
         return ServerResponse.createByErrorMsg("操作失败");
     }

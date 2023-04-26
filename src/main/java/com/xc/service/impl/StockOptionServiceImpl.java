@@ -83,7 +83,7 @@ package com.xc.service.impl;
 
      if (stockOption == null) {
 
-       return ServerResponse.createBySuccessMsg("未添加");
+       return ServerResponse.createBySuccessMsg("Không thêm vào");
 
      }
 

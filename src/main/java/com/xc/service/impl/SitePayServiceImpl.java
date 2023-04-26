@@ -40,7 +40,7 @@ public class SitePayServiceImpl
 
         int insertCount = this.sitePayMapper.insert(sitePay);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
         return ServerResponse.createByErrorMsg("添加失败");
     }
@@ -63,7 +63,7 @@ public class SitePayServiceImpl
 
         int updateCount = this.sitePayMapper.updateByPrimaryKeySelective(sitePay);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
         return ServerResponse.createByErrorMsg("修改失败");
     }
@@ -75,7 +75,7 @@ public class SitePayServiceImpl
         }
         int delCount = this.sitePayMapper.deleteByPrimaryKey(cId);
         if (delCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
         return ServerResponse.createByErrorMsg("删除失败");
     }

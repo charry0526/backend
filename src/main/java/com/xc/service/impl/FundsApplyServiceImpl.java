@@ -52,11 +52,11 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
     public ServerResponse insert(FundsApply model, HttpServletRequest request) throws Exception {
         int ret = 0;
         if (model == null) {
-            return ServerResponse.createBySuccessMsg("操作异常，请稍后重试！");
+            return ServerResponse.createBySuccessMsg("Hoạt động bất thường, vui lòng thử lại sau！");
         }
         User user = this.iUserService.getCurrentRefreshUser(request);
         if(user == null){
-            return ServerResponse.createBySuccessMsg("请登录后操作");
+            return ServerResponse.createBySuccessMsg("Vui lòng đăng nhập để thao tác");
         }
         BigDecimal user_enable_amt = user.getEnableAmt();
         //支付金额=保证金+管理费
@@ -98,9 +98,9 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
                 log.error("【按天配资】修改用户金额出错");
                 throw new Exception("【按天配资】修改用户金额出错");
             }
-            return ServerResponse.createBySuccessMsg("申请成功！");
+            return ServerResponse.createBySuccessMsg("ứng dụng thành công！");
         } else {
-            return ServerResponse.createBySuccessMsg("申请失败，请稍后重试！");
+            return ServerResponse.createBySuccessMsg("Ứng dụng không thành công, vui lòng thử lại sau！");
         }
     }
 
@@ -122,7 +122,7 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
             ret = fundsApplyMapper.insert(model);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
         }
         return ServerResponse.createByErrorMsg("操作失败");
     }
@@ -232,7 +232,7 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
                 /*     */       }
             /*     */     }
         /* 234 */     if (ret > 0) {
-            /* 235 */       return ServerResponse.createBySuccessMsg("操作成功");
+            /* 235 */       return ServerResponse.createBySuccessMsg("Hoạt động thành công");
             /*     */     }
         /* 237 */     return ServerResponse.createByErrorMsg("操作失败");
         /*     */   }

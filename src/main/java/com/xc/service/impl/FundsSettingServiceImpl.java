@@ -59,7 +59,7 @@ public class FundsSettingServiceImpl implements IFundsSettingService {
             ret = update(fundsSetting);
         }
         if (ret > 0) {
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
         }
         return ServerResponse.createByErrorMsg("操作失败");
     }
