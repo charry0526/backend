@@ -359,8 +359,12 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
         List<Esop_sq> list = this.siteAdminMapper.getEsopList_sq(pageNum, pageSize,phone,flag);
         for (Esop_sq item:list) {
             String gg = this.siteAdminMapper.getEsopLeverByCode(item.getXgname());
+            String price = this.siteAdminMapper.getEsopPriceByCode(item.getXgname());
+            item.setFinalPrice(item.getBzj());
+            item.setIssuePrice(price);
             item.setGgStr(gg);
         }
+
         PageInfo pageInfo = new PageInfo(page);
         pageInfo.setList(list);
         return ServerResponse.createBySuccess(pageInfo);

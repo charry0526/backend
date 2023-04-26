@@ -75,25 +75,25 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
         /*实名认证开关开启*/
         SiteProduct siteProduct = iSiteProductService.getProductSetting();
         if (siteProduct.getRealNameDisplay() && (StringUtils.isBlank(user.getRealName()) || StringUtils.isBlank(user.getIdCard()))) {
-            return ServerResponse.createByErrorMsg("下单失败，请先实名认证");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Vui lòng xác thực tên thật");
         }
 
         if(siteProduct.getHolidayDisplay()){
-            return ServerResponse.createByErrorMsg("周末或节假日不能交易！");
+            return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
 
         log.info("用户 {} 下单, 指数id = {} ，数量 = {} 手 , 方向 = {} ， 杠杆 = {}", new Object[]{user
                 .getId(), indexId, buyNum, buyType, lever});
 
         if (siteProduct.getRealNameDisplay() && user.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("下单失败，账户已被锁定");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, tài khoản đã bị khóa");
         }
 
 
         SiteIndexSetting siteIndexSetting = this.iSiteIndexSettingService.getSiteIndexSetting();
         if (siteIndexSetting == null) {
             log.error("下单出错，指数设置表不存在");
-            return ServerResponse.createByErrorMsg("下单失败，系统设置错误");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, lỗi hệ thống");
         }
 
 
@@ -105,7 +105,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
         boolean pm_flag = BuyAndSellUtils.isTransTime(pm_begin, pm_end);
         log.info("是否在上午交易时间 = {} 是否在下午交易时间 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag));
         if (!am_flag && !pm_flag) {
-            return ServerResponse.createByErrorMsg("下单失败，不在交易时段内");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, không trong thời gian giao dịch");
         }
 
 
@@ -205,7 +205,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             throw new Exception("用户交易指数下单】保存持仓记录出错");
         }
 
-        return ServerResponse.createBySuccess("下单成功");
+        return ServerResponse.createBySuccess("Đặt lệnh thành công");
     }
 
     @Override
@@ -234,7 +234,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
         SiteIndexSetting siteIndexSetting = this.iSiteIndexSettingService.getSiteIndexSetting();
         if (siteIndexSetting == null) {
             log.error("平仓出错，网站指数设置表不存在");
-            return ServerResponse.createByErrorMsg("下单失败，系统设置错误");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, lỗi hệ thống");
         }
 
 
@@ -265,7 +265,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             return ServerResponse.createByErrorMsg("平仓失败，用户已被锁定");
         }
         if(siteProduct.getHolidayDisplay()){
-            return ServerResponse.createByErrorMsg("周末或节假日不能交易！");
+            return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
         if (userIndexPosition.getSellOrderPrice() != null) {
             return ServerResponse.createByErrorMsg("平仓失败，此订单已平仓");

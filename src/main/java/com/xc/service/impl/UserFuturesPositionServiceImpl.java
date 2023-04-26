@@ -75,15 +75,15 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
         SiteProduct siteProduct = iSiteProductService.getProductSetting();
         User user = this.iUserService.getCurrentRefreshUser(request);
         if (siteProduct.getRealNameDisplay() && (StringUtils.isBlank(user.getRealName()) || StringUtils.isBlank(user.getIdCard()))) {
-            return ServerResponse.createByErrorMsg("下单失败，请先实名认证");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Vui lòng xác thực tên thật");
         }
 
         if(siteProduct.getHolidayDisplay()){
-            return ServerResponse.createByErrorMsg("周末或节假日不能交易！");
+            return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
 
         if (siteProduct.getRealNameDisplay() && user.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("下单失败，账户已被锁定");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, tài khoản đã bị khóa");
         }
 
         StockFutures stockFutures = this.iStockFuturesService.selectFuturesById(futuresId);
@@ -114,26 +114,26 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
         boolean pm_flag2 = BuyAndSellUtils.isTransTime(pm_begin2, pm_end2);
         log.info("futures 是否在上午交易时间 = {} 是否在下午交易时间 = {}是否在下午交易时间2 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag), Boolean.valueOf(pm_flag2));
         if (!am_flag && !pm_flag && !pm_flag2) {
-            return ServerResponse.createByErrorMsg("下单失败，不在交易时段内");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, không trong thời gian giao dịch");
         }
 
 
         SiteFuturesSetting siteFuturesSetting = this.iSiteFuturesSettingService.getSetting();
         if (siteFuturesSetting == null) {
             log.error("下单出错，网站设置表不存在");
-            return ServerResponse.createByErrorMsg("下单失败，系统设置错误");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, lỗi hệ thống");
         }
 
         List dbPosition = findPositionByFuturesCodeAndTimes(siteFuturesSetting.getBuySameTimes().intValue(), stockFutures
                 .getFuturesCode(), user.getId());
         if (dbPosition.size() >= siteFuturesSetting.getBuySameNums().intValue()) {
-            return ServerResponse.createByErrorMsg("频繁交易," + siteFuturesSetting.getBuySameTimes() + "分钟内同一产品持仓不得超过" + siteFuturesSetting
+            return ServerResponse.createByErrorMsg("Giao dịch vượt" + siteFuturesSetting.getBuySameTimes() + "分钟内同一产品持仓不得超过" + siteFuturesSetting
                     .getBuySameNums() + "条");
         }
 
         Integer transNum = findPositionNumByTimes(siteFuturesSetting.getBuyNumTimes().intValue(), user.getId());
         if (transNum.intValue() >= siteFuturesSetting.getBuyNumLots().intValue()) {
-            return ServerResponse.createByErrorMsg("频繁交易," + siteFuturesSetting.getBuyNumTimes() + "分钟内不能超过" + siteFuturesSetting
+            return ServerResponse.createByErrorMsg("Giao dịch vượt" + siteFuturesSetting.getBuyNumTimes() + "分钟内不能超过" + siteFuturesSetting
                     .getBuyNumLots() + "手");
         }
 
@@ -228,7 +228,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
             throw new Exception("用户交易 期货 下单】保存持仓记录出错");
         }
 
-        return ServerResponse.createBySuccess("下单成功");
+        return ServerResponse.createBySuccess("Đặt lệnh thành công");
     }
 
     @Override
@@ -289,7 +289,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
             return ServerResponse.createByErrorMsg("操作失败，用户已被锁定");
         }
         if(siteProduct.getHolidayDisplay()){
-            return ServerResponse.createByErrorMsg("周末或节假日不能交易！");
+            return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
 
         if (userFuturesPosition.getSellOrderPrice() != null) {
