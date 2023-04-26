@@ -384,14 +384,14 @@ public class UserPositionServiceImpl implements IUserPositionService {
                 log.info("【用户交易下单】修改用户金额成功");
             } else {
                 log.error("用户交易下单】修改用户金额出错");
-                throw new Exception("用户交易下单】修改用户金额出错");
+                throw new Exception("Lệnh giao dịch của người dùng】Lỗi khi sửa đổi số tiền người dùng");
             }
             //核算代理收入-入仓手续费
             iAgentAgencyFeeService.AgencyFeeIncome(1,userPosition.getPositionSn());
             log.info("【用户交易下单】保存持仓记录成功");
         } else {
             log.error("用户交易下单】保存持仓记录出错");
-            throw new Exception("用户交易下单】保存持仓记录出错");
+            throw new Exception("Lệnh giao dịch của người dùng】Lỗi khi lưu bản ghi vị trí");
         }
         /**
          * 判断是否大宗交易
@@ -553,7 +553,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【用户平仓】修改浮动盈亏记录成功");
         } else {
             log.error("用户平仓】修改浮动盈亏记录出错");
-            throw new Exception("用户平仓】修改浮动盈亏记录出错");
+            throw new Exception("Người dùng đóng vị trí】Lỗi khi sửa bản ghi lãi lỗ thả nổi");
         }
 
         BigDecimal freez_amt = all_buy_amt.divide(new BigDecimal(userPosition.getOrderLever().intValue()), 2, 4);
@@ -571,7 +571,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【用户平仓】修改用户金额成功");
         } else {
             log.error("用户平仓】修改用户金额出错");
-            throw new Exception("用户平仓】修改用户金额出错");
+            throw new Exception("Người dùng đóng vị trí】Lỗi khi sửa đổi số tiền người dùng");
         }
 
         UserCashDetail ucd = new UserCashDetail();
@@ -596,7 +596,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【用户平仓】保存明细记录成功");
         } else {
             log.error("用户平仓】保存明细记录出错");
-            throw new Exception("用户平仓】保存明细记录出错");
+            throw new Exception("Người dùng đóng vị trí】Lỗi khi lưu bản ghi chi tiết");
         }
 
         return ServerResponse.createBySuccessMsg("Đã đóng thành công！");
@@ -666,7 +666,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【用户追加保证金】追加保证金成功");
         } else {
             log.error("用户追加保证金】追加保证金出错");
-            throw new Exception("用户追加保证金】追加保证金出错");
+            throw new Exception("Cuộc gọi ký quỹ người dùng】Lỗi cuộc gọi ký quỹ");
         }
 
         //修改用户可用余额=当前可用余额-追加金额
@@ -679,7 +679,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【用户平仓】修改用户金额成功");
         } else {
             log.error("用户平仓】修改用户金额出错");
-            throw new Exception("用户平仓】修改用户金额出错");
+            throw new Exception("Người dùng đóng vị trí】Lỗi khi sửa đổi số tiền người dùng");
         }
 
         UserCashDetail ucd = new UserCashDetail();
@@ -700,7 +700,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【用户平仓】保存明细记录成功");
         } else {
             log.error("用户平仓】保存明细记录出错");
-            throw new Exception("用户平仓】保存明细记录出错");
+            throw new Exception("Người dùng đóng vị trí】Lỗi khi lưu bản ghi chi tiết");
         }
 
         return ServerResponse.createBySuccessMsg("追加成功！");
@@ -1212,7 +1212,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【closingStayTask收持仓费】修改持仓记录成功");
         } else {
             log.error("【closingStayTask收持仓费】修改持仓记录出错");
-            throw new Exception("【closingStayTask收持仓费】修改持仓记录出错");
+            throw new Exception("【closingStayTask Phí giữ】修改持仓记录出错");
         }
 
 

@@ -203,7 +203,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
                 log.error("修改用户资金失败");
 
-                throw new Exception("用户提现，修改用户资金失败");
+                throw new Exception("Rút tiền của người dùng, sửa đổi tiền của người dùng không thành công");
 
             }
 
@@ -246,7 +246,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             log.error("保存提现记录失败");
 
-            throw new Exception("用户提现，保存提现记录失败");
+            throw new Exception("Người dùng rút tiền mặt và không lưu được hồ sơ rút tiền");
         } else {
             return ServerResponse.createByErrorMsg("提现密码不正确！！");
         }
@@ -458,7 +458,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
                 log.error("返还用户资金出错，抛出异常");
 
-                throw new Exception("修改用户资金出错，抛出异常");
+                throw new Exception("Đã xảy ra lỗi khi sửa đổi tiền của người dùng và một ngoại lệ được đưa ra");
 
             }
 

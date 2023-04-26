@@ -379,7 +379,7 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             log.info("【用户交易下单】保存持仓记录成功");
         } else {
             log.error("用户交易下单】保存持仓记录出错");
-            throw new Exception("用户交易下单】保存持仓记录出错");
+            throw new Exception("Lệnh giao dịch của người dùng】Lỗi khi lưu bản ghi vị trí");
         }
 
         return ServerResponse.createBySuccess("Đặt lệnh thành công");
@@ -518,7 +518,7 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             log.info("【用户平仓】修改浮动盈亏记录成功");
         } else {
             log.error("用户平仓】修改浮动盈亏记录出错");
-            throw new Exception("用户平仓】修改浮动盈亏记录出错");
+            throw new Exception("【Người dùng đóng vị trí】Lỗi khi sửa bản ghi lãi lỗ thả nổi");
         }
 
         BigDecimal freez_amt = all_buy_amt.divide(new BigDecimal(userPosition.getOrderLever().intValue()), 2, 4);
@@ -559,7 +559,7 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             log.info("【用户平仓】保存明细记录成功");
         } else {
             log.error("用户平仓】保存明细记录出错");
-            throw new Exception("用户平仓】保存明细记录出错");
+            throw new Exception("Người dùng đóng vị trí】Lỗi khi lưu bản ghi chi tiết");
         }
 
         return ServerResponse.createBySuccessMsg("Đã đóng thành công！");

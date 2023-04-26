@@ -178,7 +178,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         if (updateCCount > 0) {
             log.info("2.修改订单状态成功");
         } else {
-            throw new Exception("2. 修改订单状态失败!");
+            throw new Exception("2. Không thể sửa đổi trạng thái đơn đặt hàng!");
         }
 
 
@@ -328,7 +328,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
                 log.info("修改用户资金成功！");
             } else {
                 log.error("修改用户资金出错，抛出异常");
-                throw new Exception("修改用户资金出错，抛出异常");
+                throw new Exception("Đã xảy ra lỗi khi sửa đổi tiền của người dùng và một ngoại lệ được đưa ra");
             }
         }
 

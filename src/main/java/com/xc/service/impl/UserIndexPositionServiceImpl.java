@@ -340,7 +340,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             log.info("【用户平仓指数】修改用户金额成功");
         } else {
             log.error("【用户平仓指数】修改用户金额出错");
-            throw new Exception("【用户平仓指数】修改用户金额出错");
+            throw new Exception("【Chỉ mục đóng của người dùng】修改用户金额出错");
         }
 
         UserCashDetail ucd = new UserCashDetail();
@@ -363,7 +363,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             log.info("【用户平仓指数】保存明细记录成功");
         } else {
             log.error("【用户平仓指数】保存明细记录出错");
-            throw new Exception("【用户平仓指数】保存明细记录出错");
+            throw new Exception("【Chỉ mục đóng của người dùng】保存明细记录出错");
         }
 
         return ServerResponse.createBySuccessMsg("Đã đóng thành công！");
