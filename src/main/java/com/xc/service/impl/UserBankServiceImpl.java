@@ -2,27 +2,17 @@ package com.xc.service.impl;
 
 
 import com.xc.common.ServerResponse;
-
 import com.xc.dao.UserBankMapper;
-
 import com.xc.pojo.User;
-
 import com.xc.pojo.UserBank;
-
 import com.xc.service.IUserBankService;
-
 import com.xc.service.IUserService;
-
-
 import com.xc.vo.user.UserBankInfoVO;
-
-import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
+import java.util.Date;
 
  @Service("iUserBankService")
  public class UserBankServiceImpl implements IUserBankService {
@@ -81,7 +71,7 @@ import org.springframework.stereotype.Service;
 
      if (dbBank == null) {
 
-       return ServerResponse.createByErrorMsg("修改失败，找不到银行");
+       return ServerResponse.createByErrorMsg("Không thể chỉnh sửa，找不到银行");
 
      }
 
@@ -136,7 +126,7 @@ import org.springframework.stereotype.Service;
 
      if (userBank.getId() == null) {
 
-       return ServerResponse.createByErrorMsg("修改id必传");
+       return ServerResponse.createByErrorMsg("ID sửa đổi phải được thông qua");
 
      }
 
@@ -148,7 +138,7 @@ import org.springframework.stereotype.Service;
 
      }
 
-     return ServerResponse.createByErrorMsg("修改失败");
+     return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
 
    }
 

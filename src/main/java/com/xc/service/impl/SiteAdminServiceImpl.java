@@ -71,7 +71,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (StringUtils.isBlank(verifyCode)) {
 
-            return ServerResponse.createByErrorMsg("验证码不能为空");
+            return ServerResponse.createByErrorMsg("Mã xác minh phải được điền");
 
         }
 
@@ -86,7 +86,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (StringUtils.isBlank(adminPhone) || StringUtils.isBlank(adminPwd)) {
 
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
 
         }
 
@@ -95,14 +95,14 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (siteAdmin == null) {
 
-            return ServerResponse.createByErrorMsg("账号密码错误");
+            return ServerResponse.createByErrorMsg("lỗi mật khẩu tài khoản");
 
         }
 
 
         if (siteAdmin.getIsLock().intValue() == 1) {
 
-            return ServerResponse.createByErrorMsg("账号已被锁定");
+            return ServerResponse.createByErrorMsg("Tài khoản đã bị khóa");
 
         }
 
@@ -228,7 +228,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
+            return ServerResponse.createBySuccessMsg("修改成功");
 
         }
 
@@ -286,7 +286,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (insertCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("Thêm thành công");
+            return ServerResponse.createBySuccessMsg("添加成功");
 
         }
 
@@ -306,7 +306,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
         stock.setId(null);
         this.stockMapper.insert(stock);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("Thêm thành công");
+            return ServerResponse.createBySuccessMsg("添加成功");
         }
         return ServerResponse.createByErrorMsg("添加失败");
     }
@@ -315,7 +315,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
     public ServerResponse addESOP_sq(Esop_sq esop) {
         int insertCount = this.siteAdminMapper.addEsop_sq(esop);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("Thêm thành công");
+            return ServerResponse.createBySuccessMsg("添加成功");
         }
         return ServerResponse.createByErrorMsg("添加失败");
     }
@@ -420,7 +420,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
+            return ServerResponse.createBySuccessMsg("修改成功");
 
         }
 
@@ -443,7 +443,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("Xóa thành công");
+            return ServerResponse.createBySuccessMsg("删除成功");
 
         }
 

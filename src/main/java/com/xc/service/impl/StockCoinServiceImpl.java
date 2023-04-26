@@ -136,7 +136,7 @@ public class StockCoinServiceImpl implements IStockCoinService {
 
                 StringUtils.isBlank(stockCoin.getCoinGid())) {
 
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
 
         }
 
@@ -177,7 +177,7 @@ public class StockCoinServiceImpl implements IStockCoinService {
 
         }
 
-        return ServerResponse.createByErrorMsg("添加失败");
+        return ServerResponse.createByErrorMsg("Thêm không thành công");
 
     }
 
@@ -186,7 +186,7 @@ public class StockCoinServiceImpl implements IStockCoinService {
 
         if (stockCoin.getId() == null) {
 
-            return ServerResponse.createByErrorMsg("修改id不能为空");
+            return ServerResponse.createByErrorMsg("修改id không thể để trống");
 
         }
 
@@ -245,7 +245,7 @@ public class StockCoinServiceImpl implements IStockCoinService {
 
         }
 
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
 
     }
 

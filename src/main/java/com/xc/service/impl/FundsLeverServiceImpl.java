@@ -76,9 +76,9 @@ public class FundsLeverServiceImpl implements IFundsLeverService {
             ret = fundsLeverMapper.insert(fundsLever);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
+            return ServerResponse.createBySuccessMsg("Chạy thành công");
         }
-        return ServerResponse.createByErrorMsg("操作失败");
+        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
     }
 
     /*查询配资类型杠杆*/

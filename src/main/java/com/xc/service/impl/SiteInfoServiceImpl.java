@@ -60,7 +60,7 @@ public class SiteInfoServiceImpl implements ISiteInfoService {
         if (insertCount > 0) {
             return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
-        return ServerResponse.createByErrorMsg("添加失败");
+        return ServerResponse.createByErrorMsg("Thêm không thành công");
 
     }
 
@@ -68,7 +68,7 @@ public class SiteInfoServiceImpl implements ISiteInfoService {
     public ServerResponse update(SiteInfo siteInfo) {
 
         if (siteInfo.getId() == null) {
-            return ServerResponse.createByErrorMsg("ID不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
 
         int updateCount = this.siteInfoMapper.updateByPrimaryKeySelective(siteInfo);
@@ -76,7 +76,7 @@ public class SiteInfoServiceImpl implements ISiteInfoService {
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
     }
 
 

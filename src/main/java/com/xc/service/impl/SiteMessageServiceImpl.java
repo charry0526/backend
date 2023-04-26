@@ -100,14 +100,14 @@ public class SiteMessageServiceImpl implements ISiteMessageService {
 
     public ServerResponse del(Integer id, HttpServletRequest request) {
         if (id == null) {
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
 
         int updateCount = this.siteMessageMapper.delete(id);
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
 }

@@ -14,7 +14,6 @@ import com.xc.pojo.StockFutures;
 import com.xc.pojo.StockIndex;
 import com.xc.pojo.User;
 import com.xc.service.*;
-import com.xc.utils.DateTimeUtil;
 import com.xc.utils.HttpClientRequest;
 import com.xc.utils.PropertiesUtil;
 import com.xc.utils.stock.pinyin.GetPyByChinese;
@@ -26,7 +25,6 @@ import com.xc.vo.stock.k.echarts.EchartsDataVO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -615,7 +613,7 @@ public class StockServiceImpl implements IStockService {
   public ServerResponse deleteByPrimaryKey(Integer id) {
     int updateCount = this.stockMapper.deleteByPrimaryKey(id);
     if (updateCount > 0) {
-      return ServerResponse.createBySuccessMsg("Hoạt động thành công");
+      return ServerResponse.createBySuccessMsg("操作成功");
     }
     return ServerResponse.createByErrorMsg("操作失败");
   }

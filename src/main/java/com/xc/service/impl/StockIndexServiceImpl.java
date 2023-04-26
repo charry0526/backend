@@ -91,7 +91,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
 
     public ServerResponse updateIndex(StockIndex stockIndex) {
         if (stockIndex.getId() == null) {
-            return ServerResponse.createByErrorMsg("修改id不能为空");
+            return ServerResponse.createByErrorMsg("修改id không thể để trống");
         }
 
         StockIndex dbindex = this.stockIndexMapper.selectByPrimaryKey(stockIndex.getId());
@@ -108,7 +108,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
     }
 
 
@@ -118,7 +118,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
         if (StringUtils.isBlank(stockIndex.getIndexName()) ||
                 StringUtils.isBlank(stockIndex.getIndexCode()) ||
                 StringUtils.isBlank(stockIndex.getIndexGid())) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         StockIndex nameIndex = this.stockIndexMapper.selectIndexByName(stockIndex.getIndexName());
@@ -136,7 +136,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
         if (insertCount > 0) {
             return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
-        return ServerResponse.createByErrorMsg("添加失败");
+        return ServerResponse.createByErrorMsg("Thêm không thành công");
     }
 
 

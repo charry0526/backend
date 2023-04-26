@@ -40,7 +40,7 @@ public class QqStockApi {
 
         log.info(" qq-code = {} ", stock.getStockGid());
         if (StringUtils.isBlank(hqstr)) {
-            return ServerResponse.createByErrorMsg("没有查询到行情数据");
+            return ServerResponse.createByErrorMsg("Không tìm thấy dữ liệu thị trường");
         }
         String qqstr = hqstr.split("=")[1].replace("\";","").replace("\\n\\",",").replace("\n","").replace("\"","");
         String[] liststr = qqstr.split(",");
@@ -86,7 +86,7 @@ public class QqStockApi {
 
         log.info(" 期货日线-code = {} ", stock.getFuturesGid());
         if (StringUtils.isBlank(hqstr)) {
-            return ServerResponse.createByErrorMsg("没有查询到行情数据");
+            return ServerResponse.createByErrorMsg("Không tìm thấy dữ liệu thị trường");
         }
         hqstr = hqstr.split("\\(")[1].replace(");","");
         hqstr = hqstr.replaceAll("date","day");
@@ -123,7 +123,7 @@ public class QqStockApi {
 
         log.info(" 指数日线-code = {} ", stock.getIndexGid());
         if (StringUtils.isBlank(hqstr)) {
-            return ServerResponse.createByErrorMsg("没有查询到行情数据");
+            return ServerResponse.createByErrorMsg("Không tìm thấy dữ liệu thị trường");
         }
         hqstr = hqstr.split(":\\[\\[")[1];
         hqstr = hqstr.split("]]")[0].replace("],[",";");
@@ -185,7 +185,7 @@ public class QqStockApi {
 
         log.info(" qq-code = {} ", stock.getStockGid());
         if (StringUtils.isBlank(hqstr)) {
-            return ServerResponse.createByErrorMsg("没有查询到行情数据");
+            return ServerResponse.createByErrorMsg("Không tìm thấy dữ liệu thị trường");
         }
         //String qqstr = hqstr.split("=")[1];
         JSONObject json = JSONObject.fromObject(hqstr);

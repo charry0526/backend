@@ -7,11 +7,11 @@ import com.xc.common.ServerResponse;
 import com.xc.dao.SitePayMapper;
 import com.xc.pojo.SitePay;
 import com.xc.service.ISitePayService;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service("iSitePayService")
@@ -29,7 +29,7 @@ public class SitePayServiceImpl
                 .getChannelMaxLimit() == null || sitePay
                 .getIsShow() == null || sitePay
                 .getIsLock() == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
 
@@ -42,7 +42,7 @@ public class SitePayServiceImpl
         if (insertCount > 0) {
             return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
-        return ServerResponse.createByErrorMsg("添加失败");
+        return ServerResponse.createByErrorMsg("Thêm không thành công");
     }
 
 
@@ -58,26 +58,26 @@ public class SitePayServiceImpl
 
     public ServerResponse update(SitePay sitePay) {
         if (sitePay.getId() == null) {
-            return ServerResponse.createByErrorMsg("修改id不能为空");
+            return ServerResponse.createByErrorMsg("修改id không thể để trống");
         }
 
         int updateCount = this.sitePayMapper.updateByPrimaryKeySelective(sitePay);
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
     }
 
 
     public ServerResponse del(Integer cId) {
         if (cId == null) {
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
         int delCount = this.sitePayMapper.deleteByPrimaryKey(cId);
         if (delCount > 0) {
             return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
 

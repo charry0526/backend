@@ -3,7 +3,6 @@ package com.xc.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Lists;
 import com.xc.common.ServerResponse;
 import com.xc.dao.AgentUserMapper;
 import com.xc.dao.SiteTaskLogMapper;
@@ -19,20 +18,17 @@ import com.xc.utils.redis.JsonUtil;
 import com.xc.utils.redis.RedisShardedPoolUtils;
 import com.xc.vo.agent.AgentInfoVO;
 import com.xc.vo.agent.AgentSecondInfoVO;
-
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 
 @Service("iAgentUserService")
@@ -80,16 +76,16 @@ public class AgentUserServiceImpl implements IAgentUserService {
 //        }
 
         if (StringUtils.isBlank(agentPhone) || StringUtils.isBlank(agentPwd)) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         AgentUser agentUser = this.agentUserMapper.login(agentPhone, agentPwd);
         if (agentUser == null) {
-            return ServerResponse.createByErrorMsg("用户密码不正确");
+            return ServerResponse.createByErrorMsg("Mật khẩu người dùng không chính xác");
         }
 
         if (agentUser.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("登陆失败，您的账号已被锁定！");
+            return ServerResponse.createByErrorMsg("Đăng nhập không thành công, tài khoản của bạn đã bị khóa!");
         }
 
         return ServerResponse.createBySuccess(agentUser);
@@ -102,7 +98,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
         if (serverResponse.isSuccess()) {
             SiteInfo siteInfo = (SiteInfo) serverResponse.getData();
             if (StringUtils.isBlank(siteInfo.getSiteHost())) {
-                return ServerResponse.createByErrorMsg("info host未设置");
+                return ServerResponse.createByErrorMsg("Máy chủ thông tin chưa được đặt");
             }
             host = siteInfo.getSiteHost();
         }
@@ -117,12 +113,12 @@ public class AgentUserServiceImpl implements IAgentUserService {
 
     public ServerResponse updatePwd(String oldPwd, String newPwd, HttpServletRequest request) {
         if (StringUtils.isBlank(oldPwd) || StringUtils.isBlank(newPwd)) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         AgentUser agentUser = getCurrentAgent(request);
         if (!oldPwd.equals(agentUser.getAgentPwd())) {
-            return ServerResponse.createByErrorMsg("密码错误");
+            return ServerResponse.createByErrorMsg("Sai mật khẩu");
         }
 
         agentUser.setAgentPwd(newPwd);
@@ -131,7 +127,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
     }
 
 
@@ -140,17 +136,17 @@ public class AgentUserServiceImpl implements IAgentUserService {
                 StringUtils.isBlank(agentPwd) ||
                 StringUtils.isBlank(agentRealName) ||
                 StringUtils.isBlank(agentPhone)) {
-            return ServerResponse.createByErrorMsg("添加失败，参数不能为空");
+            return ServerResponse.createByErrorMsg("Thêm không thành công，Tham số không thể để trống");
         }
 
         AgentUser dbuser = this.agentUserMapper.findByName(agentName);
         if (dbuser != null) {
-            return ServerResponse.createByErrorMsg("添加失败，代理名已存在");
+            return ServerResponse.createByErrorMsg("Thêm không thành công，Tên đại lý đã tồn tại");
         }
 
         AgentUser dbuser2 = this.agentUserMapper.findByPhone(agentPhone);
         if (dbuser2 != null) {
-            return ServerResponse.createByErrorMsg("添加失败，手机号已存在");
+            return ServerResponse.createByErrorMsg("Thêm không thành công，số điện thoại đã tồn tại");
         }
 
         AgentUser agentUser = new AgentUser();
@@ -172,7 +168,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
         if (parentId != null && parentId>0) {
             if (parentAgent != null) {
                 if(parentAgent.getAgentLevel()>=6){
-                    return ServerResponse.createByErrorMsg("六级代理不能添加下级");
+                    return ServerResponse.createByErrorMsg("Đại lý cấp 6 không thể thêm cấp dưới");
                 }
                 agentUser.setParentId(parentAgent.getId());
                 agentUser.setParentName(parentAgent.getAgentName());
@@ -202,7 +198,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
             }
             return ServerResponse.createBySuccessMsg("Lưu người dùng proxy thành công");
         }
-        return ServerResponse.createByErrorMsg("添加失败，请重试");
+        return ServerResponse.createByErrorMsg("Thêm không thành công，vui lòng thử lại");
     }
 
     //分销代理数据：循环添加
@@ -261,7 +257,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
                 StringUtils.isBlank(agentUser.getAgentPhone()) ||
                 StringUtils.isBlank(agentUser.getAgentRealName()) ||
                 StringUtils.isBlank(agentUser.getAgentPwd())) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         AgentUser pAgent = this.agentUserMapper.findByPhone(agentUser.getAgentPhone());
@@ -389,7 +385,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
     @Transactional
     public ServerResponse updateAgentAmt(Integer agentId, Integer amt, Integer direction) {
         if (agentId == null || amt == null || direction == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         AgentUser agentUser = this.agentUserMapper.selectByPrimaryKey(agentId);

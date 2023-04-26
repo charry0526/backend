@@ -138,14 +138,14 @@ public class UserPositionServiceImpl implements IUserPositionService {
         List dbPosition = findPositionByStockCodeAndTimes(siteSetting.getBuySameTimes().intValue(), stock
                 .getStockCode(), user.getId());
         if (dbPosition.size() >= siteSetting.getBuySameNums().intValue()) {
-            return ServerResponse.createByErrorMsg("Giao dịch vượt" + siteSetting.getBuySameTimes() + "分钟内同一股票持仓不得超过" + siteSetting
-                    .getBuySameNums() + "条");
+            return ServerResponse.createByErrorMsg("Giao dịch vượt" + siteSetting.getBuySameTimes() + "Vị trí của cùng một cổ phiếu trong vòng một phút không được vượt quá" + siteSetting
+                    .getBuySameNums() + "dải");
         }
 
         Integer transNum = findPositionNumByTimes(siteSetting.getBuyNumTimes().intValue(), user.getId());
         if (transNum.intValue() / 100 >= siteSetting.getBuyNumLots().intValue()) {
             return ServerResponse.createByErrorMsg("Giao dịch vượt" + siteSetting
-                    .getBuyNumTimes() + "分钟内不能超过" + siteSetting.getBuyNumLots() + "股");
+                    .getBuyNumTimes() + "phút không thể vượt quá" + siteSetting.getBuyNumLots() + "cổ");
         }
 
 
@@ -165,9 +165,9 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【普通A股】");
         }
 
-        if(stockListVO.getName().startsWith("ST") || stockListVO.getName().endsWith("退")){
-            return ServerResponse.createByErrorMsg("ST和已退市的股票不能入仓");
-        }
+//        if(stockListVO.getName().startsWith("ST") || stockListVO.getName().endsWith("退")){
+////            return ServerResponse.createByErrorMsg("ST和已退市的股票不能入仓");
+//        }
         String price = "";
         UserPosition userPosition = new UserPosition();
         int min = siteSetting.getBuyMinNum().intValue();
@@ -198,13 +198,13 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
         BigDecimal ztRate = chaPrice.multiply(new BigDecimal("100")).divide(zsPrice, 2, 4);
         if (now_price.compareTo(new BigDecimal("0")) == 0) {
-            return ServerResponse.createByErrorMsg("报价0，请稍后再试");
+            return ServerResponse.createByErrorMsg("Trích dẫn 0, vui lòng thử lại sau");
         }
 
         log.info("当前涨跌幅 = {} % , 涨停幅度 = {} %", Double.valueOf(stock_crease), ztRate);
         if ((new BigDecimal(String.valueOf(stock_crease))).compareTo(ztRate) == 0 && buyType
                 .intValue() == 0) {
-            return ServerResponse.createByErrorMsg("当前股票已涨停不能买涨");
+            return ServerResponse.createByErrorMsg("Cổ phiếu hiện tại đã đạt đến giới hạn hàng ngày và không thể mua được");
         }
 
 
@@ -404,7 +404,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             if(r > 0){
                 log.info("iSiteAdminService.updateStatus : {} 申请状态Sửa đổi thành công");
             }else{
-                log.info("iSiteAdminService.updateStatus : {}  申请状态修改失败");
+                log.info("iSiteAdminService.updateStatus : {}  申请状态Không thể chỉnh sửa");
             }
         }
 
@@ -709,7 +709,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
     public ServerResponse lock(Integer positionId, Integer state, String lockMsg) {
         if (positionId == null || state == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         UserPosition position = this.userPositionMapper.selectByPrimaryKey(positionId);
@@ -736,14 +736,14 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
         int updateCount = this.userPositionMapper.updateByPrimaryKeySelective(position);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
+            return ServerResponse.createBySuccessMsg("Chạy thành công");
         }
-        return ServerResponse.createByErrorMsg("操作失败");
+        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
     }
 
     public ServerResponse del(Integer positionId) {
         if (positionId == null) {
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
         UserPosition position = this.userPositionMapper.selectByPrimaryKey(positionId);
         if (position == null) {
@@ -754,9 +754,9 @@ public class UserPositionServiceImpl implements IUserPositionService {
         }*/
         int updateCount = this.userPositionMapper.deleteByPrimaryKey(positionId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("Xóa thành công");
+            return ServerResponse.createBySuccessMsg("删除成功");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
     public ServerResponse findMyPositionByCodeAndSpell(String stockCode, String stockSpell, Integer state, HttpServletRequest request, int pageNum, int pageSize) {
@@ -983,7 +983,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         if (userId == null || StringUtils.isBlank(buyPrice) || StringUtils.isBlank(stockCode) ||
                 StringUtils.isBlank(buyTime) || buyNum == null || buyType == null || lever == null) {
 
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         User user = this.userMapper.selectByPrimaryKey(userId);

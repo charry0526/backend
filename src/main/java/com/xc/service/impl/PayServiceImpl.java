@@ -55,7 +55,7 @@ public class PayServiceImpl implements IPayService {
 
     public ServerResponse juhe1(String payType, String payAmt, HttpServletRequest request) {
         if (StringUtils.isBlank(payType) || StringUtils.isBlank(payAmt)) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
         BigDecimal payAmtBig = new BigDecimal(payAmt);
         if ((new BigDecimal("0")).compareTo(payAmtBig) != -1) {

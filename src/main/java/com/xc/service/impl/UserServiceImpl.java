@@ -96,7 +96,7 @@ public class UserServiceImpl implements IUserService {
         if (StringUtils.isBlank(agentCode) || StringUtils.isBlank(phone) ||
                 StringUtils.isBlank(userPwd) || StringUtils.isBlank(yzmCode))
         {
-            return ServerResponse.createByErrorMsg("注册失败, 参数不能为空");
+            return ServerResponse.createByErrorMsg("Dăng ký thất bại, Tham số không thể để trống");
         }
 
 
@@ -105,22 +105,22 @@ public class UserServiceImpl implements IUserService {
 
         log.info("redis_yzm = {},yzmCode = {}", redis_yzm, yzmCode);
         if (!yzmCode.equals(redis_yzm) && !"6666".equals(yzmCode)) {
-            return ServerResponse.createByErrorMsg("注册失败, 验证码错误");
+            return ServerResponse.createByErrorMsg("Dăng ký thất bại, Lỗi mã xác minh");
         }
 
 
         AgentUser agentUser = this.iAgentUserService.findByCode(agentCode);
         if (agentUser == null) {
-            return ServerResponse.createByErrorMsg("注册失败, 代理不存在");
+            return ServerResponse.createByErrorMsg("Dăng ký thất bại, đại lý không tồn tại");
         }
         if (agentUser.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("注册失败, 代理已被锁定");
+            return ServerResponse.createByErrorMsg("Dăng ký thất bại, Proxy đã bị khóa");
         }
 
 
         User dbuser = this.userMapper.findByPhone(phone);
         if (dbuser != null) {
-            return ServerResponse.createByErrorMsg("注册失败, 手机号已注册");
+            return ServerResponse.createByErrorMsg("Dăng ký thất bại, Số điện thoại di động đã được đăng ký");
         }
 
 
@@ -169,21 +169,21 @@ public class UserServiceImpl implements IUserService {
 
     public ServerResponse login(String phone, String userPwd, HttpServletRequest request) {
         if (StringUtils.isBlank(phone) || StringUtils.isBlank(userPwd)) {
-            return ServerResponse.createByErrorMsg("手机号和密码不能为空");
+            return ServerResponse.createByErrorMsg("Số điện thoại di động và mật khẩu không được để trống");
         }
 
         User user = this.userMapper.login(phone, userPwd);
         if (user != null) {
             if (user.getIsLogin().intValue() == 1) {
-                return ServerResponse.createByErrorMsg("登陆失败, 账户被锁定");
+                return ServerResponse.createByErrorMsg("Đăng nhập không thành công, tài khoản bị khóa");
             }
 
-            log.info("用户{}Hạ cánh thành công, 登陆状态{} ,交易状态{}", new Object[] { user.getId(), user.getIsLogin(), user.getIsLock() });
+            log.info("用户{}登陆成功, 登陆状态{} ,交易状态{}", new Object[] { user.getId(), user.getIsLogin(), user.getIsLock() });
 
             this.iSiteLoginLogService.saveLog(user, request);
             return ServerResponse.createBySuccess(user);
         }
-        return ServerResponse.createByErrorMsg("登陆失败，用户名密码错误");
+        return ServerResponse.createByErrorMsg("Đăng nhập không thành công, tên người dùng và mật khẩu sai");
     }
 
 
@@ -214,7 +214,7 @@ public class UserServiceImpl implements IUserService {
         StockOption dboption = this.stockOptionMapper.findMyOptionIsExistByCode(user.getId(), stockcode);
 
         if (dboption != null) {
-            return ServerResponse.createByErrorMsg("添加失败，自选股已存在");
+            return ServerResponse.createByErrorMsg("Thêm không thành công，Cổ phiếu tùy chọn đã tồn tại ");
         }
 
 
@@ -242,7 +242,7 @@ public class UserServiceImpl implements IUserService {
             stock = this.stockMapper.findStockByCode(code,0);
         }
         if (stock == null) {
-            return ServerResponse.createByErrorMsg("添加失败，股票不存在");
+            return ServerResponse.createByErrorMsg("Thêm không thành công，股票不存在");
         }
         StockOption stockOption = new StockOption();
         stockOption.setUserId(user.getId());
@@ -258,7 +258,7 @@ public class UserServiceImpl implements IUserService {
         if (insertCount > 0) {
             return ServerResponse.createBySuccessMsg("添加自选股成功");
         }
-        return ServerResponse.createByErrorMsg("添加失败, 请重试");
+        return ServerResponse.createByErrorMsg("Thêm không thành công, 请重试");
     }
 
 
@@ -274,14 +274,14 @@ public class UserServiceImpl implements IUserService {
         StockOption dboption = this.stockOptionMapper.findMyOptionIsExistByCode(user.getId(), stockcode);
 
         if (dboption == null) {
-            return ServerResponse.createByErrorMsg("删除失败, 自选股不存在");
+            return ServerResponse.createByErrorMsg("Không thể xóa, 自选股不存在");
         }
 
         int delCount = this.stockOptionMapper.deleteByPrimaryKey(dboption.getId());
         if (delCount > 0) {
             return ServerResponse.createBySuccessMsg("删除自选股成功");
         }
-        return ServerResponse.createByErrorMsg("删除失败, 请重试");
+        return ServerResponse.createByErrorMsg("Không thể xóa, 请重试");
     }
 
 
@@ -313,12 +313,12 @@ public class UserServiceImpl implements IUserService {
 
     public ServerResponse updatePwd(String oldPwd, String newPwd, HttpServletRequest request) {
         if (StringUtils.isBlank(oldPwd) || StringUtils.isBlank(newPwd)) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         User user = getCurrentRefreshUser(request);
         if (!oldPwd.equals(user.getUserPwd())) {
-            return ServerResponse.createByErrorMsg("密码错误");
+            return ServerResponse.createByErrorMsg("Sai mật khẩu");
         }
 
         user.setUserPwd(newPwd);
@@ -326,7 +326,7 @@ public class UserServiceImpl implements IUserService {
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
     }
 
 
@@ -345,7 +345,7 @@ public class UserServiceImpl implements IUserService {
         if (StringUtils.isBlank(phone) ||
                 StringUtils.isBlank(code) ||
                 StringUtils.isBlank(newPwd)) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
 
@@ -387,7 +387,7 @@ public class UserServiceImpl implements IUserService {
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
     }
 
 
@@ -402,7 +402,7 @@ public class UserServiceImpl implements IUserService {
                 StringUtils.isBlank(img2key))
         {
 
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         User user = getCurrentRefreshUser(request);
@@ -1237,9 +1237,9 @@ public class UserServiceImpl implements IUserService {
 
         int insertCount = this.userMapper.insert(user);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("用户Thêm thành công");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
-        return ServerResponse.createByErrorMsg("用户添加失败");
+        return ServerResponse.createByErrorMsg("Thêm không thành công");
     }
 
 
@@ -1279,7 +1279,7 @@ public class UserServiceImpl implements IUserService {
         if (updateCount > 0) {
             return ServerResponse.createBySuccess("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
     }
 
 
@@ -1287,7 +1287,7 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     public ServerResponse updateAmt(Integer userId, Integer amt, Integer direction) {
         if (userId == null || amt == null || direction == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         User user = this.userMapper.selectByPrimaryKey(userId);
@@ -1402,9 +1402,9 @@ public class UserServiceImpl implements IUserService {
 
         int delUserCount = this.userMapper.deleteByPrimaryKey(userId);
         if (delUserCount > 0) {
-            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
+            return ServerResponse.createBySuccessMsg("Chạy thành công");
         }
-        return ServerResponse.createByErrorMsg("操作失败, 查看日志");
+        return ServerResponse.createByErrorMsg("Lỗi hệ thống, 查看日志");
     }
 
 
@@ -1468,7 +1468,7 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse updateWithPwd(String with_pwd, String phone) {
 
         if (StringUtils.isBlank(with_pwd)||StringUtils.isBlank(phone)){
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         String withPwd = userMapper.findWithPwd(with_pwd);
@@ -1481,7 +1481,7 @@ public class UserServiceImpl implements IUserService {
         if (i>0){
             return ServerResponse.createBySuccessMsg("Thêm thành công！");
         }else {
-            return ServerResponse.createByErrorMsg("添加失败！");
+            return ServerResponse.createByErrorMsg("Thêm không thành công！");
         }
     }
 

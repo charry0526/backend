@@ -70,7 +70,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
 
     public ServerResponse inMoney(String amt, String payType, HttpServletRequest request) {
         if (StringUtils.isBlank(amt) || StringUtils.isBlank(payType)) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         SiteSetting siteSetting = this.iSiteSettingService.getSiteSetting();
@@ -347,7 +347,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
 
     public ServerResponse createOrder(Integer userId, Integer state, Integer amt, String payChannel) {
         if (userId == null || state == null || amt == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
 
         User user = this.userMapper.selectByPrimaryKey(userId);
@@ -394,13 +394,13 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
 
     public ServerResponse del(Integer cId) {
         if (cId == null) {
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
         int updateCount = this.userRechargeMapper.deleteByPrimaryKey(cId);
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
 

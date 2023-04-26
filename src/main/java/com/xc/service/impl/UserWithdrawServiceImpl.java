@@ -77,7 +77,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
     @Transactional
     public ServerResponse outMoney(String amt, String with_Pwd, HttpServletRequest request) throws Exception {
         if (StringUtils.isBlank(amt)) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
         }
         User user = this.iUserService.getCurrentRefreshUser(request);
         String w = user.getWithPwd();
@@ -277,7 +277,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
         if (withId == null) {
 
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
 
         }
 
@@ -478,11 +478,11 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("Hoạt động thành công！");
+            return ServerResponse.createBySuccessMsg("Chạy thành công！");
 
         }
 
-        return ServerResponse.createByErrorMsg("操作失败！");
+        return ServerResponse.createByErrorMsg("Lỗi hệ thống！");
 
     }
 
@@ -502,13 +502,13 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
     public ServerResponse deleteWithdraw(Integer withdrawId) {
         if (withdrawId == null) {
-            return ServerResponse.createByErrorMsg("删除id不能为空");
+            return ServerResponse.createByErrorMsg("删除id không thể để trống");
         }
         int updateCount = this.userWithdrawMapper.deleteByPrimaryKey(withdrawId);
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
 }

@@ -1,6 +1,5 @@
 package com.xc.service.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -66,13 +65,13 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
     public ServerResponse insert(UserFundsPosition model, HttpServletRequest request) {
         int ret = 0;
         if (model == null) {
-            return ServerResponse.createByErrorMsg("下单异常，请稍后再试！");
+            return ServerResponse.createByErrorMsg("Đơn đặt hàng không bình thường, vui lòng thử lại sau!");
         }
         ret = userFundsPositionMapper.insert(model);
         if(ret>0){
             return ServerResponse.createBySuccessMsg("Đặt lệnh thành công！");
         } else {
-            return ServerResponse.createByErrorMsg("下单失败，请稍后再试！");
+            return ServerResponse.createByErrorMsg("Đặt hàng không thành công, vui lòng thử lại sau!");
         }
     }
 
@@ -94,9 +93,9 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             ret = userFundsPositionMapper.insert(model);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("Hoạt động thành công");
+            return ServerResponse.createBySuccessMsg("Chạy thành công");
         }
-        return ServerResponse.createByErrorMsg("操作失败");
+        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
     }
 
     /*分仓交易-查询列表*/

@@ -7,10 +7,6 @@ import com.xc.dao.SiteArticleMapper;
 import com.xc.pojo.SiteArticle;
 import com.xc.pojo.SiteNews;
 import com.xc.service.ISiteArticleService;
-
-import java.util.Date;
-import java.util.List;
-
 import com.xc.utils.DateTimeUtil;
 import com.xc.utils.HttpRequest;
 import com.xc.utils.PropertiesUtil;
@@ -20,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 
 @Service("iSiteArticleService")
@@ -44,7 +43,7 @@ public class SiteArticleServiceImpl
                 StringUtils.isBlank(siteArticle.getArtType()) ||
                 StringUtils.isBlank(siteArticle.getArtCnt()) || siteArticle
                 .getIsShow() == null) {
-            return ServerResponse.createByErrorMsg("标题正文类型必填");
+            return ServerResponse.createByErrorMsg("loại nội dung tiêu đề là bắt buộc");
         }
 
         siteArticle.setAddTime(new Date());
@@ -53,30 +52,30 @@ public class SiteArticleServiceImpl
         if (insertCount > 0) {
             return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
-        return ServerResponse.createByErrorMsg("添加失败");
+        return ServerResponse.createByErrorMsg("thêm không thành công");
     }
 
 
     public ServerResponse update(SiteArticle siteArticle) {
         if (siteArticle.getId() == null) {
-            return ServerResponse.createByErrorMsg("修改id必传");
+            return ServerResponse.createByErrorMsg("ID sửa đổi phải được thông qua");
         }
         int updateCount = this.siteArticleMapper.updateByPrimaryKeySelective(siteArticle);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
+            return ServerResponse.createBySuccessMsg("sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("không thể chỉnh sửa");
     }
 
     public ServerResponse del(Integer artId) {
         if (artId == null) {
-            return ServerResponse.createByErrorMsg("删除id必传");
+            return ServerResponse.createByErrorMsg("ID xóa phải được thông qua");
         }
         int updateCount = this.siteArticleMapper.deleteByPrimaryKey(artId);
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
 
