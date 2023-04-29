@@ -430,7 +430,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             boolean pm_flag = BuyAndSellUtils.isTransTime(pm_begin, pm_end);
             log.info("是否在上午交易时间 = {} 是否在下午交易时间 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag));
             if (!am_flag && !pm_flag) {
-                return ServerResponse.createByErrorMsg("平仓失败，不在交易时段内");
+                return ServerResponse.createByErrorMsg("Không thể đóng vị trí,ngoài giờ giao dịch");
             }
 
             if(siteProduct.getHolidayDisplay()){
@@ -441,28 +441,28 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
         UserPosition userPosition = this.userPositionMapper.findPositionBySn(positionSn);
         if (userPosition == null) {
-            return ServerResponse.createByErrorMsg("平仓失败，订单不存在");
+            return ServerResponse.createByErrorMsg("Không thể đóng vị trí,thứ tự không tồn tại");
         }
 
         User user = this.userMapper.selectByPrimaryKey(userPosition.getUserId());
         /*实名认证开关开启*/
 
         if (siteProduct.getRealNameDisplay() && user.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("平仓失败，用户已被锁定");
+            return ServerResponse.createByErrorMsg("Không thể đóng vị trí，Người dùng bị khóa");
         }
 
 
 
         if (userPosition.getSellOrderId() != null) {
-            return ServerResponse.createByErrorMsg("平仓失败，此订单已平仓");
+            return ServerResponse.createByErrorMsg("Không thể đóng vị trí，Đơn đặt hàng này đã bị đóng");
         }
 
         if (1 == userPosition.getIsLock().intValue()) {
-            return ServerResponse.createByErrorMsg("平仓失败 " + userPosition.getLockMsg());
+            return ServerResponse.createByErrorMsg("Không thể đóng vị trí " + userPosition.getLockMsg());
         }
 
         if (!DateTimeUtil.isCanSell(userPosition.getBuyOrderTime(), siteSetting.getCantSellTimes().intValue())) {
-            return ServerResponse.createByErrorMsg(siteSetting.getCantSellTimes() + "分钟内不能平仓");
+            return ServerResponse.createByErrorMsg(siteSetting.getCantSellTimes() + "Vị trí không thể được đóng trong vòng vài phút");
         }
 
 //        if (DateTimeUtil.sameDate(DateTimeUtil.getCurrentDate(),userPosition.getBuyOrderTime())) {
@@ -476,7 +476,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         BigDecimal now_price = new BigDecimal(stockListVO.getNowPrice());
         if (now_price.compareTo(new BigDecimal("0")) != 1) {
             log.error("股票 = {} 收到报价 = {}", userPosition.getStockName(), now_price);
-            return ServerResponse.createByErrorMsg("报价0，平仓失败，请稍后再试");
+            return ServerResponse.createByErrorMsg("Báo giá 0, không thể đóng vị trí, vui lòng thử lại sau");
         }
 
         double stock_crease = stockListVO.getHcrate().doubleValue();
@@ -493,7 +493,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         log.info("股票当前涨跌幅 = {} 跌停幅度 = {}", Double.valueOf(stock_crease), ztRate);
         if ((new BigDecimal(String.valueOf(stock_crease))).compareTo(ztRate) == 0 && "买涨"
                 .equals(userPosition.getOrderDirection())) {
-            return ServerResponse.createByErrorMsg("当前股票已跌停不能卖出");
+            return ServerResponse.createByErrorMsg("Cổ phiếu hiện tại đã đạt đến giới hạn và không thể được bán");
         }
 
         Integer buy_num = userPosition.getOrderNum();
@@ -580,9 +580,9 @@ public class UserPositionServiceImpl implements IUserPositionService {
         ucd.setAgentName(user.getAgentName());
         ucd.setUserId(user.getId());
         ucd.setUserName(user.getRealName());
-        ucd.setDeType("总盈亏");
+        ucd.setDeType("Tổng lãi lỗ");
         ucd.setDeAmt(all_profit);
-        ucd.setDeSummary("卖出股票，" + userPosition.getStockCode() + "/" + userPosition.getStockName() + ",占用本金：" + freez_amt + ",总手续费：" + all_fee_amt + ",递延费：" + orderStayFee+ ",印花税：" + orderSpread + ",盈亏：" + profitLoss + "，总盈亏：" + all_profit);
+        ucd.setDeSummary("Bán cổ phần，" + userPosition.getStockCode() + "/" + userPosition.getStockName() + ",Chiếm hiệu trưởng：" + freez_amt + ",总手续费：" + all_fee_amt + ",Tổng phí xử lý：" + orderStayFee+ ",印花税：" + orderSpread + ",Tem đóng thuế：" + profitLoss + "，Tổng lãi lỗ：" + all_profit);
 
         ucd.setAddTime(new Date());
         ucd.setIsRead(Integer.valueOf(0));
