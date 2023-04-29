@@ -55,7 +55,7 @@ import java.util.Date;
      int insertCount = this.userBankMapper.insert(userBank);
 
      if (insertCount > 0) {
-       return ServerResponse.createBySuccess("Đã thêm thành công thẻ ngân hàng");
+       return ServerResponse.createBySuccess("Thành công thêm tài khoản ngân hàng");
 
      }
 
@@ -71,7 +71,7 @@ import java.util.Date;
 
      if (dbBank == null) {
 
-       return ServerResponse.createByErrorMsg("Không thể chỉnh sửa，找不到银行");
+       return ServerResponse.createByErrorMsg("Sửa đổi thất bại，找不到银行");
 
      }
 
@@ -89,7 +89,7 @@ import java.util.Date;
 
      if (updateCount > 0) {
 
-       return ServerResponse.createBySuccess("Sửa đổi thẻ ngân hàng thành công");
+       return ServerResponse.createBySuccess("Thành công sửa đổi tài khoản ngân hàng");
 
      }
 
@@ -138,7 +138,7 @@ import java.util.Date;
 
      }
 
-     return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
+     return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
 
    }
 

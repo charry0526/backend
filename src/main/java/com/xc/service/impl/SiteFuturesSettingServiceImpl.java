@@ -70,7 +70,7 @@ public class SiteFuturesSettingServiceImpl
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
 }

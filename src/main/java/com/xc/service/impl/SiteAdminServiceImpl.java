@@ -71,7 +71,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (StringUtils.isBlank(verifyCode)) {
 
-            return ServerResponse.createByErrorMsg("Mã xác minh phải được điền");
+            return ServerResponse.createByErrorMsg("Mã xác thực không được bỏ trống");
 
         }
 
@@ -86,7 +86,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (StringUtils.isBlank(adminPhone) || StringUtils.isBlank(adminPwd)) {
 
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
 
         }
 
@@ -95,7 +95,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (siteAdmin == null) {
 
-            return ServerResponse.createByErrorMsg("lỗi mật khẩu tài khoản");
+            return ServerResponse.createByErrorMsg("Lỗi mật khẩu tài khoản");
 
         }
 

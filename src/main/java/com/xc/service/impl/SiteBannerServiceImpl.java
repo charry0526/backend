@@ -31,7 +31,7 @@ public class SiteBannerServiceImpl
                 .getIsOrder() == null || siteBanner
                 .getIsPc() == null || siteBanner
                 .getIsM() == null) {
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         siteBanner.setAddTime(new Date());
@@ -61,7 +61,7 @@ public class SiteBannerServiceImpl
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
 
@@ -71,7 +71,7 @@ public class SiteBannerServiceImpl
         }
         int deleteCount = this.siteBannerMapper.deleteByPrimaryKey(id);
         if (deleteCount > 0) {
-            return ServerResponse.createBySuccessMsg("Xóa thành công");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
         return ServerResponse.createByErrorMsg("Không thể xóa");
     }
@@ -86,7 +86,7 @@ public class SiteBannerServiceImpl
             List bannerList = this.siteBannerMapper.getBannerByPC();
             return ServerResponse.createBySuccess(bannerList);
         }
-        return ServerResponse.createByErrorMsg("Loại nền tảng không tồn tại");
+        return ServerResponse.createByErrorMsg("Sàn này không tồn tại");
     }
 }
 

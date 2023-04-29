@@ -29,7 +29,7 @@ public class SitePayServiceImpl
                 .getChannelMaxLimit() == null || sitePay
                 .getIsShow() == null || sitePay
                 .getIsLock() == null) {
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
 
@@ -65,7 +65,7 @@ public class SitePayServiceImpl
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
 
@@ -75,7 +75,7 @@ public class SitePayServiceImpl
         }
         int delCount = this.sitePayMapper.deleteByPrimaryKey(cId);
         if (delCount > 0) {
-            return ServerResponse.createBySuccessMsg("Xóa thành công");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
         return ServerResponse.createByErrorMsg("Không thể xóa");
     }

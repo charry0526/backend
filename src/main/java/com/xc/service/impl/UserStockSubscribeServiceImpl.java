@@ -112,9 +112,9 @@ public class UserStockSubscribeServiceImpl implements IUserStockSubscribeService
             ret = userStockSubscribeMapper.insert(model);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("Chạy thành công");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
     /**
@@ -153,9 +153,9 @@ public class UserStockSubscribeServiceImpl implements IUserStockSubscribeService
             }
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("Chạy thành công");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
 
@@ -199,9 +199,9 @@ public class UserStockSubscribeServiceImpl implements IUserStockSubscribeService
 
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("Chạy thành công");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
 }

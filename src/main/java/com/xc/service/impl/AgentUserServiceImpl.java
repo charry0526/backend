@@ -76,12 +76,12 @@ public class AgentUserServiceImpl implements IAgentUserService {
 //        }
 
         if (StringUtils.isBlank(agentPhone) || StringUtils.isBlank(agentPwd)) {
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         AgentUser agentUser = this.agentUserMapper.login(agentPhone, agentPwd);
         if (agentUser == null) {
-            return ServerResponse.createByErrorMsg("Mật khẩu người dùng không chính xác");
+            return ServerResponse.createByErrorMsg("Tài khoản mật khẩu không chính xác");
         }
 
         if (agentUser.getIsLock().intValue() == 1) {
@@ -98,7 +98,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
         if (serverResponse.isSuccess()) {
             SiteInfo siteInfo = (SiteInfo) serverResponse.getData();
             if (StringUtils.isBlank(siteInfo.getSiteHost())) {
-                return ServerResponse.createByErrorMsg("Máy chủ thông tin chưa được đặt");
+                return ServerResponse.createByErrorMsg("Chưa cài đặt info host ");
             }
             host = siteInfo.getSiteHost();
         }
@@ -113,7 +113,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
 
     public ServerResponse updatePwd(String oldPwd, String newPwd, HttpServletRequest request) {
         if (StringUtils.isBlank(oldPwd) || StringUtils.isBlank(newPwd)) {
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         AgentUser agentUser = getCurrentAgent(request);
@@ -127,7 +127,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
 
@@ -136,7 +136,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
                 StringUtils.isBlank(agentPwd) ||
                 StringUtils.isBlank(agentRealName) ||
                 StringUtils.isBlank(agentPhone)) {
-            return ServerResponse.createByErrorMsg("Thêm không thành công，Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Thêm không thành công，Sửa đổi thất Tham số không được bỏ trống");
         }
 
         AgentUser dbuser = this.agentUserMapper.findByName(agentName);
@@ -196,7 +196,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
                 //分销用户数据处理
                 recursiveSaveAgentDistributionUser(insertCount,parentId,parentAgent.getAgentLevel());
             }
-            return ServerResponse.createBySuccessMsg("Lưu người dùng proxy thành công");
+            return ServerResponse.createBySuccessMsg("Lưu thành công tài khoản đại lý");
         }
         return ServerResponse.createByErrorMsg("Thêm không thành công，vui lòng thử lại");
     }
@@ -257,7 +257,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
                 StringUtils.isBlank(agentUser.getAgentPhone()) ||
                 StringUtils.isBlank(agentUser.getAgentRealName()) ||
                 StringUtils.isBlank(agentUser.getAgentPwd())) {
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         AgentUser pAgent = this.agentUserMapper.findByPhone(agentUser.getAgentPhone());
@@ -294,7 +294,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
 
         int insertCount = this.agentUserMapper.insert(dbAgent);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("Đã thêm đại lý thành công");
+            return ServerResponse.createBySuccessMsg("Thêm thành công đại lý");
         }
         return ServerResponse.createByErrorMsg("添加代理失败");
     }
@@ -341,7 +341,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
 
         int updateCount = this.agentUserMapper.updateByPrimaryKeySelective(dbAgent);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("Sửa đổi proxy thành công");
+            return ServerResponse.createBySuccessMsg("Thành công sửa đổi đại lý");
         }
         return ServerResponse.createByErrorMsg("修改代理失败");
     }
@@ -385,7 +385,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
     @Transactional
     public ServerResponse updateAgentAmt(Integer agentId, Integer amt, Integer direction) {
         if (agentId == null || amt == null || direction == null) {
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         AgentUser agentUser = this.agentUserMapper.selectByPrimaryKey(agentId);
@@ -446,7 +446,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
 
         int insertCount = this.siteTaskLogMapper.insert(siteTaskLog);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("Sửa đổi quỹ thành công");
+            return ServerResponse.createBySuccessMsg("Điều chỉnh tiền thành công");
         }
         return ServerResponse.createByErrorMsg("修改资金失败");
     }
@@ -461,7 +461,7 @@ public class AgentUserServiceImpl implements IAgentUserService {
 
         int updateCount = this.agentUserMapper.deleteByPrimaryKey(agentId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("Đã xóa proxy thành công");
+            return ServerResponse.createBySuccessMsg("Thành công hủy đại lý");
         }
         return ServerResponse.createByErrorMsg("删除代理失败");
     }

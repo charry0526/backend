@@ -109,7 +109,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         SiteSetting siteSetting = this.iSiteSettingService.getSiteSetting();
         if (siteSetting == null) {
             log.error("下单出错，网站设置表不存在");
-            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, lỗi hệ thống");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Thao tác thất bại");
         }
 
         String am_begin = siteSetting.getTransAmBegin();
@@ -198,13 +198,13 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
         BigDecimal ztRate = chaPrice.multiply(new BigDecimal("100")).divide(zsPrice, 2, 4);
         if (now_price.compareTo(new BigDecimal("0")) == 0) {
-            return ServerResponse.createByErrorMsg("Trích dẫn 0, vui lòng thử lại sau");
+            return ServerResponse.createByErrorMsg("Báo giá 0, vui lòng thử lại sau");
         }
 
         log.info("当前涨跌幅 = {} % , 涨停幅度 = {} %", Double.valueOf(stock_crease), ztRate);
         if ((new BigDecimal(String.valueOf(stock_crease))).compareTo(ztRate) == 0 && buyType
                 .intValue() == 0) {
-            return ServerResponse.createByErrorMsg("Cổ phiếu hiện tại đã đạt đến giới hạn hàng ngày và không thể mua được");
+            return ServerResponse.createByErrorMsg("Mã cổ phiếu hiện tại đã tăng trần không mua được");
         }
 
 
@@ -384,7 +384,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
                 log.info("【用户交易下单】修改用户金额成功");
             } else {
                 log.error("用户交易下单】修改用户金额出错");
-                throw new Exception("Lệnh giao dịch của người dùng】Lỗi khi sửa đổi số tiền người dùng");
+                throw new Exception("Lệnh giao dịch của người dùng】Lỗi sửa đổi tiền trong tài khoản");
             }
             //核算代理收入-入仓手续费
             iAgentAgencyFeeService.AgencyFeeIncome(1,userPosition.getPositionSn());
@@ -404,7 +404,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             if(r > 0){
                 log.info("iSiteAdminService.updateStatus : {} 申请状态Sửa đổi thành công");
             }else{
-                log.info("iSiteAdminService.updateStatus : {}  申请状态Không thể chỉnh sửa");
+                log.info("iSiteAdminService.updateStatus : {}  申请状态Sửa đổi thất bại");
             }
         }
 
@@ -417,7 +417,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         SiteSetting siteSetting = this.iSiteSettingService.getSiteSetting();
         if (siteSetting == null) {
             log.error("平仓出错，网站设置表不存在");
-            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, lỗi hệ thống");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Thao tác thất bại");
         }
         SiteProduct siteProduct = iSiteProductService.getProductSetting();
 
@@ -430,7 +430,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             boolean pm_flag = BuyAndSellUtils.isTransTime(pm_begin, pm_end);
             log.info("是否在上午交易时间 = {} 是否在下午交易时间 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag));
             if (!am_flag && !pm_flag) {
-                return ServerResponse.createByErrorMsg("Không thể đóng vị trí,ngoài giờ giao dịch");
+                return ServerResponse.createByErrorMsg("Bán ra không thành công, không trong thời gian giao dịch");
             }
 
             if(siteProduct.getHolidayDisplay()){
@@ -441,31 +441,31 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
         UserPosition userPosition = this.userPositionMapper.findPositionBySn(positionSn);
         if (userPosition == null) {
-            return ServerResponse.createByErrorMsg("Không thể đóng vị trí,thứ tự không tồn tại");
+            return ServerResponse.createByErrorMsg("Bán ra không thành công，thứ tự không tồn tại");
         }
 
         User user = this.userMapper.selectByPrimaryKey(userPosition.getUserId());
         /*实名认证开关开启*/
 
         if (siteProduct.getRealNameDisplay() && user.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("Không thể đóng vị trí，Người dùng bị khóa");
+            return ServerResponse.createByErrorMsg("Bán ra không thành công，người dùng bị khóa");
         }
 
 
 
         if (userPosition.getSellOrderId() != null) {
-            return ServerResponse.createByErrorMsg("Không thể đóng vị trí，Đơn đặt hàng này đã bị đóng");
+            return ServerResponse.createByErrorMsg("Bán ra không thành công，Đơn đặt hàng này đã bị đóng");
         }
 
         if (1 == userPosition.getIsLock().intValue()) {
-            return ServerResponse.createByErrorMsg("Không thể đóng vị trí " + userPosition.getLockMsg());
+            return ServerResponse.createByErrorMsg("Bán ra không thành công " + userPosition.getLockMsg());
         }
 
         if (!DateTimeUtil.isCanSell(userPosition.getBuyOrderTime(), siteSetting.getCantSellTimes().intValue())) {
             return ServerResponse.createByErrorMsg(siteSetting.getCantSellTimes() + "Vị trí không thể được đóng trong vòng vài phút");
         }
 
-//        if (DateTimeUtil.sameDate(DateTimeUtil.getCurrentDate(),userPosition.getBuyOrderTime())) {
+//        if (DateTimeUtil.sameDate(DateTimeUtil.getCurrentDate(),.getBuyOrderTime())) {
 //            return ServerResponse.createByErrorMsg("当天入仓的股票需要隔天才能出仓");
 //        }
 
@@ -571,7 +571,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【用户平仓】修改用户金额成功");
         } else {
             log.error("用户平仓】修改用户金额出错");
-            throw new Exception("Người dùng đóng vị trí】Lỗi khi sửa đổi số tiền người dùng");
+            throw new Exception("Tài khoản đóng vị thế】Lỗi sửa đổi tiền trong tài khoản");
         }
 
         UserCashDetail ucd = new UserCashDetail();
@@ -582,7 +582,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         ucd.setUserName(user.getRealName());
         ucd.setDeType("Tổng lãi lỗ");
         ucd.setDeAmt(all_profit);
-        ucd.setDeSummary("Bán cổ phần，" + userPosition.getStockCode() + "/" + userPosition.getStockName() + ",Chiếm hiệu trưởng：" + freez_amt + ",总手续费：" + all_fee_amt + ",Tổng phí xử lý：" + orderStayFee+ ",印花税：" + orderSpread + ",Tem đóng thuế：" + profitLoss + "，Tổng lãi lỗ：" + all_profit);
+        ucd.setDeSummary("Bán cổ phần，" + userPosition.getStockCode() + "/" + userPosition.getStockName() + ",Chiếm hiệu trưởng：" + freez_amt + ",Tổng phí xử lý：" + all_fee_amt + ",Phí trả chậm：" + orderStayFee+ ",Tem đóng thuế：" + orderSpread + ",Lợi nhuận và thua lỗ：" + profitLoss + "，Tổng lãi lỗ：" + all_profit);
 
         ucd.setAddTime(new Date());
         ucd.setIsRead(Integer.valueOf(0));
@@ -596,10 +596,10 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【用户平仓】保存明细记录成功");
         } else {
             log.error("用户平仓】保存明细记录出错");
-            throw new Exception("Người dùng đóng vị trí】Lỗi khi lưu bản ghi chi tiết");
+            throw new Exception("Tài khoản đóng vị thế】Lỗi sao kê bản chi tiết");
         }
 
-        return ServerResponse.createBySuccessMsg("Đã đóng thành công！");
+        return ServerResponse.createBySuccessMsg("Thành công bán ra！");
     }
 
     //用户追加保证金操作
@@ -679,7 +679,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【用户平仓】修改用户金额成功");
         } else {
             log.error("用户平仓】修改用户金额出错");
-            throw new Exception("Người dùng đóng vị trí】Lỗi khi sửa đổi số tiền người dùng");
+            throw new Exception("Tài khoản đóng vị thế】Lỗi sửa đổi tiền trong tài khoản");
         }
 
         UserCashDetail ucd = new UserCashDetail();
@@ -700,7 +700,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.info("【用户平仓】保存明细记录成功");
         } else {
             log.error("用户平仓】保存明细记录出错");
-            throw new Exception("Người dùng đóng vị trí】Lỗi khi lưu bản ghi chi tiết");
+            throw new Exception("Tài khoản đóng vị thế】Lỗi sao kê bản chi tiết");
         }
 
         return ServerResponse.createBySuccessMsg("追加成功！");
@@ -709,7 +709,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
     public ServerResponse lock(Integer positionId, Integer state, String lockMsg) {
         if (positionId == null || state == null) {
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         UserPosition position = this.userPositionMapper.selectByPrimaryKey(positionId);
@@ -736,9 +736,9 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
         int updateCount = this.userPositionMapper.updateByPrimaryKeySelective(position);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("Chạy thành công");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
     public ServerResponse del(Integer positionId) {
@@ -983,7 +983,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         if (userId == null || StringUtils.isBlank(buyPrice) || StringUtils.isBlank(stockCode) ||
                 StringUtils.isBlank(buyTime) || buyNum == null || buyType == null || lever == null) {
 
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         User user = this.userMapper.selectByPrimaryKey(userId);
@@ -1003,7 +1003,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         SiteSetting siteSetting = this.iSiteSettingService.getSiteSetting();
         if (siteSetting == null) {
             log.error("下单出错，网站设置表不存在");
-            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, lỗi hệ thống");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Thao tác thất bại");
         }
 
 

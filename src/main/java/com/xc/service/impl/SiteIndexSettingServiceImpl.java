@@ -48,7 +48,7 @@ public class SiteIndexSettingServiceImpl
 
         if (siteIndexSetting.getId() == null) {
 
-            return ServerResponse.createByErrorMsg("Sửa đổi id không thể để trống");
+            return ServerResponse.createByErrorMsg("ID không được bỏ trống");
 
         }
 
@@ -57,7 +57,7 @@ public class SiteIndexSettingServiceImpl
 
         if (dbsetting == null) {
 
-            return ServerResponse.createByErrorMsg("Chỉ mục không tồn tại");
+            return ServerResponse.createByErrorMsg("Chỉ số không tồn tại");
 
         }
 
@@ -89,7 +89,7 @@ public class SiteIndexSettingServiceImpl
 
         }
 
-        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
 
     }
 

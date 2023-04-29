@@ -54,7 +54,7 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
     public ServerResponse insert(FundsApply model, HttpServletRequest request) throws Exception {
         int ret = 0;
         if (model == null) {
-            return ServerResponse.createBySuccessMsg("Hoạt động bất thường, vui lòng thử lại sau！");
+            return ServerResponse.createBySuccessMsg("Lỗi thao tác, vui lòng thử lại sau！");
         }
         User user = this.iUserService.getCurrentRefreshUser(request);
         if(user == null){
@@ -66,7 +66,7 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
         int compareUserAmtInt = user_enable_amt.compareTo(pay_amount);
         log.info("用户可用金额 = {}  实际购买金额 =  {} 比较结果 = {} ", user_enable_amt, pay_amount, compareUserAmtInt);
         if (compareUserAmtInt == -1) {
-            return ServerResponse.createByErrorMsg("Đơn đăng ký không thành công, có ít tiền hơn" + pay_amount + "VND");
+            return ServerResponse.createByErrorMsg("Đề xuất thất bại, số dư khả dụng nhỏ hơn" + pay_amount + "VND");
         }
 
         //自动生成订单编号
@@ -100,9 +100,9 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
                 log.error("【按天配资】修改用户金额出错");
                 throw new Exception("【按天配资】修改用户金额出错");
             }
-            return ServerResponse.createBySuccessMsg("ứng dụng thành công！");
+            return ServerResponse.createBySuccessMsg("Đề xuất thành công！");
         } else {
-            return ServerResponse.createBySuccessMsg("Ứng dụng không thành công, vui lòng thử lại sau！");
+            return ServerResponse.createBySuccessMsg("Đề xuất thất bại, vui lòng thử lại sau！");
         }
     }
 
@@ -124,9 +124,9 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
             ret = fundsApplyMapper.insert(model);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("Chạy thành công");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
     /**
@@ -234,9 +234,9 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
                 /*     */       }
             /*     */     }
         /* 234 */     if (ret > 0) {
-            /* 235 */       return ServerResponse.createBySuccessMsg("Chạy thành công");
+            /* 235 */       return ServerResponse.createBySuccessMsg("Thao tác thành công");
             /*     */     }
-        /* 237 */     return ServerResponse.createByErrorMsg("Lỗi hệ thống");
+        /* 237 */     return ServerResponse.createByErrorMsg("Thao tác thất bại");
         /*     */   }
 
 

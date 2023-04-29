@@ -162,7 +162,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
                 StringUtils.isBlank(stockFutures.getFuturesCode())) {
 
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
 
         }
 
@@ -171,7 +171,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (fuName != null) {
 
-            return ServerResponse.createByErrorMsg("Tên sản phẩm không được lặp lại");
+            return ServerResponse.createByErrorMsg("Tên sản phẩm không được trùng");
 
         }
 
@@ -180,7 +180,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (fuCode != null) {
 
-            return ServerResponse.createByErrorMsg("Mã không thể lặp lại");
+            return ServerResponse.createByErrorMsg("Mã không được trùng");
 
         }
 
@@ -189,7 +189,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (stockCoin == null) {
 
-            return ServerResponse.createByErrorMsg("Tiền tệ cơ sở không tồn tại");
+            return ServerResponse.createByErrorMsg("Số tiền không tồn tại");
 
         }
 
@@ -214,7 +214,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (stockFutures.getId() == null) {
 
-            return ServerResponse.createByErrorMsg("ID sửa đổi không được để trống");
+            return ServerResponse.createByErrorMsg("Sửa ID không được bỏ trống");
 
         }
 
@@ -223,28 +223,28 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (dbFutures == null) {
 
-            return ServerResponse.createByErrorMsg("sản phẩm không tồn tại");
+            return ServerResponse.createByErrorMsg("Sản phẩm không tồn tại");
 
         }
 
 
         if (stockFutures.getFuturesName() != null) {
 
-            return ServerResponse.createByErrorMsg("Tên sản phẩm không thể sửa đổi");
+            return ServerResponse.createByErrorMsg("Tên sản phẩm không được sửa");
 
         }
 
 
         if (stockFutures.getFuturesCode() != null) {
 
-            return ServerResponse.createByErrorMsg("Mã sản phẩm không thể sửa đổi");
+            return ServerResponse.createByErrorMsg("Mã sản phẩm không được sửa");
 
         }
 
 
         if (stockFutures.getFuturesGid() != null) {
 
-            return ServerResponse.createByErrorMsg("Gid không thể sửa đổi");
+            return ServerResponse.createByErrorMsg("Gid không được sửa");
 
         }
 
@@ -257,7 +257,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         }
 
-        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
 
     }
 

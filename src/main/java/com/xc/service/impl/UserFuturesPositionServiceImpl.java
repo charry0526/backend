@@ -62,7 +62,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
     @Transactional
     public ServerResponse buyFutures(Integer futuresId, Integer buyNum, Integer buyType, Integer lever, HttpServletRequest request) throws Exception {
         if (futuresId == null || buyNum == null || buyType == null) {
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
         /*实名认证开关开启*/
         SiteProduct siteProduct = iSiteProductService.getProductSetting();
@@ -81,16 +81,16 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
         StockFutures stockFutures = this.iStockFuturesService.selectFuturesById(futuresId);
         if (stockFutures == null) {
-            return ServerResponse.createByErrorMsg("sản phẩm không tồn tại");
+            return ServerResponse.createByErrorMsg("Sản phẩm không tồn tại");
         }
         if (1 != stockFutures.getTransState().intValue()) {
-            return ServerResponse.createByErrorMsg("Sản phẩm này không thể được giao dịch");
+            return ServerResponse.createByErrorMsg("Sản phẩm này không giao dịch được");
         }
         if (buyNum.intValue() < stockFutures.getMinNum().intValue()) {
-            return ServerResponse.createByErrorMsg("Mức tối thiểu không thể thấp hơn" + stockFutures.getMinNum() + "cổ");
+            return ServerResponse.createByErrorMsg("Không ít hơn" + stockFutures.getMinNum() + "cổ");
         }
         if (buyNum.intValue() > stockFutures.getMaxNum().intValue()) {
-            return ServerResponse.createByErrorMsg("Tối đa không cao hơn" + stockFutures.getMaxNum() + "cổ");
+            return ServerResponse.createByErrorMsg("Không nhiều hơn" + stockFutures.getMaxNum() + "cổ");
         }
         log.info("用户 {} 下单, 期货产品 = {} ，数量 = {} 手 , 方向 = {} ， 杠杆倍数 = {}", new Object[]{user
                 .getId(), stockFutures.getFuturesName(), buyNum, buyType, lever});
@@ -114,7 +114,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
         SiteFuturesSetting siteFuturesSetting = this.iSiteFuturesSettingService.getSetting();
         if (siteFuturesSetting == null) {
             log.error("下单出错，网站设置表不存在");
-            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, lỗi hệ thống");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Thao tác thất bại");
         }
 
         List dbPosition = findPositionByFuturesCodeAndTimes(siteFuturesSetting.getBuySameTimes().intValue(), stockFutures
@@ -236,7 +236,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
         int updateCount = this.userFuturesPositionMapper.deleteByPrimaryKey(positionId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("Xóa thành công");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
         return ServerResponse.createByErrorMsg("Không thể xóa");
     }
@@ -248,13 +248,13 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
         UserFuturesPosition userFuturesPosition = this.userFuturesPositionMapper.selectPositionBySn(positionSn);
         if (userFuturesPosition == null) {
-            return ServerResponse.createByErrorMsg("Lỗi hệ thống，找不到订单");
+            return ServerResponse.createByErrorMsg("Thao tác thất bại");
         }
 
 
         StockFutures stockFutures = this.iStockFuturesService.selectFuturesByCode(userFuturesPosition.getFuturesCode());
         if (stockFutures == null) {
-            return ServerResponse.createByErrorMsg("Lỗi hệ thống，sản phẩm không tồn tại或已被删除");
+            return ServerResponse.createByErrorMsg("Thao tác thất bại，sản phẩm không tồn ");
         }
 
 
@@ -270,7 +270,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
             boolean pm_flag2 = BuyAndSellUtils.isTransTime(pm_begin2, pm_end2);
             log.info("【 期货 】是否在上午交易时间 = {} 是否在下午交易时间 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag));
             if (!am_flag && !pm_flag && !pm_flag2) {
-                return ServerResponse.createByErrorMsg("Lỗi hệ thống，不在交易时段内");
+                return ServerResponse.createByErrorMsg("Thao tác thất bại，不在交易时段内");
             }
         }
 
@@ -279,14 +279,14 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
         /*实名认证开关开启*/
         SiteProduct siteProduct = iSiteProductService.getProductSetting();
         if (siteProduct.getRealNameDisplay() && user.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("Lỗi hệ thống，用户已被锁定");
+            return ServerResponse.createByErrorMsg("Thao tác thất bại，用户已被锁定");
         }
         if(siteProduct.getHolidayDisplay()){
             return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
 
         if (userFuturesPosition.getSellOrderPrice() != null) {
-            return ServerResponse.createByErrorMsg("Lỗi hệ thống，此订单已平仓");
+            return ServerResponse.createByErrorMsg("Thao tác thất bại，此订单已平仓");
         }
 
         if (1 == userFuturesPosition.getIsLock().intValue()) {
@@ -389,7 +389,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
             throw new Exception("【用户平仓 期货 】保存明细记录出错");
         }
 
-        return ServerResponse.createBySuccessMsg("Đã đóng thành công！");
+        return ServerResponse.createBySuccessMsg("Thành công bán ra！");
     }
 
 
@@ -426,7 +426,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
     public ServerResponse lock(Integer positionId, Integer state, String lockMsg) {
         if (positionId == null || state == null) {
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         UserFuturesPosition position = this.userFuturesPositionMapper.selectByPrimaryKey(positionId);
@@ -453,9 +453,9 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
         int updateCount = this.userFuturesPositionMapper.updateByPrimaryKeySelective(position);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("Chạy thành công");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
 

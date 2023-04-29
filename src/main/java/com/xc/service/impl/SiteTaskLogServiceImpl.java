@@ -58,7 +58,7 @@ public class SiteTaskLogServiceImpl implements ISiteTaskLogService {
 
         int updateCount = this.siteTaskLogMapper.deleteByPrimaryKey(id);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("Xóa thành công");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
         return ServerResponse.createByErrorMsg("Không thể xóa");
     }

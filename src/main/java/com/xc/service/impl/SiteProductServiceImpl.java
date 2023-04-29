@@ -21,18 +21,18 @@ public class SiteProductServiceImpl
 
     public ServerResponse update(SiteProduct siteProduct) {
         if (siteProduct.getId() == null) {
-            return ServerResponse.createByErrorMsg("Sửa đổi id không thể để trống");
+            return ServerResponse.createByErrorMsg("ID không được bỏ trống");
         }
         SiteProduct dbproduct = this.siteProductMapper.selectByPrimaryKey(siteProduct.getId());
         if (dbproduct == null) {
-            return ServerResponse.createByErrorMsg("Không có bản ghi cài đặt sản phẩm nào tồn tại");
+            return ServerResponse.createByErrorMsg("Bản hướng dẫn cài đặt sản phẩm không tồn tại");
         }
 
         int updateCount = this.siteProductMapper.updateByPrimaryKeySelective(siteProduct);
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
     public SiteProduct getProductSetting() {

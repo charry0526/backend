@@ -56,9 +56,9 @@ public class FundsDealerInstitutionsServiceImpl implements IFundsDealerInstituti
             ret = fundsDealerInstitutionsMapper.insert(model);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("Chạy thành công");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
     /*配资券商机构-查询列表*/

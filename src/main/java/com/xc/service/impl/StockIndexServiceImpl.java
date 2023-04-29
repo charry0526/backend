@@ -108,7 +108,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("Không thể chỉnh sửa");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
 
@@ -118,7 +118,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
         if (StringUtils.isBlank(stockIndex.getIndexName()) ||
                 StringUtils.isBlank(stockIndex.getIndexCode()) ||
                 StringUtils.isBlank(stockIndex.getIndexGid())) {
-            return ServerResponse.createByErrorMsg("Tham số không thể để trống");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         StockIndex nameIndex = this.stockIndexMapper.selectIndexByName(stockIndex.getIndexName());

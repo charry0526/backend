@@ -43,7 +43,7 @@ public class SiteArticleServiceImpl
                 StringUtils.isBlank(siteArticle.getArtType()) ||
                 StringUtils.isBlank(siteArticle.getArtCnt()) || siteArticle
                 .getIsShow() == null) {
-            return ServerResponse.createByErrorMsg("loại nội dung tiêu đề là bắt buộc");
+            return ServerResponse.createByErrorMsg("Loại nội dung tiêu đề bắt buộc ghi rõ");
         }
 
         siteArticle.setAddTime(new Date());
@@ -64,16 +64,16 @@ public class SiteArticleServiceImpl
         if (updateCount > 0) {
             return ServerResponse.createBySuccessMsg("sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("không thể chỉnh sửa");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
     public ServerResponse del(Integer artId) {
         if (artId == null) {
-            return ServerResponse.createByErrorMsg("ID xóa phải được thông qua");
+            return ServerResponse.createByErrorMsg("Xóa ID phải được thông qua");
         }
         int updateCount = this.siteArticleMapper.deleteByPrimaryKey(artId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("Xóa thành công");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
         return ServerResponse.createByErrorMsg("Không thể xóa");
     }

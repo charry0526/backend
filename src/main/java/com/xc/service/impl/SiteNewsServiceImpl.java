@@ -65,9 +65,9 @@ public class SiteNewsServiceImpl implements ISiteNewsService {
             ret = siteNewsMapper.insert(model);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("Chạy thành công");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("Lỗi hệ thống");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
     /*新闻资讯-查询列表*/

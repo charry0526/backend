@@ -20,12 +20,12 @@ public class RealTimeServiceImpl implements RealTimeService {
 
     public ServerResponse deleteRealTime() {
         this.realTimeMapper.deleteStockCode();
-        return ServerResponse.createBySuccessMsg("Xóa thành công");
+        return ServerResponse.createBySuccessMsg("Hủy thành công");
     }
 
     public ServerResponse deleteFuturesRealTime() {
         this.realTimeMapper.deleteStockFuturesCode();
-        return ServerResponse.createBySuccessMsg("Xóa thành công");
+        return ServerResponse.createBySuccessMsg("Hủy thành công");
     }
 
     public ServerResponse findStock(String stockCode) {
