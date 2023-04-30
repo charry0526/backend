@@ -656,9 +656,9 @@ public class StockServiceImpl implements IStockService {
                                 .getTime()/1000)
         );
 
-        h.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("high_root").toString())/1000));
-        o.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("open_root").toString())/1000));
-        l.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("low_root").toString())/1000));
+          h.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("high_adjust").toString())/1000));
+        o.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("open_adjust").toString())/1000));
+        l.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("low_adjust").toString())/1000));
         c.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("close_adjust").toString())/1000));
         v.add(String.valueOf(Float.valueOf(((JSONObject) data2.get(i)).get("volume_adjust").toString())/1));
       } catch (ParseException e) {
