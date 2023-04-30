@@ -79,7 +79,7 @@ public class FundsAppendServiceImpl implements IFundsAppendService {
         }
         User user = this.iUserService.getCurrentRefreshUser(request);
         if(user == null){
-            return ServerResponse.createBySuccessMsg("请登录后操作");
+            return ServerResponse.createBySuccessMsg("Vui lòng đăng nhập để thao tác");
         }
         //修改+审核
         if(model!=null && model.getId()>0){
@@ -149,9 +149,9 @@ public class FundsAppendServiceImpl implements IFundsAppendService {
             ret = fundsAppendMapper.insert(model);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("操作失败");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
     /*配资追加申请-查询列表*/

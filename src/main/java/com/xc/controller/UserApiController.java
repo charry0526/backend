@@ -76,7 +76,7 @@ public class UserApiController {
             UserLoginResultVO resultVO = new UserLoginResultVO();
             resultVO.setKey(pc_cookie_name);
             resultVO.setToken(token);
-            return ServerResponse.createBySuccess("登陆成功", resultVO);
+            return ServerResponse.createBySuccess("Đăng nhập thành công", resultVO);
         }
         return serverResponse;
     }
@@ -120,7 +120,7 @@ public class UserApiController {
     @ResponseBody
     public ServerResponse findSpreadRateOne(BigDecimal applies, BigDecimal turnover, String code, BigDecimal unitprice) {
         SiteSpread siteSpread = this.iSiteSpreadService.findSpreadRateOne(applies,turnover,code,unitprice);
-        return ServerResponse.createBySuccess("获取成功", siteSpread);
+        return ServerResponse.createBySuccess("Nhận được thành công", siteSpread);
     }
 
 

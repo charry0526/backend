@@ -6,14 +6,14 @@ import com.xc.common.ServerResponse;
 import com.xc.dao.SiteBannerMapper;
 import com.xc.pojo.SiteBanner;
 import com.xc.service.ISiteBannerService;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 
 @Service("iSiteBannerService")
@@ -31,15 +31,15 @@ public class SiteBannerServiceImpl
                 .getIsOrder() == null || siteBanner
                 .getIsPc() == null || siteBanner
                 .getIsM() == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         siteBanner.setAddTime(new Date());
         int insertCount = this.siteBannerMapper.insert(siteBanner);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
-        return ServerResponse.createByErrorMsg("添加失败");
+        return ServerResponse.createByErrorMsg("Thêm không thành công");
     }
 
 
@@ -54,26 +54,26 @@ public class SiteBannerServiceImpl
 
     public ServerResponse update(SiteBanner siteBanner) {
         if (siteBanner == null) {
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
 
         int updateCount = this.siteBannerMapper.updateByPrimaryKeySelective(siteBanner);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
 
     public ServerResponse delete(Integer id) {
         if (id == null) {
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
         int deleteCount = this.siteBannerMapper.deleteByPrimaryKey(id);
         if (deleteCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
 
@@ -86,7 +86,7 @@ public class SiteBannerServiceImpl
             List bannerList = this.siteBannerMapper.getBannerByPC();
             return ServerResponse.createBySuccess(bannerList);
         }
-        return ServerResponse.createByErrorMsg("不存在的平台类型");
+        return ServerResponse.createByErrorMsg("Sàn này không tồn tại");
     }
 }
 

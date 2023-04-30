@@ -71,7 +71,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (StringUtils.isBlank(verifyCode)) {
 
-            return ServerResponse.createByErrorMsg("验证码不能为空");
+            return ServerResponse.createByErrorMsg("Mã xác thực không được bỏ trống");
 
         }
 
@@ -86,7 +86,7 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (StringUtils.isBlank(adminPhone) || StringUtils.isBlank(adminPwd)) {
 
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
 
         }
 
@@ -95,14 +95,14 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
 
         if (siteAdmin == null) {
 
-            return ServerResponse.createByErrorMsg("账号密码错误");
+            return ServerResponse.createByErrorMsg("Lỗi mật khẩu tài khoản");
 
         }
 
 
         if (siteAdmin.getIsLock().intValue() == 1) {
 
-            return ServerResponse.createByErrorMsg("账号已被锁定");
+            return ServerResponse.createByErrorMsg("Tài khoản đã bị khóa");
 
         }
 
@@ -359,8 +359,12 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
         List<Esop_sq> list = this.siteAdminMapper.getEsopList_sq(pageNum, pageSize,phone,flag);
         for (Esop_sq item:list) {
             String gg = this.siteAdminMapper.getEsopLeverByCode(item.getXgname());
+            String price = this.siteAdminMapper.getEsopPriceByCode(item.getXgname());
+            item.setFinalPrice(item.getBzj());
+            item.setIssuePrice(price);
             item.setGgStr(gg);
         }
+
         PageInfo pageInfo = new PageInfo(page);
         pageInfo.setList(list);
         return ServerResponse.createBySuccess(pageInfo);

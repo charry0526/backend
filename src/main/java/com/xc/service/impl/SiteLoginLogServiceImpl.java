@@ -61,13 +61,13 @@ public class SiteLoginLogServiceImpl
 
     public ServerResponse del(Integer id, HttpServletRequest request) {
         if (id == null) {
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
 
         int updateCount = this.siteLoginLogMapper.deleteByPrimaryKey(id);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 }

@@ -1,45 +1,26 @@
 package com.xc.service.impl;
 
- import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
+import com.xc.common.ServerResponse;
+import com.xc.dao.StockMapper;
+import com.xc.dao.StockOptionMapper;
+import com.xc.pojo.Stock;
+import com.xc.pojo.StockOption;
+import com.xc.pojo.User;
+import com.xc.service.IStockOptionService;
+import com.xc.service.IUserService;
+import com.xc.utils.stock.sina.SinaStockApi;
+import com.xc.vo.stock.StockListVO;
+import com.xc.vo.stock.StockOptionListVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
- import com.github.pagehelper.PageInfo;
-
- import com.google.common.collect.Lists;
-
- import com.xc.common.ServerResponse;
-
- import com.xc.dao.StockMapper;
-
- import com.xc.dao.StockOptionMapper;
-
- import com.xc.pojo.Stock;
-
- import com.xc.pojo.StockOption;
-
- import com.xc.pojo.User;
-
- import com.xc.service.IStockOptionService;
-
- import com.xc.service.IUserService;
-
- import com.xc.utils.stock.sina.SinaStockApi;
-
- import com.xc.vo.stock.StockListVO;
- import com.xc.vo.stock.StockOptionListVO;
-
- import com.xc.vo.stock.StockVO;
-
- import java.util.List;
-
- import javax.servlet.http.HttpServletRequest;
-
- import org.slf4j.Logger;
-
- import org.slf4j.LoggerFactory;
-
- import org.springframework.beans.factory.annotation.Autowired;
-
- import org.springframework.stereotype.Service;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
  @Service("iStockOptionService")
@@ -83,11 +64,11 @@ package com.xc.service.impl;
 
      if (stockOption == null) {
 
-       return ServerResponse.createBySuccessMsg("未添加");
+       return ServerResponse.createBySuccessMsg("Chưa thêm vào");
 
      }
 
-     return ServerResponse.createByErrorMsg("已添加");
+     return ServerResponse.createByErrorMsg("Thêm");
 
    }
 

@@ -2,22 +2,15 @@ package com.xc.service.impl;
 
 
 import com.xc.common.ServerResponse;
-
 import com.xc.dao.SiteIndexSettingMapper;
-
 import com.xc.pojo.SiteIndexSetting;
-
 import com.xc.service.ISiteIndexSettingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import org.slf4j.Logger;
-
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
 
 
 @Service("iSiteIndexSettingService")
@@ -55,7 +48,7 @@ public class SiteIndexSettingServiceImpl
 
         if (siteIndexSetting.getId() == null) {
 
-            return ServerResponse.createByErrorMsg("修改id不能为空");
+            return ServerResponse.createByErrorMsg("ID không được bỏ trống");
 
         }
 
@@ -64,7 +57,7 @@ public class SiteIndexSettingServiceImpl
 
         if (dbsetting == null) {
 
-            return ServerResponse.createByErrorMsg("不存在该指数");
+            return ServerResponse.createByErrorMsg("Chỉ số không tồn tại");
 
         }
 
@@ -92,11 +85,11 @@ public class SiteIndexSettingServiceImpl
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
 
         }
 
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
 
     }
 

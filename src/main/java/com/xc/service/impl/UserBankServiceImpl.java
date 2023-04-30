@@ -2,27 +2,17 @@ package com.xc.service.impl;
 
 
 import com.xc.common.ServerResponse;
-
 import com.xc.dao.UserBankMapper;
-
 import com.xc.pojo.User;
-
 import com.xc.pojo.UserBank;
-
 import com.xc.service.IUserBankService;
-
 import com.xc.service.IUserService;
-
-
 import com.xc.vo.user.UserBankInfoVO;
-
-import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
+import java.util.Date;
 
  @Service("iUserBankService")
  public class UserBankServiceImpl implements IUserBankService {
@@ -65,7 +55,7 @@ import org.springframework.stereotype.Service;
      int insertCount = this.userBankMapper.insert(userBank);
 
      if (insertCount > 0) {
-       return ServerResponse.createBySuccess("添加银行卡成功");
+       return ServerResponse.createBySuccess("Thành công thêm tài khoản ngân hàng");
 
      }
 
@@ -81,7 +71,7 @@ import org.springframework.stereotype.Service;
 
      if (dbBank == null) {
 
-       return ServerResponse.createByErrorMsg("修改失败，找不到银行");
+       return ServerResponse.createByErrorMsg("Sửa đổi thất bại，找不到银行");
 
      }
 
@@ -99,7 +89,7 @@ import org.springframework.stereotype.Service;
 
      if (updateCount > 0) {
 
-       return ServerResponse.createBySuccess("修改银行卡成功");
+       return ServerResponse.createBySuccess("Thành công sửa đổi tài khoản ngân hàng");
 
      }
 
@@ -136,7 +126,7 @@ import org.springframework.stereotype.Service;
 
      if (userBank.getId() == null) {
 
-       return ServerResponse.createByErrorMsg("修改id必传");
+       return ServerResponse.createByErrorMsg("ID sửa đổi phải được thông qua");
 
      }
 
@@ -144,11 +134,11 @@ import org.springframework.stereotype.Service;
 
      if (updateCount > 0) {
 
-       return ServerResponse.createBySuccessMsg("修改成功");
+       return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
 
      }
 
-     return ServerResponse.createByErrorMsg("修改失败");
+     return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
 
    }
 

@@ -91,7 +91,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
 
     public ServerResponse updateIndex(StockIndex stockIndex) {
         if (stockIndex.getId() == null) {
-            return ServerResponse.createByErrorMsg("修改id不能为空");
+            return ServerResponse.createByErrorMsg("修改id không thể để trống");
         }
 
         StockIndex dbindex = this.stockIndexMapper.selectByPrimaryKey(stockIndex.getId());
@@ -106,9 +106,9 @@ public class StockIndexServiceImpl implements IStockIndexService {
 
         int updateCount = this.stockIndexMapper.updateByPrimaryKey(dbindex);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
 
@@ -118,7 +118,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
         if (StringUtils.isBlank(stockIndex.getIndexName()) ||
                 StringUtils.isBlank(stockIndex.getIndexCode()) ||
                 StringUtils.isBlank(stockIndex.getIndexGid())) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         StockIndex nameIndex = this.stockIndexMapper.selectIndexByName(stockIndex.getIndexName());
@@ -134,9 +134,9 @@ public class StockIndexServiceImpl implements IStockIndexService {
         int insertCount = this.stockIndexMapper.insert(stockIndex);
 
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
         }
-        return ServerResponse.createByErrorMsg("添加失败");
+        return ServerResponse.createByErrorMsg("Thêm không thành công");
     }
 
 
@@ -180,7 +180,7 @@ public class StockIndexServiceImpl implements IStockIndexService {
 
     public MarketVO querySingleIndex(String indexCode) {
         MarketVO marketVO = new MarketVO();
-        if(indexCode.equals("VNINDEX") || indexCode.equals("VN30") || indexCode.equals("HNXI")){
+        if(indexCode.equals("VNINDEX") || indexCode.equals("VN30") || indexCode.equals("HNX")){
             String result = RedisShardedPoolUtils.get("index-cache-" + indexCode);
             if(null == result){
                 return marketVO;

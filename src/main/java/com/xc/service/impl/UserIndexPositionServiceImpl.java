@@ -1,8 +1,6 @@
 package com.xc.service.impl;
 
 
-import com.xc.pojo.*;
-import com.xc.service.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -11,32 +9,27 @@ import com.xc.dao.AgentUserMapper;
 import com.xc.dao.UserCashDetailMapper;
 import com.xc.dao.UserIndexPositionMapper;
 import com.xc.dao.UserMapper;
+import com.xc.pojo.*;
 import com.xc.service.*;
 import com.xc.utils.DateTimeUtil;
 import com.xc.utils.KeyUtils;
 import com.xc.utils.redis.JsonUtil;
 import com.xc.utils.stock.BuyAndSellUtils;
 import com.xc.vo.agent.AgentIncomeVO;
-import com.xc.vo.indexposition.AdminIndexPositionVO;
-import com.xc.vo.indexposition.AgentIndexPositionVO;
-import com.xc.vo.indexposition.IndexPositionProfitVO;
-import com.xc.vo.indexposition.IndexPositionVO;
-import com.xc.vo.indexposition.UserIndexPositionVO;
-import com.xc.vo.position.UserPositionVO;
+import com.xc.vo.indexposition.*;
 import com.xc.vo.stock.MarketVO;
-
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 
 @Service("iUserIndexPositionService")
 public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
@@ -68,32 +61,32 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
     @Transactional
     public ServerResponse buyIndex(Integer indexId, Integer buyNum, Integer buyType, Integer lever, HttpServletRequest request) throws Exception {
         if (indexId == null || buyNum == null || buyType == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         User user = this.iUserService.getCurrentRefreshUser(request);
         /*实名认证开关开启*/
         SiteProduct siteProduct = iSiteProductService.getProductSetting();
         if (siteProduct.getRealNameDisplay() && (StringUtils.isBlank(user.getRealName()) || StringUtils.isBlank(user.getIdCard()))) {
-            return ServerResponse.createByErrorMsg("下单失败，请先实名认证");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Vui lòng xác thực tên thật");
         }
 
         if(siteProduct.getHolidayDisplay()){
-            return ServerResponse.createByErrorMsg("周末或节假日不能交易！");
+            return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
 
         log.info("用户 {} 下单, 指数id = {} ，数量 = {} 手 , 方向 = {} ， 杠杆 = {}", new Object[]{user
                 .getId(), indexId, buyNum, buyType, lever});
 
         if (siteProduct.getRealNameDisplay() && user.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("下单失败，账户已被锁定");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, tài khoản đã bị khóa");
         }
 
 
         SiteIndexSetting siteIndexSetting = this.iSiteIndexSettingService.getSiteIndexSetting();
         if (siteIndexSetting == null) {
             log.error("下单出错，指数设置表不存在");
-            return ServerResponse.createByErrorMsg("下单失败，系统设置错误");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Thao tác thất bại");
         }
 
 
@@ -105,34 +98,34 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
         boolean pm_flag = BuyAndSellUtils.isTransTime(pm_begin, pm_end);
         log.info("是否在上午交易时间 = {} 是否在下午交易时间 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag));
         if (!am_flag && !pm_flag) {
-            return ServerResponse.createByErrorMsg("下单失败，不在交易时段内");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, không trong thời gian giao dịch");
         }
 
 
         StockIndex stockIndex = this.iStockIndexService.selectIndexById(indexId);
         if (stockIndex == null) {
-            return ServerResponse.createByErrorMsg("指数不存在");
+            return ServerResponse.createByErrorMsg("Chỉ số không tồn tại");
         }
         if (1 != stockIndex.getTransState().intValue()) {
-            return ServerResponse.createByErrorMsg("该指数不能交易");
+            return ServerResponse.createByErrorMsg("Chỉ số không giao dịch được");
         }
 
         //保证金= 指数保证金*数量/杠杆倍数
         BigDecimal all_deposit_amt = (new BigDecimal(stockIndex.getDepositAmt().intValue())).multiply(new BigDecimal(buyNum.intValue())).divide(new BigDecimal(lever)).setScale(4,2);
 
         if (user.getEnableIndexAmt().compareTo(all_deposit_amt) == -1) {
-            return ServerResponse.createByErrorMsg("指数账户资金不足");
+            return ServerResponse.createByErrorMsg("Chỉ số số dư khả dụng trong tài khoản không đủ");
         }
 
         BigDecimal max_buy_amt = user.getEnableIndexAmt().multiply(siteIndexSetting.getBuyMaxPercent());
         if (max_buy_amt.compareTo(all_deposit_amt) == -1) {
-            return ServerResponse.createByErrorMsg("不能超过最大购买比例");
+            return ServerResponse.createByErrorMsg("Không thể vượt quá tỷ lệ mua tối đa");
         }
         if (user.getUserAmt().compareTo(new BigDecimal("0")) == -1) {
-            return ServerResponse.createByErrorMsg("失败，融资总资金小于0");
+            return ServerResponse.createByErrorMsg("Thất bại, ký quỹ nhỏ hơn 0");
         }
         if (user.getUserFutAmt().compareTo(new BigDecimal("0")) == -1) {
-            return ServerResponse.createByErrorMsg("失败，期货总资金小于0");
+            return ServerResponse.createByErrorMsg("Không thành công, tổng quỹ tương lai nhỏ hơn 0");
         }
 
 
@@ -146,7 +139,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             if (siteIndexSetting.getRiseLimit().multiply(new BigDecimal("100"))
                     .compareTo(increaseRate) == -1 && buyType
                     .intValue() == 0) {
-                return ServerResponse.createByErrorMsg("当前指数涨幅:" + increaseRate + ",不能买涨");
+                return ServerResponse.createByErrorMsg("Tăng chỉ số hiện tại:" + increaseRate + ",không thể mua lên");
             }
         } else {
 
@@ -154,7 +147,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             if (siteIndexSetting.getRiseLimit().multiply(new BigDecimal("100"))
                     .compareTo(increaseRate) == -1 && buyType
                     .intValue() == 1) {
-                return ServerResponse.createByErrorMsg("当前指数跌幅:" + increaseRate + ",不能买跌");
+                return ServerResponse.createByErrorMsg("Chỉ số hiện tại suy giảm:" + increaseRate + ",không thể mua ngắn");
             }
         }
 
@@ -205,13 +198,13 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             throw new Exception("用户交易指数下单】保存持仓记录出错");
         }
 
-        return ServerResponse.createBySuccess("下单成功");
+        return ServerResponse.createBySuccess("Đặt lệnh thành công");
     }
 
     @Override
     public ServerResponse del(Integer positionId) {
         if (positionId == null) {
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
         UserIndexPosition position = this.userIndexPositionMapper.selectByPrimaryKey(positionId);
 
@@ -221,9 +214,9 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
 
         int updateCount = this.userIndexPositionMapper.deleteByPrimaryKey(positionId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
     @Transactional
@@ -234,7 +227,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
         SiteIndexSetting siteIndexSetting = this.iSiteIndexSettingService.getSiteIndexSetting();
         if (siteIndexSetting == null) {
             log.error("平仓出错，网站指数设置表不存在");
-            return ServerResponse.createByErrorMsg("下单失败，系统设置错误");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Thao tác thất bại");
         }
 
 
@@ -265,7 +258,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             return ServerResponse.createByErrorMsg("平仓失败，用户已被锁定");
         }
         if(siteProduct.getHolidayDisplay()){
-            return ServerResponse.createByErrorMsg("周末或节假日不能交易！");
+            return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
         if (userIndexPosition.getSellOrderPrice() != null) {
             return ServerResponse.createByErrorMsg("平仓失败，此订单已平仓");
@@ -340,7 +333,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             log.info("【用户平仓指数】修改用户金额成功");
         } else {
             log.error("【用户平仓指数】修改用户金额出错");
-            throw new Exception("【用户平仓指数】修改用户金额出错");
+            throw new Exception("【Chỉ mục đóng của người dùng】修改用户金额出错");
         }
 
         UserCashDetail ucd = new UserCashDetail();
@@ -363,16 +356,16 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
             log.info("【用户平仓指数】保存明细记录成功");
         } else {
             log.error("【用户平仓指数】保存明细记录出错");
-            throw new Exception("【用户平仓指数】保存明细记录出错");
+            throw new Exception("【Chỉ mục đóng của người dùng】保存明细记录出错");
         }
 
-        return ServerResponse.createBySuccessMsg("平仓成功！");
+        return ServerResponse.createBySuccessMsg("Thành công bán ra！");
     }
 
 
     public ServerResponse lock(Integer positionId, Integer state, String lockMsg) {
         if (positionId == null || state == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
 
@@ -400,9 +393,9 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
 
         int updateCount = this.userIndexPositionMapper.updateByPrimaryKeySelective(userIndexPosition);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("操作失败");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
 

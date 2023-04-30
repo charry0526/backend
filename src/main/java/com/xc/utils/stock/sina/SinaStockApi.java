@@ -463,7 +463,7 @@ public class SinaStockApi {
 
 
         if (StringUtils.isBlank(hqstr)) {
-            return ServerResponse.createByErrorMsg("没有查询到行情数据");
+            return ServerResponse.createByErrorMsg("Không tìm thấy dữ liệu bảng giá thị trường");
         }
 
         MinDataVO minDataVO = new MinDataVO();
@@ -508,7 +508,7 @@ public class SinaStockApi {
         hqstr = hqstr.replace("v","\"volume\"");
 
         if (StringUtils.isBlank(hqstr)) {
-            return ServerResponse.createByErrorMsg("没有查询到行情数据");
+            return ServerResponse.createByErrorMsg("Không tìm thấy dữ liệu bảng giá thị trường");
         }
 
         MinDataVO minDataVO = new MinDataVO();
@@ -619,7 +619,7 @@ public class SinaStockApi {
 
 
         if (StringUtils.isBlank(hqstr)) {
-            return ServerResponse.createByErrorMsg("没有查询到行情数据");
+            return ServerResponse.createByErrorMsg("Không tìm thấy dữ liệu bảng giá thị trường");
         }
 
         MinDataVO minDataVO = new MinDataVO();
@@ -664,7 +664,7 @@ public class SinaStockApi {
         hqstr = hqstr.replace("v","\"volume\"");*/
 
         if (StringUtils.isBlank(hqstr)) {
-            return ServerResponse.createByErrorMsg("没有查询到行情数据");
+            return ServerResponse.createByErrorMsg("Không tìm thấy dữ liệu bảng giá thị trường");
         }
 
         MinDataVO minDataVO = new MinDataVO();

@@ -68,9 +68,9 @@ public class SiteFuturesSettingServiceImpl
 
         int updateCount = this.siteFuturesSettingMapper.updateByPrimaryKey(dbsetting);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
 }

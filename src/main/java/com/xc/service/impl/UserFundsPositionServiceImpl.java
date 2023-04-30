@@ -1,6 +1,5 @@
 package com.xc.service.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -66,13 +65,13 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
     public ServerResponse insert(UserFundsPosition model, HttpServletRequest request) {
         int ret = 0;
         if (model == null) {
-            return ServerResponse.createByErrorMsg("下单异常，请稍后再试！");
+            return ServerResponse.createByErrorMsg("Lỗi đặt lệnh, vui lòng thử lại sau !");
         }
         ret = userFundsPositionMapper.insert(model);
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("下单成功！");
+            return ServerResponse.createBySuccessMsg("Đặt lệnh thành công！");
         } else {
-            return ServerResponse.createByErrorMsg("下单失败，请稍后再试！");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, vui lòng thử lại sau!");
         }
     }
 
@@ -94,9 +93,9 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             ret = userFundsPositionMapper.insert(model);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("操作失败");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
     /*分仓交易-查询列表*/
@@ -129,22 +128,22 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
         SiteProduct siteProduct = iSiteProductService.getProductSetting();
         User user = this.iUserService.getCurrentRefreshUser(request);
         if (siteProduct.getRealNameDisplay() && (StringUtils.isBlank(user.getRealName()) || StringUtils.isBlank(user.getIdCard()))) {
-            return ServerResponse.createByErrorMsg("下单失败，请先实名认证");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Vui lòng xác thực tên thật");
         }
         if(siteProduct.getHolidayDisplay()){
-            return ServerResponse.createByErrorMsg("周末或节假日不能交易！");
+            return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
         BigDecimal user_enable_amt = user.getEnableAmt();
         log.info("用户 {} 下单，股票id = {} ，数量 = {} , 方向 = {} , 杠杆 = {}", new Object[]{user
                 .getId(), stockId, buyNum, buyType, lever});
         if (siteProduct.getRealNameDisplay() && user.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("下单失败，账户已被锁定");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, tài khoản đã bị khóa");
         }
 
         SiteSetting siteSetting = this.iSiteSettingService.getSiteSetting();
         if (siteSetting == null) {
             log.error("下单出错，网站设置表不存在");
-            return ServerResponse.createByErrorMsg("下单失败，系统设置错误");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Thao tác thất bại");
         }
 
         String am_begin = siteSetting.getTransAmBegin();
@@ -156,40 +155,40 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
         log.info("是否在上午交易时间 = {} 是否在下午交易时间 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag));
 
         if (!am_flag && !pm_flag) {
-            return ServerResponse.createByErrorMsg("下单失败，不在交易时段内");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, không trong thời gian giao dịch");
         }
 
         Stock stock = null;
         ServerResponse stock_res = this.iStockService.findStockById(stockId);
         if (!stock_res.isSuccess()) {
-            return ServerResponse.createByErrorMsg("下单失败，股票代码错误");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, sai mã cổ phiếu");
         }
         stock = (Stock) stock_res.getData();
 
         if (stock.getIsLock().intValue() != 0) {
-            return ServerResponse.createByErrorMsg("下单失败，当前股票不能交易");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, mã cổ phiếu này không giao dịch được");
         }
 
         /*List dbPosition = findPositionByStockCodeAndTimes(siteSetting.getBuySameTimes().intValue(), stock
                 .getStockCode(), user.getId());
         if (dbPosition.size() >= siteSetting.getBuySameNums().intValue()) {
-            return ServerResponse.createByErrorMsg("频繁交易," + siteSetting.getBuySameTimes() + "分钟内同一股票持仓不得超过" + siteSetting
+            return ServerResponse.createByErrorMsg("Giao dịch vượt" + siteSetting.getBuySameTimes() + "分钟内同一股票持仓不得超过" + siteSetting
                     .getBuySameNums() + "条");
         }
 
         Integer transNum = findPositionNumByTimes(siteSetting.getBuyNumTimes().intValue(), user.getId());
         if (transNum.intValue() / 100 >= siteSetting.getBuyNumLots().intValue()) {
-            return ServerResponse.createByErrorMsg("频繁交易," + siteSetting
+            return ServerResponse.createByErrorMsg("Giao dịch vượt" + siteSetting
                     .getBuyNumTimes() + "分钟内不能超过" + siteSetting.getBuyNumLots() + "手");
         }*/
 
         if (buyNum.intValue() < siteSetting.getBuyMinNum().intValue()) {
-            return ServerResponse.createByErrorMsg("下单失败，购买数量小于" + siteSetting
-                    .getBuyMinNum() + "股");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, số lượng mua nhỏ hơn" + siteSetting
+                    .getBuyMinNum() + "cổ");
         }
         if (buyNum.intValue() > siteSetting.getBuyMaxNum().intValue()) {
-            return ServerResponse.createByErrorMsg("下单失败，购买数量大于" + siteSetting
-                    .getBuyMaxNum() + "股");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, số lượng mua lớn hơn" + siteSetting
+                    .getBuyMaxNum() + "cổ");
         }
 
 
@@ -270,8 +269,8 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
 
         if (daysRate != null &&
                 siteSetting.getStockRate().compareTo(daysRate) == -1) {
-            return serverResponse.createByErrorMsg(siteSetting.getStockDays() + "天内涨幅超过 " + siteSetting
-                    .getStockRate() + "不能交易");
+            return serverResponse.createByErrorMsg(siteSetting.getStockDays() + "Vượt quá biên độ tăng trong ngày" + siteSetting
+                    .getStockRate() + "không thể giao dịch");
         }
 
 
@@ -283,15 +282,15 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
 
         int compareInt = buy_amt_autual.compareTo(new BigDecimal(siteSetting.getBuyMinAmt().intValue()));
         if (compareInt == -1) {
-            return ServerResponse.createByErrorMsg("下单失败，购买金额小于" + siteSetting
-                    .getBuyMinAmt() + "元");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, số tiền mua nhỏ hơn" + siteSetting
+                    .getBuyMinAmt() + "VND");
         }
 
 
         BigDecimal max_buy_amt = user_enable_amt.multiply(siteSetting.getBuyMaxAmtPercent());
         int compareCwInt = buy_amt_autual.compareTo(max_buy_amt);
         if (compareCwInt == 1) {
-            return ServerResponse.createByErrorMsg("下单失败，不能超过可用资金的" + siteSetting
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, số tiền mua vượt quá số dư khả dụng" + siteSetting
                     .getBuyMaxAmtPercent().multiply(new BigDecimal("100")) + "%");
         }
 
@@ -300,7 +299,7 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
         log.info("用户可用金额 = {}  实际购买金额 =  {}", user_enable_amt, buy_amt_autual);
         log.info("比较 用户金额 和 实际 购买金额 =  {}", Integer.valueOf(compareUserAmtInt));
         if (compareUserAmtInt == -1) {
-            return ServerResponse.createByErrorMsg("下单失败，融资可用金额小于" + buy_amt_autual + "元");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, số quỹ khả dụng nhỏ hơn" + buy_amt_autual + "VND");
         }
 
         if (user.getUserIndexAmt().compareTo(new BigDecimal("0")) == -1) {
@@ -379,10 +378,10 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             log.info("【用户交易下单】保存持仓记录成功");
         } else {
             log.error("用户交易下单】保存持仓记录出错");
-            throw new Exception("用户交易下单】保存持仓记录出错");
+            throw new Exception("Lệnh giao dịch của người dùng】Lỗi khi lưu bản ghi vị trí");
         }
 
-        return ServerResponse.createBySuccess("下单成功");
+        return ServerResponse.createBySuccess("Đặt lệnh thành công");
     }
 
     /*
@@ -395,7 +394,7 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
         SiteSetting siteSetting = this.iSiteSettingService.getSiteSetting();
         if (siteSetting == null) {
             log.error("平仓出错，网站设置表不存在");
-            return ServerResponse.createByErrorMsg("下单失败，系统设置错误");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Thao tác thất bại");
         }
 
         if (doType != 0) {
@@ -407,7 +406,7 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             boolean pm_flag = BuyAndSellUtils.isTransTime(pm_begin, pm_end);
             log.info("是否在上午交易时间 = {} 是否在下午交易时间 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag));
             if (!am_flag && !pm_flag) {
-                return ServerResponse.createByErrorMsg("平仓失败，不在交易时段内");
+                return ServerResponse.createByErrorMsg("Không thể đóng vị trí，不在交易时段内");
             }
         }
 
@@ -423,7 +422,7 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             return ServerResponse.createByErrorMsg("平仓失败，用户已被锁定");
         }
         if(siteProduct.getHolidayDisplay()){
-            return ServerResponse.createByErrorMsg("周末或节假日不能交易！");
+            return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
 
         if (userPosition.getSellOrderId() != null) {
@@ -518,7 +517,7 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             log.info("【用户平仓】修改浮动盈亏记录成功");
         } else {
             log.error("用户平仓】修改浮动盈亏记录出错");
-            throw new Exception("用户平仓】修改浮动盈亏记录出错");
+            throw new Exception("【Tài khoản đóng vị thế】Lỗi khi sửa bản ghi lãi lỗ thả nổi");
         }
 
         BigDecimal freez_amt = all_buy_amt.divide(new BigDecimal(userPosition.getOrderLever().intValue()), 2, 4);
@@ -559,10 +558,10 @@ public class UserFundsPositionServiceImpl implements IUserFundsPositionService {
             log.info("【用户平仓】保存明细记录成功");
         } else {
             log.error("用户平仓】保存明细记录出错");
-            throw new Exception("用户平仓】保存明细记录出错");
+            throw new Exception("Tài khoản đóng vị thế】Lỗi sao kê bản chi tiết");
         }
 
-        return ServerResponse.createBySuccessMsg("平仓成功！");
+        return ServerResponse.createBySuccessMsg("Thành công bán ra！");
     }
 
 

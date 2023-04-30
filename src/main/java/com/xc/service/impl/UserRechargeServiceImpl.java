@@ -70,7 +70,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
 
     public ServerResponse inMoney(String amt, String payType, HttpServletRequest request) {
         if (StringUtils.isBlank(amt) || StringUtils.isBlank(payType)) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         SiteSetting siteSetting = this.iSiteSettingService.getSiteSetting();
@@ -152,13 +152,13 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         log.info("充值订单 确认成功操作 id = {}", userRecharge.getId());
 
         if (userRecharge.getOrderStatus().intValue() != 0) {
-            return ServerResponse.createByErrorMsg("订单状态不能重复修改");
+            return ServerResponse.createByErrorMsg("Trạng thái đơn hàng không thể được sửa đổi nhiều lần");
         }
 
 
         User user = this.userMapper.selectByPrimaryKey(userRecharge.getUserId());
         if (user == null) {
-            return ServerResponse.createByErrorMsg("用户不存在");
+            return ServerResponse.createByErrorMsg("Người dùng không tồn tại");
         }
         BigDecimal userAmt_before = user.getUserAmt();
         BigDecimal enableAmt_before = user.getEnableAmt();
@@ -168,7 +168,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         if (updateCount > 0) {
             log.info("1.修改用户资金成功");
         } else {
-            return ServerResponse.createByErrorMsg("失败，修改用户资金失败");
+                return ServerResponse.createByErrorMsg("Không thể sửa đổi tiền của người dùng");
         }
 
 
@@ -178,7 +178,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         if (updateCCount > 0) {
             log.info("2.修改订单状态成功");
         } else {
-            throw new Exception("2. 修改订单状态失败!");
+            throw new Exception("Khổng thể sửa đổi đặt lệnh!");
         }
 
 
@@ -187,18 +187,18 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         ucd.setAgentName(user.getAgentName());
         ucd.setUserId(user.getId());
         ucd.setUserName(user.getRealName());
-        ucd.setDeType("用户充值");
+        ucd.setDeType("Người dùng nạp tiền");
         ucd.setDeAmt(userRecharge.getPayAmt());
-        ucd.setDeSummary("用户充值成功，充值前总金额:" + userAmt_before + ",充值后总金额:" + user.getUserAmt() + ",充值前可用:" + enableAmt_before + ",充值后可用:" + user
+        ucd.setDeSummary("Người dùng nạp tiền，Tổng số tiền trước khi nạp tiền:" + userAmt_before + ",Tổng số tiền sau khi nạp tiền:" + user.getUserAmt() + ",Có sẵn trước khi nạp tiền:" + enableAmt_before + ",Có sẵn sau khi nạp tiền:" + user
                 .getEnableAmt());
 
         ucd.setAddTime(new Date());
         ucd.setIsRead(Integer.valueOf(0));
         int insertCount = this.userCashDetailMapper.insert(ucd);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("充值成功！");
+            return ServerResponse.createBySuccessMsg("Nạp tiền thành công！");
         }
-        return ServerResponse.createByErrorMsg("充值失败");
+        return ServerResponse.createByErrorMsg("Nạp tiền không thành công");
     }
 
 
@@ -328,7 +328,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
                 log.info("修改用户资金成功！");
             } else {
                 log.error("修改用户资金出错，抛出异常");
-                throw new Exception("修改用户资金出错，抛出异常");
+                throw new Exception("Xảy ra lỗi sửa đổi tiền người dùng, đưa ra bất thường");
             }
         }
 
@@ -347,7 +347,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
 
     public ServerResponse createOrder(Integer userId, Integer state, Integer amt, String payChannel) {
         if (userId == null || state == null || amt == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         User user = this.userMapper.selectByPrimaryKey(userId);
@@ -394,13 +394,13 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
 
     public ServerResponse del(Integer cId) {
         if (cId == null) {
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
         int updateCount = this.userRechargeMapper.deleteByPrimaryKey(cId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
 

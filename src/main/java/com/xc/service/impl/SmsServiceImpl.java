@@ -54,7 +54,7 @@ public class SmsServiceImpl implements ISmsService {
             siteSmsLog.setSmsStatus(Integer.valueOf(0));
             siteSmsLog.setAddTime(DateTimeUtil.getCurrentDate());
             this.siteSmsLogMapper.insert(siteSmsLog);
-            return ServerResponse.createBySuccessMsg("发送成功");
+            return ServerResponse.createBySuccessMsg("Gửi thành công");
         }
         return ServerResponse.createByErrorMsg("短信发送失败，请重试");
     }

@@ -77,7 +77,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
     @Transactional
     public ServerResponse outMoney(String amt, String with_Pwd, HttpServletRequest request) throws Exception {
         if (StringUtils.isBlank(amt)) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
         User user = this.iUserService.getCurrentRefreshUser(request);
         String w = user.getWithPwd();
@@ -203,7 +203,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
                 log.error("修改用户资金失败");
 
-                throw new Exception("用户提现，修改用户资金失败");
+                throw new Exception("Tài khoản rút tiền, sửa đổi tiền tài khoản thất bại");
 
             }
 
@@ -246,7 +246,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             log.error("保存提现记录失败");
 
-            throw new Exception("用户提现，保存提现记录失败");
+            throw new Exception("Tài khoản rút tiền, lưu sao kê rút tiền thất bại");
         } else {
             return ServerResponse.createByErrorMsg("提现密码不正确！！");
         }
@@ -277,7 +277,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
         if (withId == null) {
 
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
 
         }
 
@@ -458,7 +458,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
                 log.error("返还用户资金出错，抛出异常");
 
-                throw new Exception("修改用户资金出错，抛出异常");
+                throw new Exception("Xảy ra lỗi sửa đổi tiền người dùng, đưa ra bất thường");
 
             }
 
@@ -478,11 +478,11 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("操作成功！");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công！");
 
         }
 
-        return ServerResponse.createByErrorMsg("操作失败！");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại！");
 
     }
 
@@ -502,13 +502,13 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
     public ServerResponse deleteWithdraw(Integer withdrawId) {
         if (withdrawId == null) {
-            return ServerResponse.createByErrorMsg("删除id不能为空");
+            return ServerResponse.createByErrorMsg("删除id không thể để trống");
         }
         int updateCount = this.userWithdrawMapper.deleteByPrimaryKey(withdrawId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
 }

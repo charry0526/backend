@@ -2,55 +2,33 @@ package com.xc.service.impl;
 
 
 import com.github.pagehelper.PageHelper;
-
 import com.github.pagehelper.PageInfo;
-
 import com.google.common.collect.Lists;
-
 import com.xc.common.ServerResponse;
-
 import com.xc.dao.StockFuturesMapper;
-
 import com.xc.pojo.StockCoin;
-
 import com.xc.pojo.StockFutures;
-
 import com.xc.pojo.User;
 import com.xc.service.IStockCoinService;
-
 import com.xc.service.IStockFuturesService;
-
 import com.xc.service.IStockOptionService;
 import com.xc.service.IUserService;
 import com.xc.utils.HttpClientRequest;
-
 import com.xc.utils.PropertiesUtil;
-
 import com.xc.vo.foreigncurrency.ExchangeVO;
-
 import com.xc.vo.stockfutures.FuturesAdminListVO;
-
 import com.xc.vo.stockfutures.FuturesVO;
-
 import com.xc.vo.stockfutures.StockFuturesListVO;
-
-import java.math.BigDecimal;
-
-import java.util.Date;
-
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
-
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 
 @Service("iStockFuturesService")
@@ -184,7 +162,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
                 StringUtils.isBlank(stockFutures.getFuturesCode())) {
 
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
 
         }
 
@@ -193,7 +171,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (fuName != null) {
 
-            return ServerResponse.createByErrorMsg("产品名不能重复");
+            return ServerResponse.createByErrorMsg("Tên sản phẩm không được trùng");
 
         }
 
@@ -202,7 +180,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (fuCode != null) {
 
-            return ServerResponse.createByErrorMsg("代码不能重复");
+            return ServerResponse.createByErrorMsg("Mã không được trùng");
 
         }
 
@@ -211,7 +189,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (stockCoin == null) {
 
-            return ServerResponse.createByErrorMsg("基币不存在");
+            return ServerResponse.createByErrorMsg("Số tiền không tồn tại");
 
         }
 
@@ -223,11 +201,11 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (insertCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thêm thành công");
 
         }
 
-        return ServerResponse.createByErrorMsg("添加失败");
+        return ServerResponse.createByErrorMsg("Thêm không thành công");
 
     }
 
@@ -236,7 +214,7 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (stockFutures.getId() == null) {
 
-            return ServerResponse.createByErrorMsg("修改id不能为空");
+            return ServerResponse.createByErrorMsg("Sửa ID không được bỏ trống");
 
         }
 
@@ -245,28 +223,28 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (dbFutures == null) {
 
-            return ServerResponse.createByErrorMsg("产品不存在");
+            return ServerResponse.createByErrorMsg("Sản phẩm không tồn tại");
 
         }
 
 
         if (stockFutures.getFuturesName() != null) {
 
-            return ServerResponse.createByErrorMsg("产品名不能修改");
+            return ServerResponse.createByErrorMsg("Tên sản phẩm không được sửa");
 
         }
 
 
         if (stockFutures.getFuturesCode() != null) {
 
-            return ServerResponse.createByErrorMsg("产品代码不能修改");
+            return ServerResponse.createByErrorMsg("Mã sản phẩm không được sửa");
 
         }
 
 
         if (stockFutures.getFuturesGid() != null) {
 
-            return ServerResponse.createByErrorMsg("Gid不能修改");
+            return ServerResponse.createByErrorMsg("Gid không được sửa");
 
         }
 
@@ -275,11 +253,11 @@ public class StockFuturesServiceImpl implements IStockFuturesService {
 
         if (updateCount > 0) {
 
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
 
         }
 
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
 
     }
 

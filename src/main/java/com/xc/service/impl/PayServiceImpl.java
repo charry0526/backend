@@ -55,7 +55,7 @@ public class PayServiceImpl implements IPayService {
 
     public ServerResponse juhe1(String payType, String payAmt, HttpServletRequest request) {
         if (StringUtils.isBlank(payType) || StringUtils.isBlank(payAmt)) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
         BigDecimal payAmtBig = new BigDecimal(payAmt);
         if ((new BigDecimal("0")).compareTo(payAmtBig) != -1) {
@@ -293,7 +293,7 @@ public class PayServiceImpl implements IPayService {
             user.setEnableAmt(total_enable);
             int updateUserCount = this.userMapper.updateByPrimaryKeySelective(user);
             if (updateUserCount > 0) {
-                return ServerResponse.createBySuccessMsg("后台通知 处理成功");
+                return ServerResponse.createBySuccessMsg("Thông báo hậu đại  xử lý thành công");
             }
             return ServerResponse.createByErrorMsg("后台通知 处理失败 修改用户资金不成功");
         }

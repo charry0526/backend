@@ -53,7 +53,7 @@ public class SmsApiController {
             siteSmsLog.setSmsTemplate("字段无用");
             siteSmsLog.setAddTime(DateTimeUtil.getCurrentDate());
             iSiteSmsLogService.addData(siteSmsLog);
-            return ServerResponse.createBySuccessMsg("发送成功");
+            return ServerResponse.createBySuccessMsg("Gửi thành công");
         } else {
             return ServerResponse.createByErrorMsg("短信发送失败，请重试");
         }

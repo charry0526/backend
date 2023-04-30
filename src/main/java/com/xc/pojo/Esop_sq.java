@@ -68,6 +68,15 @@ public class Esop_sq implements Serializable {
     private String gg;
 
     private String ggStr;
+    /**
+     * 成交价
+     */
+    private String finalPrice;
+    /**
+     * 发行价
+     */
+    private String issuePrice;
+
 
 
 

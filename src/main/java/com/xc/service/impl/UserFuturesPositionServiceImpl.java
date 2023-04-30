@@ -1,38 +1,31 @@
 package com.xc.service.impl;
 
 
-import com.xc.dao.*;
-import com.xc.pojo.*;
-import com.xc.service.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.xc.common.ServerResponse;
+import com.xc.dao.*;
+import com.xc.pojo.*;
 import com.xc.service.*;
 import com.xc.utils.DateTimeUtil;
 import com.xc.utils.KeyUtils;
 import com.xc.utils.stock.BuyAndSellUtils;
 import com.xc.vo.agent.AgentIncomeVO;
-import com.xc.vo.futuresposition.AdminFuturesPositionVO;
-import com.xc.vo.futuresposition.AgentFuturesPositionVO;
-import com.xc.vo.futuresposition.FuturesPositionProfitVO;
-import com.xc.vo.futuresposition.FuturesPositionVO;
-import com.xc.vo.futuresposition.UserFuturesPositionVO;
-import com.xc.vo.position.UserPositionVO;
+import com.xc.vo.futuresposition.*;
 import com.xc.vo.stockfutures.FuturesVO;
-
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 
 @Service("iUserFuturesPositionService")
 public class UserFuturesPositionServiceImpl implements IUserFuturesPositionService {
@@ -69,35 +62,35 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
     @Transactional
     public ServerResponse buyFutures(Integer futuresId, Integer buyNum, Integer buyType, Integer lever, HttpServletRequest request) throws Exception {
         if (futuresId == null || buyNum == null || buyType == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
         /*实名认证开关开启*/
         SiteProduct siteProduct = iSiteProductService.getProductSetting();
         User user = this.iUserService.getCurrentRefreshUser(request);
         if (siteProduct.getRealNameDisplay() && (StringUtils.isBlank(user.getRealName()) || StringUtils.isBlank(user.getIdCard()))) {
-            return ServerResponse.createByErrorMsg("下单失败，请先实名认证");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Vui lòng xác thực tên thật");
         }
 
         if(siteProduct.getHolidayDisplay()){
-            return ServerResponse.createByErrorMsg("周末或节假日不能交易！");
+            return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
 
         if (siteProduct.getRealNameDisplay() && user.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("下单失败，账户已被锁定");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, tài khoản đã bị khóa");
         }
 
         StockFutures stockFutures = this.iStockFuturesService.selectFuturesById(futuresId);
         if (stockFutures == null) {
-            return ServerResponse.createByErrorMsg("产品不存在");
+            return ServerResponse.createByErrorMsg("Sản phẩm không tồn tại");
         }
         if (1 != stockFutures.getTransState().intValue()) {
-            return ServerResponse.createByErrorMsg("该产品不能交易");
+            return ServerResponse.createByErrorMsg("Sản phẩm này không giao dịch được");
         }
         if (buyNum.intValue() < stockFutures.getMinNum().intValue()) {
-            return ServerResponse.createByErrorMsg("最低不能低于" + stockFutures.getMinNum() + "手");
+            return ServerResponse.createByErrorMsg("Không ít hơn" + stockFutures.getMinNum() + "cổ");
         }
         if (buyNum.intValue() > stockFutures.getMaxNum().intValue()) {
-            return ServerResponse.createByErrorMsg("最多不能高于" + stockFutures.getMaxNum() + "手");
+            return ServerResponse.createByErrorMsg("Không nhiều hơn" + stockFutures.getMaxNum() + "cổ");
         }
         log.info("用户 {} 下单, 期货产品 = {} ，数量 = {} 手 , 方向 = {} ， 杠杆倍数 = {}", new Object[]{user
                 .getId(), stockFutures.getFuturesName(), buyNum, buyType, lever});
@@ -114,26 +107,26 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
         boolean pm_flag2 = BuyAndSellUtils.isTransTime(pm_begin2, pm_end2);
         log.info("futures 是否在上午交易时间 = {} 是否在下午交易时间 = {}是否在下午交易时间2 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag), Boolean.valueOf(pm_flag2));
         if (!am_flag && !pm_flag && !pm_flag2) {
-            return ServerResponse.createByErrorMsg("下单失败，不在交易时段内");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, không trong thời gian giao dịch");
         }
 
 
         SiteFuturesSetting siteFuturesSetting = this.iSiteFuturesSettingService.getSetting();
         if (siteFuturesSetting == null) {
             log.error("下单出错，网站设置表不存在");
-            return ServerResponse.createByErrorMsg("下单失败，系统设置错误");
+            return ServerResponse.createByErrorMsg("Đặt lệnh thất bại, Thao tác thất bại");
         }
 
         List dbPosition = findPositionByFuturesCodeAndTimes(siteFuturesSetting.getBuySameTimes().intValue(), stockFutures
                 .getFuturesCode(), user.getId());
         if (dbPosition.size() >= siteFuturesSetting.getBuySameNums().intValue()) {
-            return ServerResponse.createByErrorMsg("频繁交易," + siteFuturesSetting.getBuySameTimes() + "分钟内同一产品持仓不得超过" + siteFuturesSetting
+            return ServerResponse.createByErrorMsg("Giao dịch vượt" + siteFuturesSetting.getBuySameTimes() + "分钟内同一产品持仓不得超过" + siteFuturesSetting
                     .getBuySameNums() + "条");
         }
 
         Integer transNum = findPositionNumByTimes(siteFuturesSetting.getBuyNumTimes().intValue(), user.getId());
         if (transNum.intValue() >= siteFuturesSetting.getBuyNumLots().intValue()) {
-            return ServerResponse.createByErrorMsg("频繁交易," + siteFuturesSetting.getBuyNumTimes() + "分钟内不能超过" + siteFuturesSetting
+            return ServerResponse.createByErrorMsg("Giao dịch vượt" + siteFuturesSetting.getBuyNumTimes() + "分钟内不能超过" + siteFuturesSetting
                     .getBuyNumLots() + "手");
         }
 
@@ -228,13 +221,13 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
             throw new Exception("用户交易 期货 下单】保存持仓记录出错");
         }
 
-        return ServerResponse.createBySuccess("下单成功");
+        return ServerResponse.createBySuccess("Đặt lệnh thành công");
     }
 
     @Override
     public ServerResponse del(Integer positionId) {
         if (positionId == null) {
-            return ServerResponse.createByErrorMsg("id不能为空");
+            return ServerResponse.createByErrorMsg("id không thể để trống");
         }
         UserFuturesPosition position = this.userFuturesPositionMapper.selectByPrimaryKey(positionId);
         if (position == null) {
@@ -243,9 +236,9 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
         int updateCount = this.userFuturesPositionMapper.deleteByPrimaryKey(positionId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Hủy thành công");
         }
-        return ServerResponse.createByErrorMsg("删除失败");
+        return ServerResponse.createByErrorMsg("Không thể xóa");
     }
 
 
@@ -255,13 +248,13 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
         UserFuturesPosition userFuturesPosition = this.userFuturesPositionMapper.selectPositionBySn(positionSn);
         if (userFuturesPosition == null) {
-            return ServerResponse.createByErrorMsg("操作失败，找不到订单");
+            return ServerResponse.createByErrorMsg("Thao tác thất bại");
         }
 
 
         StockFutures stockFutures = this.iStockFuturesService.selectFuturesByCode(userFuturesPosition.getFuturesCode());
         if (stockFutures == null) {
-            return ServerResponse.createByErrorMsg("操作失败，产品不存在或已被删除");
+            return ServerResponse.createByErrorMsg("Thao tác thất bại，sản phẩm không tồn ");
         }
 
 
@@ -277,7 +270,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
             boolean pm_flag2 = BuyAndSellUtils.isTransTime(pm_begin2, pm_end2);
             log.info("【 期货 】是否在上午交易时间 = {} 是否在下午交易时间 = {}", Boolean.valueOf(am_flag), Boolean.valueOf(pm_flag));
             if (!am_flag && !pm_flag && !pm_flag2) {
-                return ServerResponse.createByErrorMsg("操作失败，不在交易时段内");
+                return ServerResponse.createByErrorMsg("Thao tác thất bại，不在交易时段内");
             }
         }
 
@@ -286,14 +279,14 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
         /*实名认证开关开启*/
         SiteProduct siteProduct = iSiteProductService.getProductSetting();
         if (siteProduct.getRealNameDisplay() && user.getIsLock().intValue() == 1) {
-            return ServerResponse.createByErrorMsg("操作失败，用户已被锁定");
+            return ServerResponse.createByErrorMsg("Thao tác thất bại，用户已被锁定");
         }
         if(siteProduct.getHolidayDisplay()){
-            return ServerResponse.createByErrorMsg("周末或节假日不能交易！");
+            return ServerResponse.createByErrorMsg("Ngày nghỉ cuối tuần ngày lễ không giao dịch！");
         }
 
         if (userFuturesPosition.getSellOrderPrice() != null) {
-            return ServerResponse.createByErrorMsg("操作失败，此订单已平仓");
+            return ServerResponse.createByErrorMsg("Thao tác thất bại，此订单已平仓");
         }
 
         if (1 == userFuturesPosition.getIsLock().intValue()) {
@@ -396,7 +389,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
             throw new Exception("【用户平仓 期货 】保存明细记录出错");
         }
 
-        return ServerResponse.createBySuccessMsg("平仓成功！");
+        return ServerResponse.createBySuccessMsg("Thành công bán ra！");
     }
 
 
@@ -433,7 +426,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
     public ServerResponse lock(Integer positionId, Integer state, String lockMsg) {
         if (positionId == null || state == null) {
-            return ServerResponse.createByErrorMsg("参数不能为空");
+            return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         UserFuturesPosition position = this.userFuturesPositionMapper.selectByPrimaryKey(positionId);
@@ -460,9 +453,9 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
         int updateCount = this.userFuturesPositionMapper.updateByPrimaryKeySelective(position);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("操作失败");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
 

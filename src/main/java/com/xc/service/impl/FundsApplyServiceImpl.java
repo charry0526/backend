@@ -1,10 +1,12 @@
 package com.xc.service.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xc.common.ServerResponse;
-import com.xc.dao.*;
+import com.xc.dao.FundsApplyMapper;
+import com.xc.dao.FundsTradingAccountMapper;
+import com.xc.dao.UserCashDetailMapper;
+import com.xc.dao.UserMapper;
 import com.xc.pojo.*;
 import com.xc.service.IFundsApplyService;
 import com.xc.service.IFundsSettingService;
@@ -52,11 +54,11 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
     public ServerResponse insert(FundsApply model, HttpServletRequest request) throws Exception {
         int ret = 0;
         if (model == null) {
-            return ServerResponse.createBySuccessMsg("操作异常，请稍后重试！");
+            return ServerResponse.createBySuccessMsg("Lỗi thao tác, vui lòng thử lại sau！");
         }
         User user = this.iUserService.getCurrentRefreshUser(request);
         if(user == null){
-            return ServerResponse.createBySuccessMsg("请登录后操作");
+            return ServerResponse.createBySuccessMsg("Vui lòng đăng nhập để thao tác");
         }
         BigDecimal user_enable_amt = user.getEnableAmt();
         //支付金额=保证金+管理费
@@ -64,7 +66,7 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
         int compareUserAmtInt = user_enable_amt.compareTo(pay_amount);
         log.info("用户可用金额 = {}  实际购买金额 =  {} 比较结果 = {} ", user_enable_amt, pay_amount, compareUserAmtInt);
         if (compareUserAmtInt == -1) {
-            return ServerResponse.createByErrorMsg("申请失败，可用金额小于" + pay_amount + "元");
+            return ServerResponse.createByErrorMsg("Đề xuất thất bại, số dư khả dụng nhỏ hơn" + pay_amount + "VND");
         }
 
         //自动生成订单编号
@@ -98,9 +100,9 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
                 log.error("【按天配资】修改用户金额出错");
                 throw new Exception("【按天配资】修改用户金额出错");
             }
-            return ServerResponse.createBySuccessMsg("申请成功！");
+            return ServerResponse.createBySuccessMsg("Đề xuất thành công！");
         } else {
-            return ServerResponse.createBySuccessMsg("申请失败，请稍后重试！");
+            return ServerResponse.createBySuccessMsg("Đề xuất thất bại, vui lòng thử lại sau！");
         }
     }
 
@@ -122,9 +124,9 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
             ret = fundsApplyMapper.insert(model);
         }
         if(ret>0){
-            return ServerResponse.createBySuccessMsg("操作成功");
+            return ServerResponse.createBySuccessMsg("Thao tác thành công");
         }
-        return ServerResponse.createByErrorMsg("操作失败");
+        return ServerResponse.createByErrorMsg("Thao tác thất bại");
     }
 
     /**
@@ -232,9 +234,9 @@ public class FundsApplyServiceImpl implements IFundsApplyService {
                 /*     */       }
             /*     */     }
         /* 234 */     if (ret > 0) {
-            /* 235 */       return ServerResponse.createBySuccessMsg("操作成功");
+            /* 235 */       return ServerResponse.createBySuccessMsg("Thao tác thành công");
             /*     */     }
-        /* 237 */     return ServerResponse.createByErrorMsg("操作失败");
+        /* 237 */     return ServerResponse.createByErrorMsg("Thao tác thất bại");
         /*     */   }
 
 

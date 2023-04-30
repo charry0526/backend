@@ -4,13 +4,12 @@ import com.xc.common.ServerResponse;
 import com.xc.dao.SiteProductMapper;
 import com.xc.pojo.SiteProduct;
 import com.xc.service.ISiteProductService;
-
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("iSiteProductService")
 public class SiteProductServiceImpl
@@ -22,18 +21,18 @@ public class SiteProductServiceImpl
 
     public ServerResponse update(SiteProduct siteProduct) {
         if (siteProduct.getId() == null) {
-            return ServerResponse.createByErrorMsg("修改id不能为空");
+            return ServerResponse.createByErrorMsg("ID không được bỏ trống");
         }
         SiteProduct dbproduct = this.siteProductMapper.selectByPrimaryKey(siteProduct.getId());
         if (dbproduct == null) {
-            return ServerResponse.createByErrorMsg("不存在产品设置记录");
+            return ServerResponse.createByErrorMsg("Bản hướng dẫn cài đặt sản phẩm không tồn tại");
         }
 
         int updateCount = this.siteProductMapper.updateByPrimaryKeySelective(siteProduct);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改成功");
+            return ServerResponse.createBySuccessMsg("Sửa đổi thành công");
         }
-        return ServerResponse.createByErrorMsg("修改失败");
+        return ServerResponse.createByErrorMsg("Sửa đổi thất bại");
     }
 
     public SiteProduct getProductSetting() {
