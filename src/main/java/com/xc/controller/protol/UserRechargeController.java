@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
+
 
 @Controller
 @RequestMapping({"/user/recharge/"})
@@ -32,7 +34,7 @@ public class UserRechargeController {
     //账户线下充值转账 创建充值订单
     @RequestMapping({"inMoney.do"})
     @ResponseBody
-    public ServerResponse inMoney(String amt, String payType, HttpServletRequest request) {
+    public ServerResponse inMoney(BigDecimal amt, String payType, HttpServletRequest request) {
         return this.iUserRechargeService.inMoney(amt, payType, request);
     }
 }

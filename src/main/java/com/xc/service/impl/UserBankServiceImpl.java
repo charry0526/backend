@@ -33,7 +33,7 @@ import java.util.Date;
 
      if (dbBank != null) {
 
-       return ServerResponse.createByErrorMsg("银行信息已存在，不要重复添加");
+       return ServerResponse.createByErrorMsg("Thông tin ngân hàng đã có, vui lòng không thêm lại");
 
      }
      UserBank userBank = new UserBank();
@@ -59,7 +59,7 @@ import java.util.Date;
 
      }
 
-     return ServerResponse.createByErrorMsg("添加银行卡失败");
+     return ServerResponse.createByErrorMsg("Không thể thêm thẻ ngân hàng");
 
    }
 
@@ -93,7 +93,7 @@ import java.util.Date;
 
      }
 
-     return ServerResponse.createByErrorMsg("修改银行卡失败");
+     return ServerResponse.createByErrorMsg("Không thể sửa đổi thẻ ngân hàng");
    }
 
    public ServerResponse getBankInfo(HttpServletRequest request) {
@@ -104,7 +104,7 @@ import java.util.Date;
 
      if (dbBank == null) {
 
-       return ServerResponse.createByErrorMsg("未添加银行信息");
+       return ServerResponse.createByErrorMsg("Chưa thêm thông tin ngân hàng");
 
      }
 

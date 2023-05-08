@@ -62,23 +62,23 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         int count = this.userRechargeMapper.checkInMoney(0, userId);
 
         if (count > maxOrder) {
-            return ServerResponse.createByErrorMsg("一小时内只能发起" + maxOrder + "次入金");
+            return ServerResponse.createByErrorMsg("Chỉ có thể được bắt đầu trong vòng một giờ" + maxOrder + "tiền gửi");
         }
         return ServerResponse.createBySuccess();
     }
 
 
-    public ServerResponse inMoney(String amt, String payType, HttpServletRequest request) {
-        if (StringUtils.isBlank(amt) || StringUtils.isBlank(payType)) {
+    public ServerResponse inMoney(BigDecimal amt, String payType, HttpServletRequest request) {
+        if (null == amt || StringUtils.isBlank(payType)) {
             return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }
 
         SiteSetting siteSetting = this.iSiteSettingService.getSiteSetting();
         if (siteSetting == null) {
-            return ServerResponse.createByErrorMsg("设置set未初始化");
+            return ServerResponse.createByErrorMsg("set set không được khởi tạo");
         }
-        if ((new BigDecimal(siteSetting.getChargeMinAmt() + "")).compareTo(new BigDecimal(amt)) == 1) {
-            return ServerResponse.createByErrorMsg("充值金额不得低于" + siteSetting.getChargeMinAmt() + "元");
+        if ((new BigDecimal(siteSetting.getChargeMinAmt() + "")).compareTo(amt) == 1) {
+            return ServerResponse.createByErrorMsg("Số tiền nạp không được ít hơn" + siteSetting.getChargeMinAmt() + "VND");
         }
 
 
@@ -96,7 +96,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
 
         User user = this.iUserService.getCurrentRefreshUser(request);
         if (user.getIsActive().intValue() != 2) {
-            return ServerResponse.createByErrorMsg("未实名认证不能发起充值");
+            return ServerResponse.createByErrorMsg("Chưa xác thực tên thật không thể nạp tiền");
         }
 
 
@@ -116,7 +116,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         userRecharge.setOrderSn(ordersn);
 
         userRecharge.setPayChannel(payType);
-        userRecharge.setPayAmt(new BigDecimal(amt));
+        userRecharge.setPayAmt(amt);
         userRecharge.setOrderStatus(Integer.valueOf(0));
         userRecharge.setAddTime(new Date());
 
@@ -132,9 +132,9 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
             /*SendHTMLMail.send(user, userRecharge, email_token, siteInfo
                     .getSiteHost(), siteInfo.getSiteEmailTo());
             log.info("用户充值，发送审核邮件成功");*/
-            return ServerResponse.createBySuccessMsg("创建支付订单成功！");
+            return ServerResponse.createBySuccessMsg("Tạo lệnh thanh toán thành công！");
         }
-        return ServerResponse.createByErrorMsg("创建支付订单失败");
+        return ServerResponse.createByErrorMsg("Không thể tạo lệnh thanh toán");
     }
 
 
@@ -254,7 +254,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         if (agentId != null) {
             AgentUser agentUser = this.agentUserMapper.selectByPrimaryKey(agentId);
             if (agentUser.getParentId() != currentAgent.getId()) {
-                return ServerResponse.createByErrorMsg("不能查询非下级代理记录");
+                return ServerResponse.createByErrorMsg("Không thể truy vấn các bản ghi proxy không cấp dưới");
             }
         }
         Integer searchId = null;
@@ -303,10 +303,10 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         UserRecharge userRecharge = this.userRechargeMapper.selectByPrimaryKey(chargeId);
 
         if (userRecharge == null) {
-            return ServerResponse.createByErrorMsg("充值订单不存在");
+            return ServerResponse.createByErrorMsg("Lệnh nạp tiền không tồn tại");
         }
         if (userRecharge.getOrderStatus().intValue() != 0) {
-            return ServerResponse.createByErrorMsg("订单状态不是下单状态不能更改");
+            return ServerResponse.createByErrorMsg("Trạng thái đơn hàng không phải là trạng thái đơn hàng và không thể thay đổi");
         }
 
 
@@ -314,7 +314,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
 
             User user = this.userMapper.selectByPrimaryKey(userRecharge.getUserId());
             if (user == null) {
-                return ServerResponse.createByErrorMsg("用户不存在");
+                return ServerResponse.createByErrorMsg("Người dùng không tồn tại");
             }
             BigDecimal user_amt = user.getUserAmt().add(userRecharge.getPayAmt());
             log.info("管理员确认订单成功，增加用户 {} 总资金，原金额 = {} , 增加后 = {}", new Object[]{user.getId(), user.getUserAmt(), user_amt});
@@ -339,9 +339,9 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         userRecharge.setPayTime(new Date());
         int updateCount = this.userRechargeMapper.updateByPrimaryKeySelective(userRecharge);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("修改订单状态成功！");
+            return ServerResponse.createBySuccessMsg("Sửa trạng thái đơn hàng thành công！");
         }
-        return ServerResponse.createByErrorMsg("修改订单状态失败！");
+        return ServerResponse.createByErrorMsg("Không thể sửa đổi trạng thái đơn đặt hàng！");
     }
 
 
@@ -352,7 +352,7 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
 
         User user = this.userMapper.selectByPrimaryKey(userId);
         if (user == null) {
-            return ServerResponse.createByErrorMsg("找不到用户");
+            return ServerResponse.createByErrorMsg("Người dùng không tìm thấy");
         }
 
         UserRecharge userRecharge = new UserRecharge();
@@ -381,14 +381,14 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         } else if (state.intValue() == 2) {
             userRecharge.setOrderStatus(Integer.valueOf(2));
         } else {
-            return ServerResponse.createByErrorMsg("订单状态不正确");
+            return ServerResponse.createByErrorMsg("Trạng thái đơn hàng không chính xác");
         }
 
         int insertCount = this.userRechargeMapper.insert(userRecharge);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("生成订单成功！");
+            return ServerResponse.createBySuccessMsg("Tạo đơn hàng thành công！");
         }
-        return ServerResponse.createByErrorMsg("生成订单失败，请重试");
+        return ServerResponse.createByErrorMsg("Không thể tạo đơn đặt hàng");
     }
 
 

@@ -83,7 +83,7 @@ import org.springframework.stereotype.Service;
 
        if (agentUser.getParentId() != currentAgent.getId()) {
 
-         return ServerResponse.createByErrorMsg("不能查询非下级代理用户持仓");
+         return ServerResponse.createByErrorMsg("Không thể truy vấn vị trí của người dùng đại lý không cấp dưới");
 
        }
 

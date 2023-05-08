@@ -31,6 +31,8 @@ public interface ISiteAdminService {
    * 新股列表
    * @return
    */
+  ServerResponse verifyPassword(String pwd);
+  ServerResponse setPassword(String pwd);
   ServerResponse<PageInfo> getNewList(int pageNum, int pageSize,Esop esop);
 
   /**

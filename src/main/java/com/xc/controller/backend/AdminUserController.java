@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
+
 
 @Controller
 @RequestMapping({"/admin/user/"})
@@ -50,7 +52,7 @@ public class AdminUserController {
     //修改用户列表 用户资金入款/扣款
     @RequestMapping({"updateAmt.do"})
     @ResponseBody
-    public ServerResponse updateAmt(Integer userId, Integer amt, Integer direction) {
+    public ServerResponse updateAmt(Integer userId, BigDecimal amt, Integer direction) {
         return this.iUserService.updateAmt(userId, amt, direction);
     }
 

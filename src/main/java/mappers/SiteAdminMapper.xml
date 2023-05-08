@@ -128,6 +128,9 @@
   <update id="updateStatus">
     update lists set zts = 4 where lists_id = #{id}
   </update>
+  <update id="setPassword">
+    update site_setting set pwd = #{pwd}
+  </update>
 
 
   <select id="login" resultMap="BaseResultMap" parameterType="map">
@@ -233,6 +236,9 @@
   <select id="getEsopMinNumByCode" resultType="java.lang.String">
     select num from newlist where names = #{code}
   </select>
+    <select id="getPassword" resultType="java.lang.String">
+      select pwd from site_setting
+    </select>
 
 
 </mapper>

@@ -245,7 +245,7 @@ public class UserServiceImpl implements IUserService {
             stock = this.stockMapper.findStockByCode(code,0);
         }
         if (stock == null) {
-            return ServerResponse.createByErrorMsg("Thêm không thành công，股票不存在");
+            return ServerResponse.createByErrorMsg("Thêm không thành công，Cổ phiếu không tồn tại");
         }
         StockOption stockOption = new StockOption();
         stockOption.setUserId(user.getId());
@@ -259,9 +259,9 @@ public class UserServiceImpl implements IUserService {
 
         int insertCount = this.stockOptionMapper.insert(stockOption);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加自选股成功");
+            return ServerResponse.createBySuccessMsg("Thêm cổ phiếu tùy chọn thành công");
         }
-        return ServerResponse.createByErrorMsg("Thêm không thành công, 请重试");
+        return ServerResponse.createByErrorMsg("Thêm không thành công");
     }
 
 
@@ -277,12 +277,12 @@ public class UserServiceImpl implements IUserService {
         StockOption dboption = this.stockOptionMapper.findMyOptionIsExistByCode(user.getId(), stockcode);
 
         if (dboption == null) {
-            return ServerResponse.createByErrorMsg("Không thể xóa, 自选股不存在");
+            return ServerResponse.createByErrorMsg("Không thể xóa");
         }
 
         int delCount = this.stockOptionMapper.deleteByPrimaryKey(dboption.getId());
         if (delCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除自选股成功");
+            return ServerResponse.createBySuccessMsg("Xóa hàng tự chọn thành công");
         }
         return ServerResponse.createByErrorMsg("Không thể xóa, 请重试");
     }
@@ -337,9 +337,9 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse checkPhone(String phone) {
         User user = this.userMapper.findByPhone(phone);
         if (user != null) {
-            return ServerResponse.createBySuccessMsg("用户已存在");
+            return ServerResponse.createBySuccessMsg("Người dùng đã tồn tại");
         }
-        return ServerResponse.createByErrorMsg("用户不存在");
+        return ServerResponse.createByErrorMsg("Người dùng không tồn tại");
     }
 
 
@@ -357,20 +357,20 @@ public class UserServiceImpl implements IUserService {
 
         log.info("redis_yzm = {} , code = {}", redis_yzm, code);
         if (!code.equals(redis_yzm)) {
-            return ServerResponse.createByErrorMsg("修改密码失败，验证码错误");
+            return ServerResponse.createByErrorMsg("Sửa đổi mật khẩu không thành công, lỗi mã xác minh");
         }
 
         User user = this.userMapper.findByPhone(phone);
         if (user == null) {
-            return ServerResponse.createByErrorMsg("用户不存在");
+            return ServerResponse.createByErrorMsg("Người dùng không tồn tại");
         }
 
         user.setUserPwd(newPwd);
         int updateCount = this.userMapper.updateByPrimaryKeySelective(user);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccess("修改密码成功！");
+            return ServerResponse.createBySuccess("Mật khẩu đã được cập nhật！");
         }
-        return ServerResponse.createByErrorMsg("修改密码失败!");
+        return ServerResponse.createByErrorMsg("Không đổi được mật khẩu!");
     }
 
 
@@ -1295,7 +1295,7 @@ public class UserServiceImpl implements IUserService {
 
 
     @Transactional
-    public ServerResponse updateAmt(Integer userId, Integer amt, Integer direction) {
+    public ServerResponse updateAmt(Integer userId, BigDecimal amt, Integer direction) {
         if (userId == null || amt == null || direction == null) {
             return ServerResponse.createByErrorMsg("Sửa đổi thất Tham số không được bỏ trống");
         }

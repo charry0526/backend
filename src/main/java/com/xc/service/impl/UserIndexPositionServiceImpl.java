@@ -647,7 +647,7 @@ public class UserIndexPositionServiceImpl implements IUserIndexPositionService {
 
     public ServerResponse getIndexIncome(Integer agentId, Integer positionType, String beginTime, String endTime) {
         if (StringUtils.isBlank(beginTime) || StringUtils.isBlank(endTime)) {
-            return ServerResponse.createByErrorMsg("时间不能为空");
+            return ServerResponse.createByErrorMsg("Thời gian không thể để trống");
         }
         Timestamp begin_time = null;
         if (StringUtils.isNotBlank(beginTime)) {

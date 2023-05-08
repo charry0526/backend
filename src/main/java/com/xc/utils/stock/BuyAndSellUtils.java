@@ -3,9 +3,13 @@ package com.xc.utils.stock;
 
 import java.text.SimpleDateFormat;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 import com.xc.pojo.SiteProduct;
 import com.xc.service.ISiteProductService;
@@ -23,6 +27,7 @@ public class BuyAndSellUtils {
     private static final Logger log = LoggerFactory.getLogger(BuyAndSellUtils.class);
 
 
+
     public static boolean isTransTime(String begin_time, String end_time) throws Exception {
 
         if (StringUtils.isBlank(begin_time) || StringUtils.isBlank(end_time)) {
@@ -30,8 +35,12 @@ public class BuyAndSellUtils {
             return false;
 
         }
-
-        Date nowDate = new Date();
+        ZoneId southeastAsiaZone = ZoneId.of("Asia/Bangkok");
+        ZonedDateTime dateTime = ZonedDateTime.now(southeastAsiaZone);
+        LocalDateTime localDateTime = dateTime.toLocalDateTime();
+        // 将 LocalDateTime 转换为 Date
+        Date nowDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        //Date nowDate = new Date();
 
         if (!isWorkDay(nowDate)) {
             return false;

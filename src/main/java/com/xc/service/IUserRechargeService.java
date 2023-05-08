@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface IUserRechargeService {
   ServerResponse checkInMoney(int paramInt, Integer paramInteger);
   
-  ServerResponse inMoney(String paramString1, String paramString2, HttpServletRequest paramHttpServletRequest);
+  ServerResponse inMoney(BigDecimal paramString1, String paramString2, HttpServletRequest paramHttpServletRequest);
   
   ServerResponse findUserRechargeByOrderSn(String paramString);
   

@@ -60,7 +60,7 @@ public interface IUserService {
 
   ServerResponse updateLock(Integer paramInteger);
 
-  ServerResponse updateAmt(Integer paramInteger1, Integer paramInteger2, Integer paramInteger3);
+  ServerResponse updateAmt(Integer paramInteger1, BigDecimal paramInteger2, Integer paramInteger3);
 
   ServerResponse delete(Integer paramInteger, HttpServletRequest paramHttpServletRequest);
 

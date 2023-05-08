@@ -10,6 +10,7 @@ import com.xc.utils.redis.CookieUtils;
 import com.xc.utils.redis.JsonUtil;
 import com.xc.utils.redis.RedisConst;
 import com.xc.utils.redis.RedisShardedPoolUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 @Controller
 @RequestMapping({"/api/admin/"})
@@ -123,6 +129,27 @@ public class AdminApiController {
         return ServerResponse.createBySuccess(this.iSiteSpreadService.insert(siteSpread));
     }
 
+    @RequestMapping({"verifyPassWord.do"})
+    @ResponseBody
+    public ServerResponse verifyPassWord(String password) {
+        return ServerResponse.createBySuccess(this.iSiteAdminService.verifyPassword(password));
+    }
+    @RequestMapping({"setPassWord.do"})
+    @ResponseBody
+    public ServerResponse setPassWord(String password) {
+        return ServerResponse.createBySuccess(this.iSiteAdminService.setPassword(password));
+    }
+    public static void main(String[] args) {
+        ZoneId southeastAsiaZone = ZoneId.of("Asia/Bangkok");
+        ZonedDateTime dateTime = ZonedDateTime.now(southeastAsiaZone);
+        LocalDateTime localDateTime = dateTime.toLocalDateTime();
+        // 将 LocalDateTime 转换为 Date
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+    }
+
+
+
     @RequestMapping({"addESOP.do"})
     @ResponseBody
     public ServerResponse addESOP(Esop esop) {
@@ -139,43 +166,6 @@ public class AdminApiController {
     public ServerResponse getEsopList(int pageNum, int pageSize) {
         return this.iSiteAdminService.getEsopList(pageNum, pageSize);
     }
-
-    @RequestMapping(value = {"test.do"})
-    public String test(String name) {
-        log.info("接受到的值："+ name);
-        return name ;
-    }
-    @RequestMapping({"auth.do"})
-    @ResponseBody
-    public ServerResponse auth(String realName, HttpServletResponse response) {
-        log.info("接受到的值："+ realName);
-        try {
-            String name = URLDecoder.decode(realName, StandardCharsets.UTF_8.name());
-            log.info("接受到的值："+ name);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-        return ServerResponse.createBySuccess(realName);
-    }
-
-    public static void main(String[] args) {
-        String aaa = "ă,Ă,â,Â,đ,Đ,ê,Ê,ô,Ô,ơ,Ơ,ư,Ư";
-        System.out.println(aaa);
-    }
-
-    public static String printVietnamese(String vietnameseText) {
-        try {
-            byte[] utf8Bytes = vietnameseText.getBytes("UTF-8");
-            System.out.println("UTF-8编码字节数组：" + Arrays.toString(utf8Bytes));
-            String encodedText = new String(utf8Bytes, "UTF-8");
-            System.out.println("UTF-8解码后的字符串：" + encodedText);
-            return encodedText;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return vietnameseText;
-        }
-    }
-
     @RequestMapping({"getEsopList_sq.do"})
     @ResponseBody
     public ServerResponse getEsopList_sq(int pageNum, int pageSize,String phone,String flag) {

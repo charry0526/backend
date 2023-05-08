@@ -431,16 +431,16 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
         UserFuturesPosition position = this.userFuturesPositionMapper.selectByPrimaryKey(positionId);
         if (position == null) {
-            return ServerResponse.createByErrorMsg("持仓不存在");
+            return ServerResponse.createByErrorMsg("Vị trí không tồn tại");
         }
 
         if (position.getSellOrderPrice() != null) {
-            return ServerResponse.createByErrorMsg("平仓单不能锁仓");
+            return ServerResponse.createByErrorMsg("Lệnh thanh lý không thể bị khóa");
         }
 
         if (state.intValue() == 1 &&
                 StringUtils.isBlank(lockMsg)) {
-            return ServerResponse.createByErrorMsg("锁仓提示信息必填");
+            return ServerResponse.createByErrorMsg("Thông tin nhắc khóa là bắt buộc");
         }
 
 
@@ -506,7 +506,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
         if (agentId != null) {
             AgentUser agentUser = this.agentUserMapper.selectByPrimaryKey(agentId);
             if (agentUser.getParentId() != currentAgent.getId()) {
-                return ServerResponse.createByErrorMsg("不能查询非下级代理用户持仓");
+                return ServerResponse.createByErrorMsg("Không thể truy vấn vị trí của người dùng đại lý không cấp dưới");
             }
         }
 
@@ -619,7 +619,7 @@ public class UserFuturesPositionServiceImpl implements IUserFuturesPositionServi
 
     public ServerResponse getFuturesIncome(Integer agentId, Integer positionType, String beginTime, String endTime) {
         if (StringUtils.isBlank(beginTime) || StringUtils.isBlank(endTime)) {
-            return ServerResponse.createByErrorMsg("时间不能为空");
+            return ServerResponse.createByErrorMsg("Thời gian không thể để trống");
         }
 
         Timestamp begin_time = null;

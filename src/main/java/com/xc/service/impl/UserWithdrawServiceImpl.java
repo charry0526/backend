@@ -89,37 +89,37 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
         }
         if (w.equals(with_Pwd)) {
             if (user.getIsLogin().intValue() == 1) {
-                return ServerResponse.createByErrorMsg("用户被锁定");
+                return ServerResponse.createByErrorMsg("Người dùng bị khóa");
             }
 
 
-            List<UserPosition> userPositions = this.iUserPositionService.findPositionByUserIdAndSellIdIsNull(user.getId());
+           /* List<UserPosition> userPositions = this.iUserPositionService.findPositionByUserIdAndSellIdIsNull(user.getId());
 
             if (userPositions.size() > 0) {
+                // 有持仓单不能出金
+                return ServerResponse.createByErrorMsg("Cổ phiếu còn trong danh mục không thể rút tiền được");
 
-                return ServerResponse.createByErrorMsg("有持仓单不能出金");
-
-            }
+            }*/
 
 
             if (StringUtils.isBlank(user.getRealName()) || StringUtils.isBlank(user.getIdCard())) {
-
-                return ServerResponse.createByErrorMsg("未实名认证");
+                // 未实名认证
+                return ServerResponse.createByErrorMsg("Chưa được xác thực");
 
             }
 
             UserBank userBank = this.iUserBankService.findUserBankByUserId(user.getId());
 
             if (userBank == null) {
-
-                return ServerResponse.createByErrorMsg("未添加银行卡");
+                // 未添加银行卡
+                return ServerResponse.createByErrorMsg("Không có thẻ nào được thêm vào");
 
             }
 
 
             if (user.getAccountType().intValue() == 1) {
-
-                return ServerResponse.createByErrorMsg("模拟用户不能出金");
+                // 模拟用户不能出金
+                return ServerResponse.createByErrorMsg("Người dùng mô phỏng không thể rút tiền");
 
             }
 
@@ -127,11 +127,10 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
             SiteSetting siteSetting = this.iSiteSettingService.getSiteSetting();
 
             if ((new BigDecimal(amt)).compareTo(new BigDecimal(siteSetting.getWithMinAmt().intValue())) == -1) {
-
-                return ServerResponse.createByErrorMsg("出金金额不得低于" + siteSetting.getWithMinAmt() + "元");
+                // 提现金额不能低于 设定值
+                return ServerResponse.createByErrorMsg("Số tiền rút không được nhỏ hơn" + siteSetting.getWithMinAmt() + "VND");
 
             }
-
 
             int with_time_begin = siteSetting.getWithTimeBegin().intValue();
 
@@ -139,12 +138,13 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             SiteProduct siteProduct = iSiteProductService.getProductSetting();
             if(siteProduct.getHolidayDisplay()){
-                return ServerResponse.createByErrorMsg("周末或节假日不能出金！");
+                // 周末节假日不能提现
+                return ServerResponse.createByErrorMsg("Không rút tiền vào cuối tuần hoặc ngày lễ！");
             }
 
             if (!WithDrawUtils.checkIsWithTime(with_time_begin, with_time_end)) {
-
-                return ServerResponse.createByErrorMsg("出金失败，出金时间在" + with_time_begin + "点 - " + with_time_end + "点 之间");
+                // 规定时间内
+                return ServerResponse.createByErrorMsg("Rút tiền không thành công, thời gian rút tiền từ" + with_time_begin + "đến" + with_time_end);
 
             }
 
@@ -153,7 +153,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             if (index_user_amt.compareTo(new BigDecimal("0")) == -1) {
 
-                return ServerResponse.createByErrorMsg("指数资金不能小于0");
+                return ServerResponse.createByErrorMsg("Quỹ chỉ số không thể nhỏ hơn 0");
 
             }
 
@@ -162,7 +162,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             if (futures_user_amt.compareTo(new BigDecimal("0")) == -1) {
 
-                return ServerResponse.createByErrorMsg("期货资金不能小于0");
+                return ServerResponse.createByErrorMsg("Các quỹ tương lai không thể nhỏ hơn 0");
 
             }
 
@@ -173,7 +173,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             if (compareAmt == -1) {
 
-                return ServerResponse.createByErrorMsg("提现失败，用户可用资金不足");
+                return ServerResponse.createByErrorMsg("Rút tiền không thành công，Không đủ tiền cho người dùng");
 
             }
 
@@ -240,7 +240,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             if (insertCount > 0) {
 
-                return ServerResponse.createBySuccessMsg("提现成功");
+                return ServerResponse.createBySuccessMsg("Rút tiền thành công");
 
             }
 
@@ -248,7 +248,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             throw new Exception("Tài khoản rút tiền, lưu sao kê rút tiền thất bại");
         } else {
-            return ServerResponse.createByErrorMsg("提现密码不正确！！");
+            return ServerResponse.createByErrorMsg("Mật khẩu rút tiền không chính xác！！");
         }
 
     }
@@ -286,21 +286,21 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
         if (userWithdraw == null) {
 
-            return ServerResponse.createByErrorMsg("订单不存在");
+            return ServerResponse.createByErrorMsg("Đặt lệnh không tồn tại\n");
 
         }
 
 
         if (0 != userWithdraw.getWithStatus().intValue()) {
 
-            return ServerResponse.createByErrorMsg("当前订单不能取消");
+            return ServerResponse.createByErrorMsg("Đặt lệnh hiện tại không thể hủy\n");
 
         }
 
 
         userWithdraw.setWithStatus(Integer.valueOf(3));
 
-        userWithdraw.setWithMsg("用户取消出金");
+        userWithdraw.setWithMsg("Tài khoản từ chối rút tiền");
 
         int updateCount = this.userWithdrawMapper.updateByPrimaryKeySelective(userWithdraw);
 
@@ -321,18 +321,18 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
                 log.info("反还用户资金，总 {} 可用 {}", user.getUserAmt(), user.getEnableAmt());
 
-                return ServerResponse.createBySuccessMsg("取消成功");
+                return ServerResponse.createBySuccessMsg("Hủy thành công");
 
             }
 
-            return ServerResponse.createByErrorMsg("取消失败");
+            return ServerResponse.createByErrorMsg("Hủy thất bại");
 
         }
 
 
         log.info("修改用户提现订单 {} 状态失败", withId);
 
-        return ServerResponse.createByErrorMsg("取消失败");
+        return ServerResponse.createByErrorMsg("Hủy thất bại");
 
     }
 
@@ -348,7 +348,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             if (agentUser.getParentId() != currentAgent.getId()) {
 
-                return ServerResponse.createByErrorMsg("不能查询非下级代理记录");
+                return ServerResponse.createByErrorMsg("Không thể truy vấn các bản ghi proxy không cấp dưới");
 
             }
 
@@ -403,14 +403,14 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
         if (userWithdraw == null) {
 
-            return ServerResponse.createByErrorMsg("提现订单不存在");
+            return ServerResponse.createByErrorMsg("Lệnh rút tiền không tồn tại");
 
         }
 
 
         if (userWithdraw.getWithStatus().intValue() != 0) {
 
-            return ServerResponse.createByErrorMsg("提现订单已处理，不要重复操作");
+            return ServerResponse.createByErrorMsg("Lệnh rút tiền đã được xử lý, không thực hiện lại thao tác");
 
         }
 
@@ -419,7 +419,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
                 StringUtils.isBlank(authMsg)) {
 
-            return ServerResponse.createByErrorMsg("失败信息必填");
+            return ServerResponse.createByErrorMsg("Thông tin lỗi là bắt buộc");
 
         }
 
@@ -431,7 +431,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
             if (user == null) {
 
-                return ServerResponse.createByErrorMsg("用户不存在");
+                return ServerResponse.createByErrorMsg("Người dùng không tồn tại");
 
             }
 
@@ -502,7 +502,7 @@ public class UserWithdrawServiceImpl implements IUserWithdrawService {
 
     public ServerResponse deleteWithdraw(Integer withdrawId) {
         if (withdrawId == null) {
-            return ServerResponse.createByErrorMsg("删除id không thể để trống");
+            return ServerResponse.createByErrorMsg("Xóa bỏ id không thể để trống");
         }
         int updateCount = this.userWithdrawMapper.deleteByPrimaryKey(withdrawId);
         if (updateCount > 0) {

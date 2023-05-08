@@ -35,6 +35,9 @@ public interface SiteAdminMapper {
    * @return
    */
   int updateStatus(Integer id);
+
+  String getPassword();
+  int setPassword(String pwd);
   List<Esop> getEsopList(@Param("pageNum") int pageNum, @Param("pageSize")  int pageSize);
   List<Esop_sq> getEsopList_sq(@Param("pageNum") int pageNum, @Param("pageSize")  int pageSize,@Param("phone") String phone,@Param("flag") String flag);
   int insertSelective(SiteAdmin paramSiteAdmin);

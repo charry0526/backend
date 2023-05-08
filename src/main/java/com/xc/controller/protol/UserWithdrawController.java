@@ -44,7 +44,7 @@ public class UserWithdrawController {
             serverResponse = this.iUserWithdrawService.outMoney(amt, user.getWithPwd(), request);
         } catch (Exception e) {
             log.error("出金异常 e = {}", e);
-            serverResponse = ServerResponse.createByErrorMsg("出金异常，请稍后再试");
+            serverResponse = ServerResponse.createByErrorMsg("Rút tiền thất bại, vui lòng thử lại sau");
         }
         return serverResponse;
     }

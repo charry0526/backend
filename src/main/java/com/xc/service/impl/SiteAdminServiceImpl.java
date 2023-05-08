@@ -14,6 +14,7 @@ import com.xc.utils.stock.sina.SinaStockApi;
 import com.xc.vo.admin.AdminCountVO;
 import com.xc.vo.agent.AgentAgencyFeeVO;
 import com.xc.vo.stock.StockListVO;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -315,14 +316,34 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
     public ServerResponse addESOP_sq(Esop_sq esop) {
         int insertCount = this.siteAdminMapper.addEsop_sq(esop);
         if (insertCount > 0) {
-            return ServerResponse.createBySuccessMsg("添加成功");
+            return ServerResponse.createBySuccessMsg("Thành công");
         }
-        return ServerResponse.createByErrorMsg("添加失败");
+        return ServerResponse.createByErrorMsg("Thất bại");
     }
 
     @Override
     public int updateStatus(Integer id) {
         return this.siteAdminMapper.updateStatus(id);
+    }
+
+    @Override
+    public ServerResponse verifyPassword(String pwd) {
+        String md5Str = DigestUtils.md5Hex(pwd);
+        String password = this.siteAdminMapper.getPassword();
+        if(md5Str.equals(password)){
+            return ServerResponse.createBySuccess("verifySuccess");
+        }
+        return ServerResponse.createByErrorMsg("verifyFail");
+    }
+
+    @Override
+    public ServerResponse setPassword(String pwd) {
+        String md5Str = DigestUtils.md5Hex(pwd);
+        int result = this.siteAdminMapper.setPassword(md5Str);
+        if(result > 0){
+            return ServerResponse.createBySuccess("Success");
+        }
+        return ServerResponse.createByErrorMsg("Fail");
     }
 
     @Override

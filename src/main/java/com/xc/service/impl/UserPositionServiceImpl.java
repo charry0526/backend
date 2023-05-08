@@ -462,7 +462,8 @@ public class UserPositionServiceImpl implements IUserPositionService {
         }
 
         if (!DateTimeUtil.isCanSell(userPosition.getBuyOrderTime(), siteSetting.getCantSellTimes().intValue())) {
-            return ServerResponse.createByErrorMsg(siteSetting.getCantSellTimes() + "Vị trí không thể được đóng trong vòng vài phút");
+            //return ServerResponse.createByErrorMsg(siteSetting.getCantSellTimes() + "Vị trí không thể được đóng trong vòng vài phút");
+            return ServerResponse.createByErrorMsg("Bạn không đủ khối lượng của mã chứng khoán này trong tài khoản. xin vui lòng thử lại！");
         }
 
 //        if (DateTimeUtil.sameDate(DateTimeUtil.getCurrentDate(),.getBuyOrderTime())) {
@@ -584,7 +585,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         ucd.setUserName(user.getRealName());
         ucd.setDeType("Tổng lãi lỗ");
         ucd.setDeAmt(all_profit);
-        ucd.setDeSummary("Bán cổ phần，" + userPosition.getStockCode() + "/" + userPosition.getStockName() + ",Chiếm hiệu trưởng：" + freez_amt + ",Tổng phí xử lý：" + all_fee_amt + ",Phí trả chậm：" + orderStayFee+ ",Tem đóng thuế：" + orderSpread + ",Lợi nhuận và thua lỗ：" + profitLoss + "，Tổng lãi lỗ：" + all_profit);
+        ucd.setDeSummary("Bán cổ phiếu" + userPosition.getStockCode() + "/" + userPosition.getStockName() + ",Giá TT：" + freez_amt + ",Phí giao dịch：" + all_fee_amt + ",Phí qua đêm：" + orderStayFee+ ",Thuế TN：" + orderSpread + ",Lãi/lỗ：" + profitLoss + "，ổng lãi/lỗ：" + all_profit);
 
         ucd.setAddTime(new Date());
         ucd.setIsRead(Integer.valueOf(0));
@@ -749,14 +750,14 @@ public class UserPositionServiceImpl implements IUserPositionService {
         }
         UserPosition position = this.userPositionMapper.selectByPrimaryKey(positionId);
         if (position == null) {
-            ServerResponse.createByErrorMsg("该持仓不存在");
+            ServerResponse.createByErrorMsg("Vị trí không tồn tại");
         }
         /*if (position.getSellOrderId() == null) {
             return ServerResponse.createByErrorMsg("持仓单不能删除！");
         }*/
         int updateCount = this.userPositionMapper.deleteByPrimaryKey(positionId);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("删除成功");
+            return ServerResponse.createBySuccessMsg("Xóa thành công");
         }
         return ServerResponse.createByErrorMsg("Không thể xóa");
     }
@@ -863,7 +864,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         if (agentId != null) {
             AgentUser agentUser = this.agentUserMapper.selectByPrimaryKey(agentId);
             if (agentUser!=null && agentUser.getParentId() != currentAgent.getId()) {
-                return ServerResponse.createByErrorMsg("不能查询非下级代理用户持仓");
+                return ServerResponse.createByErrorMsg("Không thể truy vấn vị trí của người dùng đại lý không cấp dưới");
             }
         }
 
@@ -903,7 +904,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
     public ServerResponse getIncome(Integer agentId, Integer positionType, String beginTime, String endTime) {
         if (StringUtils.isBlank(beginTime) || StringUtils.isBlank(endTime)) {
-            return ServerResponse.createByErrorMsg("时间不能为空");
+            return ServerResponse.createByErrorMsg("Thời gian không thể để trống");
         }
 
         Timestamp begin_time = null;
@@ -990,15 +991,15 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
         User user = this.userMapper.selectByPrimaryKey(userId);
         if (user == null) {
-            return ServerResponse.createByErrorMsg("用户不存在");
+            return ServerResponse.createByErrorMsg("Người dùng không tồn tại");
         }
         if (user.getAccountType().intValue() != 1) {
-            return ServerResponse.createByErrorMsg("正式用户不能生成持仓单");
+            return ServerResponse.createByErrorMsg("Người dùng chính thức không thể tạo biên nhận vị trí");
         }
 
         Stock stock = (Stock) this.iStockService.findStockByCode(stockCode).getData();
         if (stock == null) {
-            return ServerResponse.createByErrorMsg("股票不存在");
+            return ServerResponse.createByErrorMsg("Cổ phiếu không tồn tại");
         }
 
 
@@ -1019,7 +1020,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         log.info("用户可用金额 = {}  实际购买金额 =  {}", user_enable_amt, buy_amt_autual);
         log.info("比较 用户金额 和 实际 购买金额 =  {}", Integer.valueOf(compareUserAmtInt));
         if (compareUserAmtInt == -1) {
-            return ServerResponse.createByErrorMsg("下单失败，用户可用金额小于" + buy_amt_autual + "元");
+            return ServerResponse.createByErrorMsg("Không thể đặt hàng, số tiền khả dụng của người dùng ít hơn" + buy_amt_autual + "VND");
         }
 
 
@@ -1089,7 +1090,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
             log.error("【创建模拟持仓】保存记录出错");
         }
 
-        return ServerResponse.createBySuccess("生成模拟持仓成功");
+        return ServerResponse.createBySuccess("Đã tạo thành công các vị trí mô phỏng");
     }
 
     public int deleteByUserId(Integer userId) {
