@@ -21,7 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 @Controller
 @RequestMapping({"/api/admin/"})
@@ -136,6 +139,43 @@ public class AdminApiController {
     public ServerResponse getEsopList(int pageNum, int pageSize) {
         return this.iSiteAdminService.getEsopList(pageNum, pageSize);
     }
+
+    @RequestMapping(value = {"test.do"})
+    public String test(String name) {
+        log.info("接受到的值："+ name);
+        return name ;
+    }
+    @RequestMapping({"auth.do"})
+    @ResponseBody
+    public ServerResponse auth(String realName, HttpServletResponse response) {
+        log.info("接受到的值："+ realName);
+        try {
+            String name = URLDecoder.decode(realName, StandardCharsets.UTF_8.name());
+            log.info("接受到的值："+ name);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        return ServerResponse.createBySuccess(realName);
+    }
+
+    public static void main(String[] args) {
+        String aaa = "ă,Ă,â,Â,đ,Đ,ê,Ê,ô,Ô,ơ,Ơ,ư,Ư";
+        System.out.println(aaa);
+    }
+
+    public static String printVietnamese(String vietnameseText) {
+        try {
+            byte[] utf8Bytes = vietnameseText.getBytes("UTF-8");
+            System.out.println("UTF-8编码字节数组：" + Arrays.toString(utf8Bytes));
+            String encodedText = new String(utf8Bytes, "UTF-8");
+            System.out.println("UTF-8解码后的字符串：" + encodedText);
+            return encodedText;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return vietnameseText;
+        }
+    }
+
     @RequestMapping({"getEsopList_sq.do"})
     @ResponseBody
     public ServerResponse getEsopList_sq(int pageNum, int pageSize,String phone,String flag) {

@@ -90,7 +90,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.xc.pojo.UserPosition" >
-    insert into user_position (id, position_type, position_sn, 
+    insert into user_position (id, position_type, position_sn,
       user_id, nick_name, agent_id, 
       stock_name, stock_code, stock_gid, 
       stock_spell, buy_order_id, buy_order_time, 

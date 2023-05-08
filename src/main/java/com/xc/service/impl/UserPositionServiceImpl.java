@@ -508,6 +508,8 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
             profitLoss = all_sell_amt.subtract(all_buy_amt);
         } else {
+
+
             log.info("买卖方向：{}", "跌");
             profitLoss = all_buy_amt.subtract(all_sell_amt);
         }

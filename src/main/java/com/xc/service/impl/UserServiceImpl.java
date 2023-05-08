@@ -29,7 +29,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -407,14 +410,21 @@ public class UserServiceImpl implements IUserService {
 
         User user = getCurrentRefreshUser(request);
         if (user == null) {
-            return ServerResponse.createByErrorMsg("请登录！");
+            return ServerResponse.createByErrorMsg("Làm ơn đăng nhập！");
         }
 
         if (((0 != user.getIsActive().intValue())) & ((3 != user.getIsActive().intValue()) ))
         {
-            return ServerResponse.createByErrorMsg("当前状态不能认证");
+            return ServerResponse.createByErrorMsg("Không thể xác thực trạng thái hiện tại");
         }
-
+        try {
+            String name = URLDecoder.decode(realName, StandardCharsets.UTF_8.name());
+            log.info(name);
+            user.setNickName(name);
+            user.setRealName(name);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         user.setNickName(realName);
         user.setRealName(realName);
         user.setIdCard(idCard);
@@ -429,9 +439,9 @@ public class UserServiceImpl implements IUserService {
 
         int updateCount = this.userMapper.updateByPrimaryKeySelective(user);
         if (updateCount > 0) {
-            return ServerResponse.createBySuccessMsg("实名认证中");
+            return ServerResponse.createBySuccessMsg("xác thực tên thật");
         }
-        return ServerResponse.createByErrorMsg("实名认证失败");
+        return ServerResponse.createByErrorMsg("Xác thực tên thật không thành công");
     }
 
 
