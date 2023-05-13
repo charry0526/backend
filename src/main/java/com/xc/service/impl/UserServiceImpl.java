@@ -425,10 +425,7 @@ public class UserServiceImpl implements IUserService {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-        user.setNickName(realName);
-        user.setRealName(realName);
         user.setIdCard(idCard);
-
         user.setImg1Key(img1key);
         user.setImg2Key(img2key);
         user.setImg3Key(img3key);

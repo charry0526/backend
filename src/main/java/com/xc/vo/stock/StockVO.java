@@ -11,6 +11,8 @@ public class StockVO {
     private String gid;
     private String nowPrice;
     private BigDecimal hcrate;
+
+    private BigDecimal hcratePercentage;
     private String today_max;
     private String today_min;
 
@@ -35,6 +37,14 @@ public class StockVO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setHcratePercentage(BigDecimal hcratePercentage) {
+        this.hcratePercentage = hcratePercentage;
+    }
+
+    public BigDecimal getHcratePercentage() {
+        return hcratePercentage;
     }
 
     private String sell1;

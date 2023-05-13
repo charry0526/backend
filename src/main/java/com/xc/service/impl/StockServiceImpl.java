@@ -335,6 +335,7 @@ public class StockServiceImpl implements IStockService {
     stockVO.setToday_max(cacheData.getToday_max());
     stockVO.setToday_min(cacheData.getToday_min());
     stockVO.setHcrate(cacheData.getHcrate());
+    stockVO.setHcratePercentage(cacheData.getHcratePercentage());
 
     String price = "";
     if(!org.springframework.util.StringUtils.isEmpty(isNew)){

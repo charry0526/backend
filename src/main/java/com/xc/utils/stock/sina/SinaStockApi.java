@@ -724,6 +724,7 @@ public class SinaStockApi {
             BigDecimal aa = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
             data.setNowPrice(aa.toString());
             data.setHcrate(BigDecimal.valueOf(data2.getDouble("changePrice")));
+            data.setHcratePercentage(BigDecimal.valueOf(data2.getDouble("changedratio")));
             data.setToday_max(data2.getString("ceiling"));
             data.setToday_min(data2.getString("floor"));
             data.setBusiness_amount(data2.getString("totalQtty").replaceAll(",",""));

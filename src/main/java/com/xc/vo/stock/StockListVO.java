@@ -17,6 +17,7 @@ public class StockListVO {
     private String nowPrice;
 
     private BigDecimal hcrate;
+    private BigDecimal hcratePercentage;
 
     private String today_max;
 
@@ -53,6 +54,14 @@ public class StockListVO {
 
     public void setHcrate(BigDecimal hcrate) {
         this.hcrate = hcrate;
+    }
+
+    public void setHcratePercentage(BigDecimal hcratePercentage) {
+        this.hcratePercentage = hcratePercentage;
+    }
+
+    public BigDecimal getHcratePercentage() {
+        return hcratePercentage;
     }
 
     public void setToday_max(String today_max) {
