@@ -723,8 +723,16 @@ public class SinaStockApi {
             BigDecimal bd = new BigDecimal(data2.getString("matchPrice"));
             BigDecimal aa = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
             data.setNowPrice(aa.toString());
-            data.setHcrate(BigDecimal.valueOf(data2.getDouble("changePrice")));
-            data.setHcratePercentage(BigDecimal.valueOf(data2.getDouble("changedratio")));
+            if(null == data2.get("changePrice")){
+                data.setHcrate(BigDecimal.valueOf(0));
+            }else{
+                data.setHcrate(BigDecimal.valueOf(data2.getDouble("changePrice")));
+            }
+            if(null == (data2.get("changedratio"))){
+                data.setHcratePercentage(BigDecimal.valueOf(0));
+            }else{
+                data.setHcratePercentage(BigDecimal.valueOf(data2.getDouble("changedratio")));
+            }
             data.setToday_max(data2.getString("ceiling"));
             data.setToday_min(data2.getString("floor"));
             data.setBusiness_amount(data2.getString("totalQtty").replaceAll(",",""));

@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -461,14 +462,15 @@ public class UserPositionServiceImpl implements IUserPositionService {
             return ServerResponse.createByErrorMsg("Bán ra không thành công " + userPosition.getLockMsg());
         }
 
-        if (!DateTimeUtil.isCanSell(userPosition.getBuyOrderTime(), siteSetting.getCantSellTimes().intValue())) {
+        if (!DateTimeUtil.isSellable(userPosition.getBuyOrderTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())) {
             //return ServerResponse.createByErrorMsg(siteSetting.getCantSellTimes() + "Vị trí không thể được đóng trong vòng vài phút");
+            // 判断持仓时间
             return ServerResponse.createByErrorMsg("Bạn không đủ khối lượng của mã chứng khoán này trong tài khoản. xin vui lòng thử lại！");
         }
 
-//        if (DateTimeUtil.sameDate(DateTimeUtil.getCurrentDate(),.getBuyOrderTime())) {
-//            return ServerResponse.createByErrorMsg("当天入仓的股票需要隔天才能出仓");
-//        }
+        //if (DateTimeUtil.sameDate(DateTimeUtil.getCurrentDate(),.getBuyOrderTime())) {
+        //    return ServerResponse.createByErrorMsg("当天入仓的股票需要隔天才能出仓");
+        //}
 
 
 //        StockListVO stockListVO = SinaStockApi.assembleStockListVO(SinaStockApi.getSinaStock(userPosition.getStockGid()));

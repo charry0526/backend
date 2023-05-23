@@ -3,8 +3,14 @@ package com.xc.utils;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -23,7 +29,80 @@ public class DateTimeUtil {
 
 
     public static final String HM_FORMAT = "HH:mm";
+    private static final LocalDate[] HOLIDAYS = {
+            LocalDate.of(2023, 1, 1),  // 元旦
+            LocalDate.of(2023, 2, 10), // 春节
+            LocalDate.of(2023, 4, 30), // 解放节
+            LocalDate.of(2023, 5, 1),  // 国际劳动节
+            LocalDate.of(2023, 9, 2),  // 国庆节
+            LocalDate.of(2023, 9, 3),  // 国庆节调休
+            LocalDate.of(2023, 9, 4)   // 国庆节调休
+    };
+    /**
+     * 判断股票是否在 T+2.5 日内平仓
+     *
+     * @param tradeDate 购买股票的日期
+     * @return 如果当前日期大于等于交易日期加上 2.5 个交易日，并且没有遇到节假日和周末，则返回 true；否则返回 false。
+     */
+    public static boolean isSellable(LocalDateTime tradeDate) {
+        // 计算两个日期之间的天数差
+        LocalDateTime now = LocalDateTime.now();
+        long days = ChronoUnit.DAYS.between(tradeDate, now) + 1;
+        int weekend = 0;
+        LocalDateTime currentDate = tradeDate; // 当前日期从开始日期开始
+        for (int i = 0; i <= days; i++) {
+            if(isHolidayOrWeekend(currentDate)){
+                weekend++;
+            }
+            currentDate = currentDate.plusDays(1); // 日期加一天，继续循环
+        }
+        // 获取小时差
+        long diffInHours = ChronoUnit.HOURS.between(tradeDate, now);
+        log.info("开始时间"+tradeDate);
+        log.info("结束时间"+now);
+        log.info("时差"+diffInHours);
+        log.info("周末时间"+weekend * 24);
+        log.info("持仓时间"+ (diffInHours - (weekend * 24)));
+        return diffInHours - (weekend * 24) >= 48;
+    }
 
+    /**
+     * 判断日期是否是节假日或周末
+     *
+     * @param date 要判断的日期
+     * @return 如果是节假日或周末，则返回 true；否则返回 false。
+     */
+    private static boolean isHolidayOrWeekend(LocalDateTime date) {
+        // 判断是否是周末
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+            return true;
+        }
+
+        // 判断是否是法定节假日
+        for (LocalDate holiday : HOLIDAYS) {
+            if (date.equals(holiday)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // 判断是否为工作日（周一至周五）
+    private static boolean isWeekday(LocalDate date) {
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        return !dayOfWeek.equals(DayOfWeek.SATURDAY) && !dayOfWeek.equals(DayOfWeek.SUNDAY);
+    }
+    // 判断日期是否为节假日（这里可以根据具体需求自行实现）
+    private static boolean isHoliday(LocalDate date) {
+        for (LocalDate holiday : HOLIDAYS) {
+            if (date.equals(holiday)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static Date getCurrentDate() {
         return new Date();
@@ -187,6 +266,10 @@ public class DateTimeUtil {
 
 
     public static void main(String[] args) {
-        parseToDateByMinute(10);
+        Date date = new Date();
+        //LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime localDateTime = LocalDateTime.of(2023, 5, 22, 14, 58);
+        boolean result = isSellable(localDateTime);
+        log.info(""+result);
     }
 }
