@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="stock2c1" />
+        <module name="backend" />
       </profile>
     </annotationProcessing>
   </component>

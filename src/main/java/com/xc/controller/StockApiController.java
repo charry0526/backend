@@ -5,7 +5,11 @@ import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.xc.common.ServerResponse;
 import com.xc.service.IStockService;
+import com.xc.utils.HttpClientRequest;
+import com.xc.utils.PropertiesUtil;
 import com.xc.vo.stock.HistoryVO;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +56,33 @@ public class StockApiController {
         return "ok";
     }
 
+    /**
+     * 初始化越南股票
+     * @return
+     */
+    @RequestMapping({"initYueStock.do"})
+    @ResponseBody
+    public String initYueStock(){
+        String url = PropertiesUtil.getProperty("yue.market.url");
 
+        String result = HttpClientRequest.doGet(url);
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        Object datas = jsonObject.get("data");
+        JSONArray jArray = JSONArray.fromObject(datas);
+
+        for (int i = 0; i < jArray.size(); i++) {
+            JSONObject jsonObject2 = jArray.getJSONObject(i);
+
+            String stockName = (String)jsonObject2.get("fullname_vi");
+            String stockCode = (String)jsonObject2.get("code");
+
+            String stockPlate = "越股";
+            String stockType = "YN";
+
+            iStockService.addStock(stockName,stockCode,stockType,stockPlate,0,0);
+        }
+        return "ok";
+    }
 
     //查询 股票指数、大盘指数信息
     @RequestMapping({"getMarket.do"})
