@@ -241,7 +241,7 @@
         and stock_code like CONCAT('%','${code}','%')
       </if>
       <if test="name != null and name != '' ">
-        and stock_name like CONCAT('%','stock2c1','%')
+        and stock_name like CONCAT('%','${name}','%')
       </if>
       <if test="stockPlate != null and stockPlate != '' ">
         and stock_plate = #{stockPlate}

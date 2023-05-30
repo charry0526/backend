@@ -17,6 +17,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+
+import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,7 +48,8 @@ public class StockPoll {
         System.out.println("stockCodes" + stockCodes.size() + "--stockCodes");
         for (Stock stock : stockCodes) {
             String stockGid = stock.getStockGid();
-            String sinaStock = SinaStockApi.getSinaStock("s_" + stockGid);
+            //String sinaStock = SinaStockApi.getSinaStock("s_" + stockGid);
+            String sinaStock = SinaStockApi.getSinaStock(stockGid);
             String[] arrayOfString = sinaStock.split(",");
             StockTask stockTask = new StockTask();
             stockTask.splits((Object[])arrayOfString);
@@ -166,7 +169,11 @@ public class StockPoll {
                 continue;
             }
             String sinaStock = SinaStockApi.getSinaStock(stockGid);
+            String sinaStock1 = sinaStock.substring(1,sinaStock.length()-1);
+            JSONObject jsonObject = JSONObject.fromObject(sinaStock1);
+
             if(sinaStock.length()>10) {
+
                 String[] arrayOfString = sinaStock.split(",");
                 //伦敦金格式不正确，特殊处理
                 if (arrayOfString.length <= 14) {

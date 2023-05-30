@@ -229,7 +229,7 @@
         and agent_phone like CONCAT('%','${phone}','%')
       </if>
       <if test="id != null and id != 0 ">
-        and parent_id = com.xc:stock2c1:war:1.0-SNAPSHOT
+        and parent_id = ${id}
       </if>
     </where>
   </select>

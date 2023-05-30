@@ -158,6 +158,7 @@ public class UserController {
     @RequestMapping({"getUserInfo.do"})
     @ResponseBody
     public ServerResponse getUserInfo(HttpServletRequest request) {
+
         return this.iUserService.getUserInfo(request);
     }
 

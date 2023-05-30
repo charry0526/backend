@@ -24,12 +24,15 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
+import java.net.URLEncoder;
+import java.net.URLDecoder;
 
 public class SinaStockApi {
-    public static final String sina_url = PropertiesUtil.getProperty("sina.single.stock.url");
+    public static final String sina_url = PropertiesUtil.getProperty("yue.single.stock.url");
     private static final Logger log = LoggerFactory.getLogger(SinaStockApi.class);
 
     public static String getSinaStock(String stockGid) {
@@ -40,11 +43,25 @@ public class SinaStockApi {
                 String novelUrl = stockGid.substring(2,stockGid.length());
                 url = sina_url + String.format("gb_%s",novelUrl.toLowerCase());
             }
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:00");
+            Calendar cal = Calendar.getInstance();
+
+            cal.add(Calendar.MINUTE, -1);
+            Date time1 =  cal.getTime();
+            String fromDate = format.format(time1);
+            Calendar cal1 = Calendar.getInstance();
+            String toDate = format.format(cal1.getTime());
+            String url1 = "&from-date=" + fromDate+"&to-date=" + toDate;
+            url1 = url1.replaceAll(" ", "%20");
+            url += url1;
+            //url += URLEncoder.encode(url1, "UTF-8");
             sina_result = HttpClientRequest.doGet(url);
         } catch (Exception e) {
             log.error("获取股票行情出错，错误信息 = {}", e);
         }
-        return sina_result.substring(sina_result.indexOf("=") + 2);
+        return sina_result;
+        //return sina_result.substring(sina_result.indexOf("=") + 2);
     }
 
     /**
