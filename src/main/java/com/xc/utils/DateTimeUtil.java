@@ -50,7 +50,7 @@ public class DateTimeUtil {
         long days = ChronoUnit.DAYS.between(tradeDate, now) + 1;
         int weekend = 0;
         LocalDateTime currentDate = tradeDate; // 当前日期从开始日期开始
-        for (int i = 0; i <= days; i++) {
+        for (int i = 0; i < days; i++) {
             if(isHolidayOrWeekend(currentDate)){
                 weekend++;
             }

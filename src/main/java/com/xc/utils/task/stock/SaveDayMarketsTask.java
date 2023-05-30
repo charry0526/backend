@@ -17,7 +17,7 @@ public class SaveDayMarketsTask {
     IStockMarketsDayService iStockMarketsDayService;
 
     /*每天16点股票数据定时存入数据库（股票走势图数据存储）*/
-    @Scheduled(cron = "0 0 16 ? * MON-FRI")
+    //@Scheduled(cron = "0 0 16 ? * MON-FRI")
     public void banlanceUserPositionTaskV1() {
         dotask();
     }
@@ -27,7 +27,7 @@ public class SaveDayMarketsTask {
     }
 
     /*每天1点同步节假日开关*/
-    @Scheduled(cron = "0 0 1 * * ?")
+    //@Scheduled(cron = "0 0 1 * * ?")
     public void holidayTask() {
         this.iStockMarketsDayService.saveHoliday();
     }

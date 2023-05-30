@@ -30,7 +30,7 @@ public class StockTask {
     }
 
     /*股票走势图定时任务-15*/
-    @Scheduled(cron = "0 0/1 9-15 * * ?")
+    //@Scheduled(cron = "0 0/1 9-15 * * ?")
     public void z1() {
         boolean am = false;
         boolean pm = false;
@@ -48,7 +48,7 @@ public class StockTask {
         }
     }
 
-    @Scheduled(cron = "0 0/1 9-15 * * ?")
+    //@Scheduled(cron = "0 0/1 9-15 * * ?")
     public void z11() {
         boolean am = false;
         boolean pm = false;
@@ -65,7 +65,7 @@ public class StockTask {
             log.info("====z11={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 9-15 * * ?")
+    //@Scheduled(cron = "0 0/1 9-15 * * ?")
     public void z12() {
         boolean am = false;
         boolean pm = false;
@@ -83,7 +83,7 @@ public class StockTask {
         }
     }
 
-    @Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
+    //@Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
     public void z2() {
         boolean am = false;
         boolean pm = false;
@@ -101,7 +101,7 @@ public class StockTask {
         }
     }
 
-    @Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
+    //@Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
     public void z21() {
         boolean am = false;
         boolean pm = false;
@@ -118,7 +118,7 @@ public class StockTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
+    //@Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
     public void z22() {
         boolean am = false;
         boolean pm = false;
@@ -136,7 +136,7 @@ public class StockTask {
         }
     }
 
-    @Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
+    //@Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
     public void z3() {
         boolean am = false;
         boolean pm = false;
@@ -153,7 +153,7 @@ public class StockTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
+    //@Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
     public void z31() {
         boolean am = false;
         boolean pm = false;
@@ -170,7 +170,7 @@ public class StockTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
+    //@Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
     public void z32() {
         boolean am = false;
         boolean pm = false;
@@ -188,7 +188,7 @@ public class StockTask {
         }
     }
 
-    @Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
+    //@Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
     public void z4() {
         boolean am = false;
         boolean pm = false;
@@ -205,7 +205,7 @@ public class StockTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
+    //@Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
     public void z41() {
         boolean am = false;
         boolean pm = false;
@@ -222,7 +222,7 @@ public class StockTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
+    //@Scheduled(cron = "0 0/1 9-15 * * MON-FRI")
     public void z42() {
         boolean am = false;
         boolean pm = false;

@@ -15,14 +15,14 @@ public class RealTimeTask {
     private static final Logger log = LoggerFactory.getLogger(RealTimeTask.class);
 
     /*每天9点定时删除股票k线数据*/
-    @Scheduled(cron = "0 00 9 * * MON-FRI")
+    //@Scheduled(cron = "0 00 9 * * MON-FRI")
     public void deleteStockCode() {
         log.info("每天9点定时删除股票k线数据");
         this.realTimeService.deleteRealTime();
     }
 
     /*每天0点定时删除期货k线数据*/
-    @Scheduled(cron = "0 00 0 * * MON-FRI")
+    //@Scheduled(cron = "0 00 0 * * MON-FRI")
     public void deleteStockFuturesCode() {
         log.info("每天0点定时删除期货k线数据");
         this.realTimeService.deleteFuturesRealTime();

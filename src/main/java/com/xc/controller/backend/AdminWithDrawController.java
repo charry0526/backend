@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 @Controller
 @RequestMapping({"/admin/withdraw/"})
 public class AdminWithDrawController {
@@ -33,12 +36,16 @@ public class AdminWithDrawController {
     public ServerResponse updateState(@RequestParam(value = "withId", required = false) Integer withId, @RequestParam(value = "state", required = false) Integer state, @RequestParam(value = "authMsg", required = false) String authMsg) {
         ServerResponse serverResponse = null;
         try {
-            serverResponse = this.iUserWithdrawService.updateState(withId, state, authMsg);
+            // authMsg
+            String unCodeMsg = URLDecoder.decode(authMsg, StandardCharsets.UTF_8.name());
+            log.info(unCodeMsg);
+            serverResponse = this.iUserWithdrawService.updateState(withId, state, unCodeMsg);
         } catch (Exception e) {
             log.error("admin修改充值订单状态出错 ，异常 = {}", e);
         }
         return serverResponse;
     }
+
 
     //删除资金记录
     @RequestMapping({"deleteWithdraw.do"})

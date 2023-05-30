@@ -1253,11 +1253,20 @@ public class UserServiceImpl implements IUserService {
 
 
 
+
     public ServerResponse listByAdmin(String realName, String phone, Integer agentId, Integer accountType, int pageNum, int pageSize, HttpServletRequest request) {
         PageHelper.startPage(pageNum, pageSize);
 
         List<User> users = this.userMapper.listByAdmin(realName, phone, agentId, accountType);
-
+        if(!users.isEmpty()){
+            users.forEach(user -> {
+                PositionVO positionVO = this.iUserPositionService.findUserPositionAllProfitAndLose(user.getId());
+                BigDecimal allProfitAndLose = positionVO.getAllProfitAndLose();
+                BigDecimal userAllAmt = user.getUserAmt();
+                userAllAmt = userAllAmt.add(allProfitAndLose);
+                user.setUserAmt(userAllAmt);
+            });
+        }
         PageInfo pageInfo = new PageInfo(users);
 
         return ServerResponse.createBySuccess(pageInfo);

@@ -215,7 +215,13 @@
     <include refid="Base_Column_List" />
     from stock
     WHERE stock_code = #{code}
-    AND is_new = #{isNew}
+    <if test="isNew == 0">
+      AND is_new = 0
+    </if>
+    <if test="isNew == 1">
+      AND is_new = 1
+      limit 1
+    </if>
   </select>
   <select id="findStockByName" resultMap="BaseResultMap" parameterType="string">
     SELECT

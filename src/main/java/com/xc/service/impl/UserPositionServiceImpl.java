@@ -587,7 +587,7 @@ public class UserPositionServiceImpl implements IUserPositionService {
         ucd.setUserName(user.getRealName());
         ucd.setDeType("Tổng lãi lỗ");
         ucd.setDeAmt(all_profit);
-        ucd.setDeSummary("Bán cổ phiếu" + userPosition.getStockCode() + "/" + userPosition.getStockName() + ",Giá TT：" + freez_amt + ",Phí giao dịch：" + all_fee_amt + ",Phí qua đêm：" + orderStayFee+ ",Thuế TN：" + orderSpread + ",Lãi/lỗ：" + profitLoss + "，ổng lãi/lỗ：" + all_profit);
+        ucd.setDeSummary("Bán cổ phiếu" + userPosition.getStockCode() + "/" + userPosition.getStockName() + ",Giá TT：" + freez_amt + ",Phí giao dịch：" + all_fee_amt + ",Phí qua đêm：" + orderStayFee+ ",Thuế TN：" + orderSpread + ",Lãi/lỗ：" + profitLoss + "，Tổng lãi/lỗ：" + all_profit);
 
         ucd.setAddTime(new Date());
         ucd.setIsRead(Integer.valueOf(0));

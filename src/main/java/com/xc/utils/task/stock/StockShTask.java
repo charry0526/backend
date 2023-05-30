@@ -17,7 +17,7 @@ public class StockShTask {
 
     private static final Logger log = LoggerFactory.getLogger(StockTask.class);
 
-    @Scheduled(cron = "0 0/1 5-15 * * ?")
+    //@Scheduled(cron = "0 0/1 5-15 * * ?")
     public void h1() {
         boolean am = false;
         boolean pm = false;
@@ -34,7 +34,7 @@ public class StockShTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 5-15 * * ?")
+    //@Scheduled(cron = "0 0/1 5-15 * * ?")
     public void h11() {
         boolean am = false;
         boolean pm = false;
@@ -51,7 +51,7 @@ public class StockShTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 5-15 * * ?")
+    //@Scheduled(cron = "0 0/1 5-15 * * ?")
     public void h12() {
         boolean am = false;
         boolean pm = false;
@@ -69,7 +69,7 @@ public class StockShTask {
         }
     }
 
-    @Scheduled(cron = "0 0/1 9-15 * * ?")
+    //@Scheduled(cron = "0 0/1 9-15 * * ?")
     public void h2() {
         boolean am = false;
         boolean pm = false;
@@ -86,7 +86,7 @@ public class StockShTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 9-15 * * ?")
+    //@Scheduled(cron = "0 0/1 9-15 * * ?")
     public void h21() {
         boolean am = false;
         boolean pm = false;
@@ -103,7 +103,7 @@ public class StockShTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 9-15 * * ?")
+    //@Scheduled(cron = "0 0/1 9-15 * * ?")
     public void h22() {
         boolean am = false;
         boolean pm = false;
@@ -121,7 +121,7 @@ public class StockShTask {
         }
     }
 
-    @Scheduled(cron = "0 0/1 9-15 * * ?")
+    //@Scheduled(cron = "0 0/1 9-15 * * ?")
     public void h3() {
         boolean am = false;
         boolean pm = false;
@@ -138,7 +138,7 @@ public class StockShTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 9-15 * * ?")
+    //@Scheduled(cron = "0 0/1 9-15 * * ?")
     public void h31() {
         boolean am = false;
         boolean pm = false;
@@ -155,7 +155,7 @@ public class StockShTask {
             log.info("====={} =====", DateTimeUtil.dateToStr(new Date()));
         }
     }
-    @Scheduled(cron = "0 0/1 9-15 * * ?")
+    //@Scheduled(cron = "0 0/1 9-15 * * ?")
     public void h32() {
         boolean am = false;
         boolean pm = false;
