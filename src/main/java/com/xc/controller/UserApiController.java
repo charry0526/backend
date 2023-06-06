@@ -58,8 +58,8 @@ public class UserApiController {
     //注册
     @RequestMapping(value = {"reg.do"}, method = {RequestMethod.POST})
     @ResponseBody
-    public ServerResponse reg(@RequestParam("agentCode") String agentCode, @RequestParam("phone") String phone, @RequestParam(value = "yzmCode", defaultValue = "") String yzmCode, @RequestParam("userPwd") String userPwd, HttpServletRequest httpServletRequest) {
-        return this.iUserService.reg(yzmCode, agentCode, phone, userPwd, httpServletRequest);
+    public ServerResponse reg(@RequestParam("agentCode") String agentCode, @RequestParam("phone") String phone, @RequestParam(value = "yzmCode", defaultValue = "") String yzmCode, @RequestParam("userPwd") String userPwd, @RequestParam(value = "msgId", defaultValue = "") String msgId,HttpServletRequest httpServletRequest) {
+        return this.iUserService.reg(yzmCode, agentCode, phone, userPwd,msgId, httpServletRequest);
 }
 
     //登录

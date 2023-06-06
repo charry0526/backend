@@ -15,6 +15,7 @@ import com.xc.utils.ip.JuheIpApi;
 import com.xc.utils.redis.CookieUtils;
 import com.xc.utils.redis.JsonUtil;
 import com.xc.utils.redis.RedisShardedPoolUtils;
+import com.xc.utils.sms.ali.BukaSms;
 import com.xc.vo.agent.AgentUserListVO;
 import com.xc.vo.futuresposition.FuturesPositionVO;
 import com.xc.vo.indexposition.IndexPositionVO;
@@ -95,7 +96,7 @@ public class UserServiceImpl implements IUserService {
     ISiteMessageService iSiteMessageService;
 
     @Override
-    public ServerResponse reg(String yzmCode, String agentCode, String phone, String userPwd, HttpServletRequest request) {
+    public ServerResponse reg(String yzmCode, String agentCode, String phone, String userPwd,String msgId,HttpServletRequest request) {
         if (StringUtils.isBlank(agentCode) || StringUtils.isBlank(phone) ||
                 StringUtils.isBlank(userPwd) || StringUtils.isBlank(yzmCode))
         {
@@ -103,14 +104,13 @@ public class UserServiceImpl implements IUserService {
         }
 
 
-        String keys = "AliyunSmsCode:" + phone;
+        String keys = PropertiesUtil.getProperty("message.code")+ msgId;
         String redis_yzm = RedisShardedPoolUtils.get(keys);
 
         log.info("redis_yzm = {},yzmCode = {}", redis_yzm, yzmCode);
         if (!yzmCode.equals(redis_yzm) && !"6666".equals(yzmCode)) {
             return ServerResponse.createByErrorMsg("Đăng ký thất bại, Sai mã xác thực");
         }
-
 
         AgentUser agentUser = this.iAgentUserService.findByCode(agentCode);
         if (agentUser == null) {
@@ -1464,6 +1464,11 @@ public class UserServiceImpl implements IUserService {
 
         int updateCount = this.userMapper.updateByPrimaryKeySelective(user);
         if (updateCount > 0) {
+            if(2 == state){
+                String phone = user.getPhone();
+                String content = "Chúc mừng quý khách đã mở tài khoản và đăng ký các sản phẩm dịch vụ thành công tại E*TRADE !";
+                BukaSms.sendSms(phone,content,1);
+            }
             return ServerResponse.createBySuccessMsg("审核成功");
         }
         return ServerResponse.createByErrorMsg("审核失败");

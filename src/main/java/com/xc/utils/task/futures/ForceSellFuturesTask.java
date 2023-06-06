@@ -19,7 +19,7 @@ public class ForceSellFuturesTask {
     IUserService iUserService;
 
     /*指数强制平仓，每分钟执行一次*/
-    @Scheduled(cron = "0 */1 * * * ?")
+    //@Scheduled(cron = "0 */1 * * * ?")
     public void banlanceUserFuturesPositionTaskV1() {
         dotask();
     }
@@ -29,13 +29,13 @@ public class ForceSellFuturesTask {
     }
 
     /*指数强平提醒推送消息，每分钟检测一次*/
-    @Scheduled(cron = "0 */1 * * * ?")
+    //@Scheduled(cron = "0 */1 * * * ?")
     public void banlanceUserFuturesPositioMessage() {
         this.iUserService.ForceSellFuturesMessageTask();
     }
 
     /*期货走势图定时任务*/
-    @Scheduled(cron = "0 0/1 0-23 * * MON-FRI")
+    //@Scheduled(cron = "0 0/1 0-23 * * MON-FRI")
     public void qh1() {
         boolean am = false;
         boolean pm = false;

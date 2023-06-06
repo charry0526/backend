@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import javax.servlet.http.HttpServletRequest;
 
 public interface IUserService {
-  ServerResponse reg(String paramString1, String paramString2, String paramString3, String paramString4, HttpServletRequest paramHttpServletRequest);
+  ServerResponse reg(String paramString1, String paramString2, String paramString3, String paramString4,String msgId,HttpServletRequest paramHttpServletRequest);
 
   ServerResponse login(String paramString1, String paramString2, HttpServletRequest paramHttpServletRequest);
 

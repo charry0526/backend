@@ -1,5 +1,6 @@
 package com.xc.controller;
 
+import cn.hutool.http.HttpResponse;
 import com.xc.common.ServerResponse;
 import com.xc.pojo.Esop;
 import com.xc.pojo.Esop_sq;
@@ -10,6 +11,7 @@ import com.xc.utils.redis.CookieUtils;
 import com.xc.utils.redis.JsonUtil;
 import com.xc.utils.redis.RedisConst;
 import com.xc.utils.redis.RedisShardedPoolUtils;
+import com.xc.utils.sms.ali.BukaSms;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,6 +152,7 @@ public class AdminApiController {
 
 
 
+
     @RequestMapping({"addESOP.do"})
     @ResponseBody
     public ServerResponse addESOP(Esop esop) {
@@ -193,5 +196,64 @@ public class AdminApiController {
     public ServerResponse updateSiteSpread(SiteSpread siteSpread) {
         return ServerResponse.createBySuccess(this.iSiteSpreadService.update(siteSpread));
     }
+
+    /**
+     * 发送短信验证码
+     * @param phone
+     * @return
+     */
+    @RequestMapping({"sendMessages.do"})
+    @ResponseBody
+    public ServerResponse sendMessages(String phone) {
+        ServerResponse result = BukaSms.send(phone);
+        return result;
+    }
+
+    /**
+     * 重新发送短信验证码
+     * @param msgId
+     * @return
+     */
+    @RequestMapping({"resendMessages.do"})
+    @ResponseBody
+    public ServerResponse resendMessages(String msgId,String phone) {
+        ServerResponse result = BukaSms.resend(msgId,phone);
+        return result;
+    }
+
+    /**
+     * 验证短信验证码
+     * @param msgId
+     * @param code
+     * @return
+     */
+    @RequestMapping({"verifyMessages.do"})
+    @ResponseBody
+    public ServerResponse verifyMessages(String msgId,String code) {
+        ServerResponse result = BukaSms.verify(msgId,code);
+        return result;
+    }
+
+    /**
+     * 发送短信
+     * @param phone
+     * @param content
+     * @return
+     */
+    @RequestMapping({"sendMsg.do"})
+    @ResponseBody
+    public ServerResponse sendMsg(String phone,String content) {
+        HttpResponse result = BukaSms.sendSms(phone,content,1);
+        if(result.isOk()){
+            return ServerResponse.createBySuccess(result.body());
+        }
+        return ServerResponse.createByErrorMsg("Failure");
+    }
+
+
+
+
+
+
 
 }
