@@ -19,8 +19,31 @@
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, nick_name, agent_id, order_sn, pay_sn, pay_channel, pay_amt, order_status,
+    id,user_id,nick_name, agent_id, order_sn, pay_sn, pay_channel, pay_amt, order_status,
     order_desc, add_time, pay_time, pay_id
+  </sql>
+
+  <resultMap id="BaseResultMap_new" type="com.xc.pojo.UserRecharge" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="nick_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="agent_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="order_sn" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pay_sn" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pay_channel" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pay_amt" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="order_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="order_desc" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="add_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="pay_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="pay_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    </constructor>
+  </resultMap>
+
+  <sql id="Base_Column_List_new" >
+    a.id,b.phone as user_id,a.nick_name, a.agent_id, a.order_sn, a.pay_sn, a.pay_channel, a.pay_amt, a.order_status,
+    a.order_desc, a.add_time, a.pay_time, a.pay_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
@@ -222,31 +245,32 @@
 
 
 
-  <select id="listByAdmin" parameterType="map" resultMap="BaseResultMap">
+  <select id="listByAdmin" parameterType="map" resultMap="BaseResultMap_new">
     SELECT
-    <include refid="Base_Column_List"/>
-    FROM user_recharge
+    <include refid="Base_Column_List_new"/>
+    FROM user_recharge as a
+    left join user as b on a.user_id = b.id
     <where>
       <if test="agentId != null">
-        and agent_id = #{agentId}
+        and a.agent_id = #{agentId}
       </if>
       <if test="userId != null">
-        and user_id = #{userId}
+        and b.phone like CONCAT('%','${userId}','%')
       </if>
       <if test="realName != null and realName != '' ">
-        and nick_name like CONCAT('%','${realName}','%')
+        and a.nick_name like CONCAT('%','${realName}','%')
       </if>
       <if test="state != null">
-        and order_status = #{state}
+        and a.order_status = #{state}
       </if>
       <if test="begin_time != null ">
-        and pay_time <![CDATA[>=]]> #{begin_time}
+        and a.pay_time <![CDATA[>=]]> #{begin_time}
       </if>
       <if test="end_time != null ">
-        and pay_time <![CDATA[<=]]> #{end_time}
+        and a.pay_time <![CDATA[<=]]> #{end_time}
       </if>
     </where>
-    ORDER BY id DESC
+    ORDER BY a.id DESC
   </select>
 
 
@@ -283,6 +307,16 @@
   <!--今日充值金额-->
   <select id="CountTotalRechargeAmountByTime" parameterType="integer" resultType="decimal">
     select sum(IFNULL(pay_amt,0)) pay_amt from user_recharge where order_status = #{chargeState} and TO_DAYS(pay_time) = TO_DAYS(NOW())
+  </select>
+  <select id="phoneToUserId" resultType="java.lang.Integer">
+    select id from user where phone like CONCAT('%','${phone}','%')
+  </select>
+  <select id="getUserIdByRechargeId" resultType="java.lang.Integer">
+    select a.phone from user as a
+    inner join user_recharge as b on (b.id = #{id,jdbcType=INTEGER} and a.id = b.user_id)
+  </select>
+  <select id="getPriceByRechargeId" resultType="java.lang.Long">
+    select pay_amt from user_recharge where id = #{id,jdbcType=INTEGER}
   </select>
 
 </mapper>

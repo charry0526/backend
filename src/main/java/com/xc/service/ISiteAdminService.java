@@ -32,6 +32,11 @@ public interface ISiteAdminService {
    * @return
    */
   ServerResponse verifyPassword(String pwd);
+
+  ServerResponse setCSAddress(String address);
+  ServerResponse setAvatar(String avatar,Integer id);
+
+  ServerResponse getCSAddress();
   ServerResponse setPassword(String pwd);
   ServerResponse<PageInfo> getNewList(int pageNum, int pageSize,Esop esop);
 

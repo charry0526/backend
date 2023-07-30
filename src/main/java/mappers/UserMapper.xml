@@ -28,22 +28,21 @@
             <arg column="img3_key" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <arg column="is_active" jdbcType="INTEGER" javaType="java.lang.Integer"/>
             <arg column="auth_msg" jdbcType="VARCHAR" javaType="java.lang.String"/>
-
             <arg column="user_index_amt" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
             <arg column="enable_index_amt" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
             <arg column="user_fut_amt" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
             <arg column="enable_fut_amt" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
             <arg column="withdrawal_Pwd" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <arg column="trading_amount" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
-
+            <arg column="avatar" jdbcType="VARCHAR" javaType="java.lang.String"/>
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
     id, agent_id, agent_name, phone, user_pwd, with_pwd, nick_name, real_name, id_card, 
     account_type, user_amt, enable_amt, sum_charge_amt, sum_buy_amt, recom_phone, is_lock, is_login,
     reg_time, reg_ip, reg_address, img1_key, img2_key, img3_key, is_active, auth_msg,
-    user_index_amt, enable_index_amt, user_fut_amt, enable_fut_amt, withdrawal_Pwd, trading_amount
-  </sql>
+    user_index_amt, enable_index_amt, user_fut_amt, enable_fut_amt, withdrawal_Pwd, trading_amount,avatar
+    </sql>
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select

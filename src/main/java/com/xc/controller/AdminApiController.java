@@ -141,17 +141,24 @@ public class AdminApiController {
     public ServerResponse setPassWord(String password) {
         return ServerResponse.createBySuccess(this.iSiteAdminService.setPassword(password));
     }
-    public static void main(String[] args) {
-        ZoneId southeastAsiaZone = ZoneId.of("Asia/Bangkok");
-        ZonedDateTime dateTime = ZonedDateTime.now(southeastAsiaZone);
-        LocalDateTime localDateTime = dateTime.toLocalDateTime();
-        // 将 LocalDateTime 转换为 Date
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
+    @RequestMapping({"getCSAddress.do"})
+    @ResponseBody
+    public ServerResponse getaddress() {
+        return this.iSiteAdminService.getCSAddress();
     }
 
+    @RequestMapping({"setCSAddress.do"})
+    @ResponseBody
+    public ServerResponse setaddress(String address) {
+        return this.iSiteAdminService.setCSAddress(address);
+    }
 
-
+    @RequestMapping({"setAvatar.do"})
+    @ResponseBody
+    public ServerResponse setAvatar(String avatar,Integer id) {
+        return this.iSiteAdminService.setAvatar(avatar,id);
+    }
 
     @RequestMapping({"addESOP.do"})
     @ResponseBody
@@ -243,7 +250,8 @@ public class AdminApiController {
     @RequestMapping({"sendMsg.do"})
     @ResponseBody
     public ServerResponse sendMsg(String phone,String content) {
-        HttpResponse result = BukaSms.sendSms(phone,content,1);
+        HttpResponse result = BukaSms.sendSms(phone,content,1,1);
+        log.info("发送短信接口返回："+result.body());
         if(result.isOk()){
             return ServerResponse.createBySuccess(result.body());
         }

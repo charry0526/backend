@@ -19,6 +19,25 @@
       <arg column="with_msg" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
+  <resultMap id="BaseResultMap_new" type="com.xc.pojo.UserWithdraw" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="nick_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="agent_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="with_amt" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="apply_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="trans_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="with_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="bank_no" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="bank_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="bank_address" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="with_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="with_fee" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="with_msg" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="phone" jdbcType="INTEGER" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
   <sql id="Base_Column_List" >
     id, user_id, nick_name, agent_id, with_amt, apply_time, trans_time, with_name, bank_no, 
     bank_name, bank_address, with_status, with_fee, with_msg
@@ -233,31 +252,33 @@
     ORDER BY id DESC
   </select>
 
-  <select id="listByAdmin" resultMap="BaseResultMap" parameterType="map">
+  <select id="listByAdmin" resultMap="BaseResultMap_new" parameterType="map">
     SELECT
-    <include refid="Base_Column_List"/>
-    FROM user_withdraw
+    a.id, a.user_id, a.nick_name,a.agent_id, a.with_amt, a.apply_time, a.trans_time, a.with_name, a.bank_no,
+    a.bank_name, a.bank_address, a.with_status, a.with_fee, a.with_msg,b.phone
+    FROM user_withdraw a
+    left join user b on b.id = a.user_id
     <where>
       <if test="agentId != null">
-        and agent_id = #{agentId}
+        and a.agent_id = #{agentId}
       </if>
       <if test="userId != null">
-        and user_id = #{userId}
+        and a.user_id = #{userId}
       </if>
       <if test="realName != null and realName != '' ">
-        and nick_name like CONCAT('%','${realName}','%')
+        and a.nick_name like CONCAT('%','${realName}','%')
       </if>
       <if test="state != null">
-        and with_status = #{state}
+        and a.with_status = #{state}
       </if>
       <if test="beginTime != null and beginTime != '' ">
-        and trans_time <![CDATA[>=]]> #{beginTime}
+        and a.trans_time <![CDATA[>=]]> #{beginTime}
       </if>
       <if test="endTime != null and endTime != '' ">
-        and trans_time <![CDATA[<=]]> #{endTime}
+        and a.trans_time <![CDATA[<=]]> #{endTime}
       </if>
     </where>
-    ORDER BY id DESC
+    ORDER BY a.id DESC
   </select>
 
 

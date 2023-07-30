@@ -1,6 +1,7 @@
 package com.xc.service.impl;
 
 
+import cn.hutool.http.HttpResponse;
 import com.xc.dao.UserRechargeMapper;
 import com.xc.service.*;
 import com.github.pagehelper.PageHelper;
@@ -23,10 +24,12 @@ import com.xc.utils.redis.RedisShardedPoolUtils;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
+import com.xc.utils.sms.ali.BukaSms;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -288,8 +291,6 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
         if (StringUtils.isNotBlank(endTime)) {
             end_time = DateTimeUtil.searchStrToTimestamp(endTime);
         }
-
-
         List<UserRecharge> userRecharges = this.userRechargeMapper.listByAdmin(agentId, userId, realName, state, begin_time, end_time);
 
         PageInfo pageInfo = new PageInfo(userRecharges);
@@ -301,15 +302,12 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
     @Transactional
     public ServerResponse updateState(Integer chargeId, Integer state) throws Exception {
         UserRecharge userRecharge = this.userRechargeMapper.selectByPrimaryKey(chargeId);
-
         if (userRecharge == null) {
             return ServerResponse.createByErrorMsg("Lệnh nạp tiền không tồn tại");
         }
         if (userRecharge.getOrderStatus().intValue() != 0) {
             return ServerResponse.createByErrorMsg("Trạng thái đơn hàng không phải là trạng thái đơn hàng và không thể thay đổi");
         }
-
-
         if (state.intValue() == 1) {
 
             User user = this.userMapper.selectByPrimaryKey(userRecharge.getUserId());
@@ -331,14 +329,18 @@ public class UserRechargeServiceImpl implements IUserRechargeService {
                 throw new Exception("Xảy ra lỗi sửa đổi tiền người dùng, đưa ra bất thường");
             }
         }
-
-
         userRecharge.setOrderStatus(Integer.valueOf((state.intValue() == 1) ? 1 : 2));
-
-
         userRecharge.setPayTime(new Date());
         int updateCount = this.userRechargeMapper.updateByPrimaryKeySelective(userRecharge);
         if (updateCount > 0) {
+            if(state == 1){
+                Integer phone = this.userRechargeMapper.getUserIdByRechargeId(chargeId);
+                Long price = this.userRechargeMapper.getPriceByRechargeId(chargeId);
+                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                String formattedNumber = decimalFormat.format(price);
+                HttpResponse result = BukaSms.sendSms("84"+phone,formattedNumber,1,1);
+                log.info("短信接口返回：{}"+result);
+            }
             return ServerResponse.createBySuccessMsg("Sửa trạng thái đơn hàng thành công！");
         }
         return ServerResponse.createByErrorMsg("Không thể sửa đổi trạng thái đơn đặt hàng！");

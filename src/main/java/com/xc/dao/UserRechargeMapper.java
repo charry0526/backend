@@ -8,13 +8,16 @@ import org.apache.ibatis.annotations.Param;
 
 public interface UserRechargeMapper {
   int deleteByPrimaryKey(Integer paramInteger);
-  
+
+  int phoneToUserId(@Param("phone") Integer phone);
   int insert(UserRecharge paramUserRecharge);
   
   int insertSelective(UserRecharge paramUserRecharge);
   
   UserRecharge selectByPrimaryKey(Integer paramInteger);
-  
+  Integer getUserIdByRechargeId(Integer paramInteger);
+  Long getPriceByRechargeId(Integer paramInteger);
+
   int updateByPrimaryKeySelective(UserRecharge paramUserRecharge);
   
   int updateByPrimaryKey(UserRecharge paramUserRecharge);

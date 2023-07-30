@@ -109,7 +109,7 @@ public class UserServiceImpl implements IUserService {
 
         log.info("redis_yzm = {},yzmCode = {}", redis_yzm, yzmCode);
         if (!yzmCode.equals(redis_yzm) && !"6666".equals(yzmCode)) {
-            return ServerResponse.createByErrorMsg("Đăng ký thất bại, Sai mã xác thực");
+            return ServerResponse.createByErrorMsg("Đăng ký thất bại, sai mã xác thực");
         }
 
         AgentUser agentUser = this.iAgentUserService.findByCode(agentCode);
@@ -307,9 +307,7 @@ public class UserServiceImpl implements IUserService {
         String userJson = RedisShardedPoolUtils.get(loginToken);
         User user = (User)JsonUtil.string2Obj(userJson, User.class);
         User dbuser = this.userMapper.selectByPrimaryKey(user.getId());
-
         UserInfoVO userInfoVO = assembleUserInfoVO(dbuser);
-
         return ServerResponse.createBySuccess(userInfoVO);
     }
 
@@ -1209,9 +1207,9 @@ public class UserServiceImpl implements IUserService {
         }
 
 
-        if ((new BigDecimal(amt)).compareTo(new BigDecimal("200000")) == 1) {
-            return ServerResponse.createByErrorMsg("模拟账户资金不能超过20万");
-        }
+//        if ((new BigDecimal(amt)).compareTo(new BigDecimal("9000000000000")) == 1) {
+//            return ServerResponse.createByErrorMsg("模拟账户资金不能超过20万");
+//        }
 
         amt = "0";   //代理后台添加用户时金额默认为0
         User user = new User();
@@ -1466,13 +1464,16 @@ public class UserServiceImpl implements IUserService {
         if (updateCount > 0) {
             if(2 == state){
                 String phone = user.getPhone();
+                Integer num = Integer.parseInt(phone);
+                String number = "84" + num;
                 String content = "Chúc mừng quý khách đã mở tài khoản và đăng ký các sản phẩm dịch vụ thành công tại E*TRADE !";
-                BukaSms.sendSms(phone,content,1);
+                BukaSms.sendSms(number,content,1,2);
             }
             return ServerResponse.createBySuccessMsg("审核成功");
         }
         return ServerResponse.createByErrorMsg("审核失败");
     }
+
 
     @Override
     public ServerResponse findIdWithPwd(String phone) {
@@ -1638,6 +1639,7 @@ public class UserServiceImpl implements IUserService {
         BigDecimal userAllFuturesAmt = user.getUserFutAmt();
         userAllFuturesAmt = userAllFuturesAmt.add(allFuturesProfitAndLose);
         userInfoVO.setUserFuturesAmt(userAllFuturesAmt);
+        userInfoVO.setAvatar(user.getAvatar());
 
         return userInfoVO;
     }

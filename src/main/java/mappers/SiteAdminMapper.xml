@@ -132,6 +132,13 @@
     update site_setting set pwd = #{pwd}
   </update>
 
+  <update id="setCSAddress">
+    update site_setting set kefu = #{address}
+  </update>
+  <update id="setAvatar">
+    update user set avatar = #{avatar} where id = #{id}
+  </update>
+
 
   <select id="login" resultMap="BaseResultMap" parameterType="map">
     SELECT
@@ -236,9 +243,14 @@
   <select id="getEsopMinNumByCode" resultType="java.lang.String">
     select num from newlist where names = #{code}
   </select>
-    <select id="getPassword" resultType="java.lang.String">
-      select pwd from site_setting
-    </select>
+
+  <select id="getPassword" resultType="java.lang.String">
+    select pwd from site_setting
+  </select>
+
+  <select id="getCSAddress" resultType="java.lang.String">
+    select kefu from  site_setting
+  </select>
 
 
 </mapper>

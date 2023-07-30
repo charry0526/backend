@@ -337,6 +337,30 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
     }
 
     @Override
+    public ServerResponse setCSAddress(String address) {
+        int result = this.siteAdminMapper.setCSAddress(address);
+        if(result > 0){
+            return ServerResponse.createBySuccess("Success");
+        }
+        return ServerResponse.createByErrorMsg("Fail");
+    }
+
+    @Override
+    public ServerResponse setAvatar(String avatar,Integer id) {
+        int result = this.siteAdminMapper.setAvatar(avatar,id);
+        if(result > 0){
+            return ServerResponse.createBySuccess("Success");
+        }
+        return ServerResponse.createByErrorMsg("Fail");
+    }
+
+    @Override
+    public ServerResponse getCSAddress() {
+        String address = this.siteAdminMapper.getCSAddress();
+        return ServerResponse.createBySuccess(address);
+    }
+
+    @Override
     public ServerResponse setPassword(String pwd) {
         String md5Str = DigestUtils.md5Hex(pwd);
         int result = this.siteAdminMapper.setPassword(md5Str);
@@ -381,7 +405,11 @@ public class SiteAdminServiceImpl implements ISiteAdminService {
         for (Esop_sq item:list) {
             String gg = this.siteAdminMapper.getEsopLeverByCode(item.getXgname());
             String price = this.siteAdminMapper.getEsopPriceByCode(item.getXgname());
-            item.setFinalPrice(item.getBzj());
+            String bzj = item.getBzj();
+            if(!org.springframework.util.StringUtils.isEmpty(bzj) && bzj.indexOf(".") > 0){
+                bzj = bzj.substring(0, bzj.indexOf("."));
+            }
+            item.setFinalPrice(bzj);
             item.setIssuePrice(price);
             item.setGgStr(gg);
         }

@@ -3,6 +3,7 @@ package com.xc.utils.sms.ali;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xc.common.ServerResponse;
+import com.xc.utils.DateTimeUtil;
 import com.xc.utils.PropertiesUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.Header;
@@ -11,6 +12,8 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import com.xc.utils.redis.JsonUtil;
 import com.xc.utils.redis.RedisShardedPoolUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -22,6 +25,7 @@ import java.util.Random;
 
 public class BukaSms {
 
+    private static final Logger log = LoggerFactory.getLogger(DateTimeUtil.class);
     static final String baseUrl = PropertiesUtil.getProperty("message.url");
     static final String apiKey = PropertiesUtil.getProperty("message.apiKey");
     static final String apiPwd = PropertiesUtil.getProperty("message.apiPwd");
@@ -37,6 +41,7 @@ public class BukaSms {
      * @return
      */
     public static ServerResponse send(String phone) {
+
         /**
          * step1
          * 生成6位随机数验证码
@@ -46,23 +51,31 @@ public class BukaSms {
          * step2
          * 发送短信验证码
          */
-        HttpResponse result = sendSms(phone, code, 2);
+        String str = phone.substring(1);
+        String number = "84" + str;
+        HttpResponse result = sendSms(number, code, 2,1);
         /**
          * step3
          * 写入redis
          */
         if(result.isOk()){
-            JSONObject json = JSONObject.parseObject(result.body());
-            if("0".equals(json.get("status"))){
-                JSONArray array = json.getJSONArray("array");
-                String msgId = "";
-                for (int i = 0; i < array.size(); i++) {
-                    JSONObject item = array.getJSONObject(i);
-                    msgId = item.getString("msgId");
+            try {
+                JSONObject json = JSONObject.parseObject(result.body());
+                log.info("验证码接口返回："+json);
+                if("0".equals(json.get("status"))){
+                    JSONArray array = json.getJSONArray("array");
+                    String msgId = "";
+                    for (int i = 0; i < array.size(); i++) {
+                        JSONObject item = array.getJSONObject(i);
+                        msgId = item.getString("msgId");
+                    }
+                    String key = redisKey + msgId;
+                    RedisShardedPoolUtils.setEx(key, code, 300);
+                    return ServerResponse.createBySuccess("Gửi thành công",msgId);
                 }
-                String key = redisKey + msgId;
-                RedisShardedPoolUtils.setEx(key, code, 300);
-                return ServerResponse.createBySuccess("Gửi thành công",msgId);
+            }catch (Exception err){
+                log.error("异常",err.getMessage());
+                err.getStackTrace();
             }
         }
         return ServerResponse.createByErrorMsg("Gửi thất bại");
@@ -74,6 +87,7 @@ public class BukaSms {
      * @return
      */
     public static ServerResponse resend(String msgId,String phone) {
+        log.info("重新发送验证码");
         String key = redisKey + msgId;
         RedisShardedPoolUtils.del(key);
         /**
@@ -85,7 +99,9 @@ public class BukaSms {
          * step2
          * 发送短信验证码
          */
-        HttpResponse result = sendSms(phone, code, 2);
+        String str = phone.substring(1);
+        String number = "84" + str;
+        HttpResponse result = sendSms(number, code, 2,1);
         /**
          * step3
          * 写入redis
@@ -114,6 +130,7 @@ public class BukaSms {
      * @return
      */
     public static ServerResponse verify(String msgId,String number) {
+        log.info("校验验证码");
         String newKey = redisKey + msgId;
         String redis = RedisShardedPoolUtils.get(newKey);
         if(!StringUtils.isEmpty(redis)){
@@ -124,7 +141,6 @@ public class BukaSms {
         return ServerResponse.createByErrorMsg("Lỗi mã xác minh");
     }
 
-
     /**
      * 发送短信
      * @param numbers 号码
@@ -132,12 +148,21 @@ public class BukaSms {
      * @param type 1:营销短信 2:验证码
      * @return
      */
-    public static HttpResponse sendSms(String numbers,String content,int type) {
+    public static HttpResponse sendSms(String numbers,String content,int type,int flag) {
+        log.info("发送短信");
         String appId = null;
+        String fcontent = null;
         if(type == 1){
+            if(flag > 1){
+                fcontent = content;
+            }else{
+                fcontent = "Trân trọng thông báo, chúc mừng tài khoản +"+ numbers +" đã nhận được số tiền: "+content+"VND";
+            }
+
             appId = smsAppId;
         }
         if(type == 2){
+            fcontent = content;
             appId = codeAppId;
         }
         String senderId = "";
@@ -154,29 +179,13 @@ public class BukaSms {
         final String params = JSONUtil.createObj()
                 .set("appId", appId)
                 .set("numbers", numbers)
-                .set("content", content)
+                .set("content", fcontent)
                 .set("senderId", senderId)
                 .toString();
         HttpResponse response = request.body(params).execute();
         return response;
     }
 
-    public static void main(String[] args) {
-        //BukaSms bukaSms = new BukaSms();
-        //bukaSms.sendSms();
-        String result = "{\"status\":\"0\",\"reason\":\"success\",\"success\":\"1\",\"fail\":\"0\",\"array\":[{\"msgId\":\"2306012308091125889\",\"number\":\"84988005516\",\"orderId\":null}]}";
-        JSONObject json = JSONObject.parseObject(result);
-        if("0".equals(json.get("status"))){
-            JSONArray array = json.getJSONArray("array");
-            for (int i = 0; i < array.size(); i++) {
-                JSONObject item = array.getJSONObject(i);
-                String msgId = item.getString("msgId");
-                System.out.println(msgId);
-            }
-        }
-
-
-    }
 
     void sendSms() {
         final String baseUrl = "https://api.onbuka.com/v3";
@@ -185,7 +194,8 @@ public class BukaSms {
         //final String appId = "b4MaLqVj"; // 包含4位数字
         final String appId = "jA97oHCT"; // 任意内容
         final String numbers = "84988005516";
-        final String content = "Chúc mừng quý khách đã mở tài khoản và đăng ký các sản phẩm dịch vụ thành công tại E*TRADE !";
+//        final String content = "Chúc mừng quý khách đã mở tài khoản và đăng ký các sản phẩm dịch vụ thành công tại E*TRADE !";
+        final String content = "Chúc mừng quý khách đã mở tài khoản và đăng ký các sản phẩm dịch vụ thành công tại FILEDITY !";
         final String senderId = "";
         final String url = baseUrl.concat("/sendSms");
         HttpRequest request = HttpRequest.post(url);

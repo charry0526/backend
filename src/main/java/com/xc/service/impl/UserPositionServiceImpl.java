@@ -1351,10 +1351,11 @@ public class UserPositionServiceImpl implements IUserPositionService {
 
         userPositionVO.setProfitAndLose(positionProfitVO.getProfitAndLose().setScale(2,BigDecimal.ROUND_HALF_UP));
         userPositionVO.setAllProfitAndLose(positionProfitVO.getAllProfitAndLose().setScale(2,BigDecimal.ROUND_HALF_UP));
-        userPositionVO.setNow_price(positionProfitVO.getNowPrice());
-
-
-
+        String nowPrice = positionProfitVO.getNowPrice();
+        if(!org.springframework.util.StringUtils.isEmpty(nowPrice) && nowPrice.indexOf(".") > 0){
+            nowPrice = nowPrice.substring(0, nowPrice.indexOf("."));
+        }
+        userPositionVO.setNow_price(nowPrice);
         return userPositionVO;
     }
 

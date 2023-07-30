@@ -35,7 +35,41 @@ public class UserWithdraw {
 
     private String withMsg;
 
+    private String phone;
 
+
+    public UserWithdraw(Integer id, Integer userId, String nickName, Integer agentId, BigDecimal withAmt, Date applyTime, Date transTime, String withName, String bankNo, String bankName, String bankAddress, Integer withStatus, BigDecimal withFee, String withMsg,String phone) {
+
+        this.id = id;
+
+        this.userId = userId;
+
+        this.nickName = nickName;
+
+        this.agentId = agentId;
+
+        this.withAmt = withAmt;
+
+        this.applyTime = applyTime;
+
+        this.transTime = transTime;
+
+        this.withName = withName;
+
+        this.bankNo = bankNo;
+
+        this.bankName = bankName;
+
+        this.bankAddress = bankAddress;
+
+        this.withStatus = withStatus;
+
+        this.withFee = withFee;
+
+        this.withMsg = withMsg;
+
+        this.phone = phone;
+    }
     public UserWithdraw(Integer id, Integer userId, String nickName, Integer agentId, BigDecimal withAmt, Date applyTime, Date transTime, String withName, String bankNo, String bankName, String bankAddress, Integer withStatus, BigDecimal withFee, String withMsg) {
 
         this.id = id;
@@ -181,5 +215,13 @@ public class UserWithdraw {
 
     public void setWithMsg(String withMsg) {
         this.withMsg = withMsg;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

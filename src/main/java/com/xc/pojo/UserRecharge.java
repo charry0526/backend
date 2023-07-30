@@ -66,6 +66,34 @@ public class UserRecharge {
 
     }
 
+    public UserRecharge(Integer id, String nickName, Integer agentId, String orderSn, String paySn, String payChannel, BigDecimal payAmt, Integer orderStatus, String orderDesc, Date addTime, Date payTime, Integer payId) {
+
+        this.id = id;
+
+        this.nickName = nickName;
+
+        this.agentId = agentId;
+
+        this.orderSn = orderSn;
+
+        this.paySn = paySn;
+
+        this.payChannel = payChannel;
+
+        this.payAmt = payAmt;
+
+        this.orderStatus = orderStatus;
+
+        this.orderDesc = orderDesc;
+
+        this.addTime = addTime;
+
+        this.payTime = payTime;
+
+        this.payId = payId;
+
+    }
+
     public UserRecharge() {
     }
 

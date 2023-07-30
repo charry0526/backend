@@ -56,6 +56,8 @@ public class UserInfoVO {
     /*操盘金额*/
     private BigDecimal tradingAmount;
 
+    private String avatar;
+
     public void setAgentId(Integer agentId) {
         this.agentId = agentId;
     }
@@ -490,6 +492,14 @@ public class UserInfoVO {
 
     public void setTradingAmount(BigDecimal tradingAmount) {
         this.tradingAmount = tradingAmount;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
 
